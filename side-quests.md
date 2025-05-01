@@ -32,4 +32,4 @@ I'm a big fan of to-dos and checklists, and I've always wanted to create a list 
 20. ❌ Visit an F1 race
 21. ❌ Watch Sumo wrestling in Japan
 22. ❌ Make a LinkedIn post that gets 5000 likes
-23. ❌ Read 250 books starting 1 Jan 2025
+23. ❌ Read 1000 books starting 1 Jan 2025. 7/1000. [List](https://www.goodreads.com/review/list/120282270-pankaj)
