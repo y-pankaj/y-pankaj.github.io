@@ -12,7 +12,7 @@ I'm a big fan of to-dos and checklists, and I've always wanted to create a list 
 
 1. ❌ Work for a start up with less than 200 employees
 2. ❌ Watch a Lakers game in LA
-3. ❌ Hike the Apls
+3. ❌ Hike the Alps
 4. ❌ Run a half marathon under 2hrs
 5. ❌ Run a full marathon
 6. ❌ Bench 70kgs * 10 clean reps
@@ -26,10 +26,11 @@ I'm a big fan of to-dos and checklists, and I've always wanted to create a list 
 14. ❌ Get featured in a news article
 15. ✅ Visit a concert (The Local Train, Sanam, Sonu Nigam, Divine, Guru, KK, Javed Ali, Papon)
 16. ❌ Write 100 blogs on my website
-17. ✅ Go on a snow trek (Kuari Paas)
+17. ✅ Go on a snow trek (Kuari Pass)
 18. ❌ Visit Ladakh
 19. ✅ Fly in a glider
 20. ❌ Visit an F1 race
 21. ❌ Watch Sumo wrestling in Japan
 22. ❌ Make a LinkedIn post that gets 5000 likes
 23. ❌ Read 1000 books starting 1 Jan 2025. 7/1000. [List](https://www.goodreads.com/review/list/120282270-pankaj)
+24. ❌ Learn a musical instrument decently well.

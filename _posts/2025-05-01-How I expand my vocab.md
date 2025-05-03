@@ -19,5 +19,7 @@ I have a highly sophisticated word-scouting technique.
 ## How I remember the words/phrases
 I have a sophisticated workflow coded out (fr this time); whenever I encounter a new word or phrase I quickly jot it down in my Microsoft todo list (only todo list that I ever liked), then the program that I vibe-coded picks it up from the list, prompts an LLM model (Gemimi 2.0 flash, because it's free), converts it to a structure that I want, and dumps it into Anki. And then it's just a matter of me revisiting the word on Anki from time to time.
 
+![Workflow](/assets/images/Anki-Flow.png)
+
 ## Here's a sample Anki Card
 ![Anki Card](/assets/images/Anki-Card-Vocab.png)
