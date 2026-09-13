@@ -12,6 +12,14 @@ on:
     # delays runs by up to an hour.
     - cron: '41 18 * * *'
   workflow_dispatch:
+  # Re-verify the pipeline whenever the sync machinery itself changes. Also
+  # means the very first push registers the workflow with a real run, rather
+  # than leaving an Actions tab with nothing in it.
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/sync-fitness.yml'
+      - 'scripts/build_fitness_data.py'
 
 permissions:
   contents: write
