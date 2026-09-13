@@ -81,17 +81,12 @@ BENCH_TARGET_REPS = 10
 MILESTONES = [(5.0, "5K", None), (10.0, "10K", None), (21.1, "Half", 4),
               (30.0, "30K", None), (42.2, "Marathon", 5)]
 
-# Where to point the "where this comes from" links. A null url means the app is
-# worth naming but has nothing public to link to -- render the label as plain
-# text rather than a dead link.
+# Profile links for the "where this comes from" section. Add an entry here to
+# have another one rendered.
 PROFILES = {
     "strava": {
         "label": "Strava",
         "url": "https://www.strava.com/athletes/32680655",
-    },
-    "nrc": {
-        "label": "Nike Run Club",
-        "url": None,
     },
 }
 
