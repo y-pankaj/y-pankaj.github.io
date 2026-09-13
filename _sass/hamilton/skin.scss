@@ -183,3 +183,6 @@ ul.post-tags {
     }
   }
 }
+
+// Republish this skin's palette as CSS custom properties, for custom-styles.
+@import "hamilton/custom-skin";

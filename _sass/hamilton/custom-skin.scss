@@ -1,0 +1,30 @@
+// Skin tokens, republished as CSS custom properties.
+//
+// Hamilton defines its palette as Sass variables inside the skin stylesheets,
+// which means they are only in scope here -- `custom-styles.scss` is imported
+// from `main.scss`, which never sees a skin. The /fitness/ page needs those
+// colours in a lot of small components, so rather than duplicating the palette
+// or moving every rule into the skin chain, the values are emitted once here
+// and everything downstream reads `var(--text)` and friends.
+//
+// Because this is imported from every `assets/css/skin*.scss`, each skin emits
+// its own values and the fitness page follows whichever one is active.
+
+:root {
+  --text: #{$text-color};
+  --text-light: #{$text-color-light};
+  --bg: #{$background-color};
+  --link: #{$link-base-color};
+  --code-bg: #{$code-background-color};
+
+  --border: #{$border-color};
+  --border-light: #{$border-color-light};
+  --border-dark: #{$border-color-dark};
+
+  // Panels sit flat on the page; the tints below are derived rather than
+  // hardcoded so they stay legible on a light, dark or sepia background.
+  --panel: #{$background-color};
+  --zebra: #{mix($text-color, $background-color, 4%)};
+  --fill: #{mix($text-color, $background-color, 9%)};
+  --hm0: #{mix($text-color, $background-color, 13%)};
+}

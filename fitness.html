@@ -1,0 +1,114 @@
+---
+layout: default
+title: Fitness
+permalink: /fitness/
+description: Lifting and running, straight out of FitNotes.
+---
+
+{%- assign f = site.data.fitness -%}
+
+<div class="fitness" id="fitness">
+
+  <div class="dash-head">
+    <h1 class="post-title">Fitness</h1>
+    <div class="post-meta">
+      Lifting and running from FitNotes &middot; tracked since <span id="since"></span>
+    </div>
+  </div>
+
+  <noscript>
+    <p class="no-js-note">
+      The charts on this page are drawn in the browser, so they need JavaScript.
+      Without it: <b>{{ f.lifting.totals.volume_kg | divided_by: 1000.0 | round: 1 }} tonnes</b>
+      lifted over {{ f.lifting.totals.sessions }} sessions, and
+      <b>{{ f.running.totals.distance_km }} km</b> run over {{ f.running.totals.count }} runs,
+      between {{ f.window.start }} and {{ f.window.end }}.
+    </p>
+  </noscript>
+
+  <div id="band"></div>
+
+  <div class="grid">
+    <div class="panel span2">
+      <div class="hero-top">
+        <h3>Training calendar <span class="meta" id="cal-range"></span></h3>
+        <div class="seg" id="mode">
+          <button type="button" data-mode="both" class="on">Both</button>
+          <button type="button" data-mode="lift">Lifting</button>
+          <button type="button" data-mode="run">Running</button>
+        </div>
+      </div>
+      <div id="heat"></div>
+      <div id="heat-foot"></div>
+      <div class="streaks" id="streaks"></div>
+    </div>
+
+    <div class="panel">
+      <h4>Distance by month</h4>
+      <p class="sub" id="run-note"></p>
+      <div class="chart" id="run-months"></div>
+    </div>
+
+    <div class="panel">
+      <h4>Weekly distance <em>4-week average</em></h4>
+      <p class="sub" id="wdist-note"></p>
+      <div class="chart" id="wdist"></div>
+    </div>
+
+    <div class="panel span2">
+      <h4>Pace against distance <em>one dot per run</em></h4>
+      <p class="sub">Easy days, workouts and long runs separate out on their own.</p>
+      <div class="chart" id="scatter"></div>
+    </div>
+
+    <div class="panel span2">
+      <h4>Last six runs</h4>
+      <div id="run-feed"></div>
+    </div>
+
+    <div class="panel span2">
+      <h4>Weekly volume <em>bars are weeks, the line is a 4-week average</em></h4>
+      <p class="sub" id="week-note"></p>
+      <div class="chart" id="weekly"></div>
+    </div>
+
+    <div class="panel span2">
+      <h4>Top twelve exercises by sets
+        <em>heaviest set, and the day it happened</em></h4>
+      <div class="table-wrap" style="margin-top:.5rem">
+        <table class="native" id="pr"></table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h4>Volume by month</h4>
+      <p class="sub" id="lift-note"></p>
+      <div class="chart" id="lift-months"></div>
+    </div>
+
+    <div class="panel">
+      <h4>Split by muscle group</h4>
+      <div id="muscle" style="margin-top:.6rem"></div>
+    </div>
+
+    <div class="panel span2">
+      <h4>How far there is left to go <em>side-quests #4, #5 and #6</em></h4>
+      <div class="chart" id="ladder"></div>
+      <p class="ladder-note" id="ladder-note"></p>
+      <div id="bench"></div>
+    </div>
+
+    <div class="panel span2">
+      <h4>Where this comes from</h4>
+      <div id="sources" style="margin-top:.7rem"></div>
+    </div>
+  </div>
+
+  <div class="attrib">
+    Built from the FitNotes export, refreshed nightly. Last synced
+    {{ f.generated_at | date: "%-d %b %Y" }}.
+  </div>
+</div>
+
+<script>window.FITNESS_DATA = {{ f | jsonify }};</script>
+<script src="{{ '/assets/js/fitness.js' | relative_url }}" defer></script>

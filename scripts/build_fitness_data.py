@@ -87,6 +87,7 @@ PROFILES = {
     "strava": {
         "label": "Strava",
         "url": "https://www.strava.com/athletes/32680655",
+        "note": "Where the runs end up, if you would rather follow along there.",
     },
 }
 

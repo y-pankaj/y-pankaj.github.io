@@ -1,1 +1,429 @@
-// Placeholder to allow customizing styles.
+// Styles for the /fitness/ page.
+//
+// Everything is scoped under `.fitness` so these fairly generic names --
+// `.grid`, `.panel`, `.rank`, `table.native` -- cannot reach a post.
+//
+// Colours come from `custom-skin.scss`, which republishes the active skin's
+// Sass palette as CSS custom properties. The one colour that is not the
+// theme's is the accent, which every chart uses.
+
+.fitness {
+  --font-base: #{$base-font-family}, -apple-system, Helvetica, Arial, sans-serif;
+  --font-headline: #{$headline-font-family}, Helvetica, Arial, sans-serif;
+  --accent: #fc4c02;
+  --a28: rgba(252, 76, 2, .28);
+  --a50: rgba(252, 76, 2, .50);
+  --a74: rgba(252, 76, 2, .74);
+  --a100: rgba(252, 76, 2, 1);
+
+  font-family: var(--font-base);
+
+  * { box-sizing: border-box; }
+
+  // --- page head ---------------------------------------------------------
+  .dash-head {
+    padding: $spacing-unit * 1.2 0 .9rem;
+    margin-bottom: 1.2rem;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .dash-head .post-title {
+    font-family: var(--font-headline);
+    font-size: 1.7em;
+    font-weight: 700;
+    letter-spacing: -1px;
+    margin: 0;
+  }
+  .dash-head .post-meta { margin: 0; font-size: .8em; color: var(--text-light); }
+
+  // --- headline band -----------------------------------------------------
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border-light);
+    border: 1px solid var(--border-light);
+    margin: 1.1rem 0 1.6rem;
+
+    &.c4 { grid-template-columns: repeat(4, 1fr); }
+
+    @include media-query(700px) { grid-template-columns: repeat(2, 1fr); }
+  }
+  .stat-card {
+    background: var(--panel);
+    padding: .85rem 1rem;
+
+    .n {
+      font-family: var(--font-headline);
+      font-size: 1.65rem;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -1px;
+      font-variant-numeric: tabular-nums;
+
+      small { font-size: .9rem; font-weight: 400; color: var(--text-light); letter-spacing: 0; }
+    }
+    .l {
+      font-size: .64rem;
+      text-transform: uppercase;
+      letter-spacing: .9px;
+      color: var(--text-light);
+      margin-top: .3rem;
+    }
+    .hint { font-size: .64rem; color: var(--text-light); margin-top: .15rem; }
+  }
+
+  // --- panel grid --------------------------------------------------------
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--border-light);
+    border: 1px solid var(--border-light);
+    margin-bottom: 1.6rem;
+
+    @include media-query(860px) { grid-template-columns: 1fr; }
+  }
+  .panel {
+    background: var(--panel);
+    padding: 1rem 1.1rem 1.2rem;
+    min-width: 0;
+
+    &.span2 { grid-column: 1 / -1; }
+
+    > h4 {
+      font-family: var(--font-headline);
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-light);
+      margin: 0 0 .2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+
+      em { font-style: normal; font-weight: 400; letter-spacing: 0; text-transform: none; }
+    }
+    > .sub { font-size: .72rem; color: var(--text-light); margin: 0 0 .7rem; }
+
+    .runs { max-width: 680px; }
+    // A half-width panel has about 305px of content. Anything wider than this
+    // for the fixed columns leaves the bar itself no room at all.
+    .rank { grid-template-columns: 88px 1fr 74px 30px; gap: 6px; }
+    &.span2 .rank { grid-template-columns: 200px 1fr 100px 40px; }
+  }
+
+  // Panel header with a control on the right.
+  .hero-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: .8rem;
+    flex-wrap: wrap;
+
+    h3 { font-family: var(--font-headline); font-size: 1rem; font-weight: 700; margin: 0; }
+    .meta { font-size: .74em; color: var(--text-light); font-weight: 400; }
+  }
+
+  .streaks {
+    display: flex;
+    gap: 1.6rem;
+    flex-wrap: wrap;
+    font-size: .76em;
+    margin-top: .8rem;
+    padding-top: .7rem;
+    border-top: 1px solid var(--border-light);
+    color: var(--text-light);
+
+    b {
+      color: var(--text);
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: 1.15em;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
+  // --- charts ------------------------------------------------------------
+  .chart {
+    margin: .6rem 0 1.2rem;
+    color: var(--text);
+
+    svg { width: 100%; height: auto; display: block; overflow: visible; }
+    .bar { fill: currentColor; opacity: .75; }
+    .bar.hi { fill: var(--accent); opacity: 1; }
+    text { font-family: var(--font-base); font-size: 10px; fill: var(--text-light); }
+    text.v { font-size: 9.5px; font-weight: 600; }
+    text.k { font-size: 10.5px; fill: var(--text); }
+    .dim { opacity: .6; }
+    .axis { stroke: currentColor; stroke-width: 1; opacity: .28; }
+    // `gl`, not `grid`: the panel layout below claims `.grid`, and an SVG
+    // <line> inheriting `display: grid` is asking for trouble.
+    .gl { stroke: currentColor; stroke-width: 1; opacity: .12; }
+    .avg { fill: none; stroke: var(--accent); stroke-width: 1.6; }
+  }
+
+  // --- contribution calendar ---------------------------------------------
+  .hm-wrap {
+    overflow-x: auto;
+    padding-bottom: .2rem;
+
+    svg { display: block; }
+  }
+  rect.hm { fill: var(--hm0); }
+  rect.hm.l1 { fill: var(--a28); }
+  rect.hm.l2 { fill: var(--a50); }
+  rect.hm.l3 { fill: var(--a74); }
+  rect.hm.l4 { fill: var(--a100); }
+  text.hm-lbl { font-family: var(--font-base); font-size: 9.5px; fill: var(--text-light); }
+
+  .hm-foot {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .7em;
+    color: var(--text-light);
+    margin-top: .45rem;
+    flex-wrap: wrap;
+
+    .sp { flex: 1 1 auto; }
+  }
+  .hm-key {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+
+    i { width: 11px; height: 11px; border-radius: 2px; display: inline-block; }
+  }
+
+  .seg {
+    display: inline-flex;
+    border: 1px solid var(--border-light);
+    border-radius: .4em;
+    overflow: hidden;
+
+    button {
+      font: inherit;
+      font-size: .95em;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text-light);
+      border: 0;
+      padding: 3px 10px;
+      line-height: 1.6;
+
+      + button { border-left: 1px solid var(--border-light); }
+      &.on { background: var(--accent); color: #fff; }
+    }
+  }
+
+  // --- ranked bars -------------------------------------------------------
+  .rank {
+    display: grid;
+    grid-template-columns: 132px 1fr 96px 40px;
+    align-items: center;
+    gap: 10px;
+    font-size: .76em;
+    margin-bottom: 7px;
+
+    @include media-query(700px) { grid-template-columns: 100px 1fr 80px; }
+  }
+  .rank-track {
+    background: var(--fill);
+    height: 11px;
+    border-radius: 2px;
+    overflow: hidden;
+
+    i { display: block; height: 100%; background: var(--accent); opacity: .85; }
+  }
+  .rank-v {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+
+    span { color: var(--text-light); font-size: .85em; }
+  }
+  .rank-p {
+    text-align: right;
+    color: var(--text-light);
+
+    @include media-query(700px) { display: none; }
+  }
+
+  // --- tables ------------------------------------------------------------
+  // The content column is ~692px, so a six-column table is tight. Numbers are
+  // held on one line and the table scrolls sideways rather than wrapping
+  // "21,920 kg" across two lines; only the exercise name is allowed to wrap.
+  .table-wrap { overflow-x: auto; }
+
+  // Reset the theme's bordered table styling; these read as plain rows.
+  table.native {
+    width: 100%;
+    border-collapse: collapse;
+    border: 0;
+    font-size: .78em;
+    margin-bottom: 0;
+
+    th, td {
+      text-align: left;
+      padding: .42rem .5rem;
+      border: 0;
+      border-bottom: 1px solid var(--border-light);
+      background: none;
+    }
+    thead th {
+      color: var(--text-light);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: .74em;
+      letter-spacing: .6px;
+      white-space: nowrap;
+    }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    td.dim { color: var(--text-light); }
+    tbody tr { background: none; }
+    tbody tr:hover { background: var(--zebra); }
+  }
+  .setbar {
+    display: inline-block;
+    vertical-align: middle;
+    height: 7px;
+    border-radius: 2px;
+    background: var(--accent);
+    opacity: .55;
+    margin-right: 6px;
+  }
+  .pill {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+
+    b { font-weight: 700; }
+    span { color: var(--text-light); }
+  }
+
+  // --- recent runs -------------------------------------------------------
+  .runs { border: 1px solid var(--border-light); }
+  .run-row {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    padding: .6rem .85rem;
+    border-bottom: 1px solid var(--border-light);
+    font-size: .8em;
+
+    &:last-child { border-bottom: 0; }
+    &:hover { background: var(--zebra); }
+  }
+  .run-ico {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--fill);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    flex: 0 0 auto;
+  }
+  .run-main { flex: 1 1 auto; min-width: 0; }
+  .run-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .run-when { color: var(--text-light); font-size: .82em; }
+  .run-num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    flex: 0 0 auto;
+
+    b { display: block; }
+    span { color: var(--text-light); font-size: .82em; }
+  }
+  .runs-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .5rem .85rem;
+    border-top: 1px solid var(--border-light);
+    background: var(--zebra);
+    font-size: .72em;
+    color: var(--text-light);
+  }
+
+  // --- goals -------------------------------------------------------------
+  .ladder-note {
+    font-size: .78em;
+    margin: .1rem 0 0;
+    color: var(--text-light);
+    max-width: 62em;
+
+    b { color: var(--text); font-variant-numeric: tabular-nums; }
+  }
+  .quest-line { margin-top: 1.1rem; font-size: .8em; }
+  .quest-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+
+    .q { color: var(--text-light); font-size: .82em; }
+    .dimtxt { color: var(--text-light); }
+  }
+  .goal-bar {
+    background: var(--fill);
+    height: 8px;
+    border-radius: 2px;
+    margin-top: .3rem;
+    overflow: hidden;
+
+    i { display: block; height: 100%; background: var(--accent); }
+  }
+  .goal-note { color: var(--text-light); font-size: .8em; margin-top: .15rem; }
+
+  // --- where the data comes from -----------------------------------------
+  .src-grid {
+    // auto-fit, so dropping a profile from the data closes the gap rather
+    // than leaving a hole in a fixed three-column layout.
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.4rem;
+
+    @include media-query(820px) { grid-template-columns: 1fr; gap: 1rem; }
+  }
+  .src-card { font-size: .78em; }
+  .src-kicker {
+    font-size: .72em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-light);
+    margin-bottom: .15rem;
+  }
+  .src-name {
+    font-family: var(--font-headline);
+    font-weight: 700;
+    font-size: 1.05em;
+    margin-bottom: .25rem;
+
+    a { font-weight: 400; font-size: .88em; margin-left: .3em; white-space: nowrap; }
+  }
+  .src-note { color: var(--text-light); line-height: 1.45; }
+  .src-foot {
+    font-size: .76em;
+    color: var(--text-light);
+    margin: 1.1rem 0 0;
+    padding-top: .8rem;
+    border-top: 1px solid var(--border-light);
+  }
+
+  .attrib { font-size: .7em; color: var(--text-light); margin-top: 1.2rem; }
+
+  // Shown only when JavaScript is off; the charts cannot render without it.
+  .no-js-note {
+    font-size: .8em;
+    border-left: 3px solid var(--accent);
+    background: rgba(252, 76, 2, .07);
+    padding: .7rem 1rem;
+    margin-bottom: 1.4rem;
+  }
+}
