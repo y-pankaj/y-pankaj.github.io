@@ -1,0 +1,64 @@
+name: Sync fitness data
+
+# Pulls the FitNotes export from the Apps Script endpoint, derives
+# _data/fitness.json, and commits it if anything actually changed.
+#
+# Requires one repository secret: FITNOTES_URL -- the Apps Script /exec URL.
+
+on:
+  schedule:
+    # 18:41 UTC = 00:11 IST, so each day syncs once it is complete.
+    # Deliberately off the hour: GitHub's scheduler backs up at :00 and
+    # delays runs by up to an hour.
+    - cron: '41 18 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Never let a scheduled run and a manual one race on the same push.
+concurrency:
+  group: sync-fitness
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch the FitNotes export
+        env:
+          FITNOTES_URL: ${{ secrets.FITNOTES_URL }}
+        run: |
+          set -euo pipefail
+          if [ -z "${FITNOTES_URL:-}" ]; then
+            echo "::error::The FITNOTES_URL secret is not set."
+            exit 1
+          fi
+          # Apps Script /exec 302-redirects to script.googleusercontent.com,
+          # so -L is required. Retries cover cold starts.
+          curl -sS -L --fail --retry 3 --retry-delay 10 --max-time 120 \
+            "$FITNOTES_URL" -o fitnotes-response.json
+          echo "fetched $(wc -c < fitnotes-response.json) bytes"
+
+      - name: Derive the summary
+        # python3 is preinstalled on ubuntu-latest and the script is
+        # standard library only, so there is nothing to install.
+        # It exits non-zero without writing if the response is not a
+        # FitNotes export, or has fewer rows than the archive on disk.
+        run: python3 scripts/build_fitness_data.py --in fitnotes-response.json
+
+      - name: Commit if anything changed
+        run: |
+          set -euo pipefail
+          rm -f fitnotes-response.json
+          git config user.name  'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add _data/fitness.json _raw/fitnotes.ndjson
+          if git diff --cached --quiet; then
+            echo 'nothing changed, skipping commit'
+            exit 0
+          fi
+          git commit -m "fitness: sync $(date -u +%F)"
+          git push
