@@ -44,10 +44,35 @@ jobs:
             echo "::error::The FITNOTES_URL secret is not set."
             exit 1
           fi
+
+          # Shape check. Never prints the secret, only what is wrong with it.
+          # The /dev URL from "Test deployments" only works for accounts with
+          # edit access, so it 404s here even though it opens fine in a browser.
+          case "$FITNOTES_URL" in
+            https://script.google.com/macros/s/*/exec) ;;
+            *dev)
+              echo "::error::That is the /dev test URL. Use the /exec URL from"
+              echo "::error::Deploy > Manage deployments > Web app."
+              exit 1 ;;
+            *)
+              echo "::warning::URL is not the expected"
+              echo "::warning::https://script.google.com/macros/s/<ID>/exec form"
+              echo "::warning::(length ${#FITNOTES_URL} chars)" ;;
+          esac
+
           # Apps Script /exec 302-redirects to script.googleusercontent.com,
-          # so -L is required. Retries cover cold starts.
-          curl -sS -L --fail --retry 3 --retry-delay 10 --max-time 120 \
-            "$FITNOTES_URL" -o fitnotes-response.json
+          # so -L is required. Retries cover cold starts. No --fail, so that a
+          # bad response can be reported rather than collapsed into exit 22.
+          status=$(curl -sS -L --retry 3 --retry-delay 10 --max-time 120 \
+            -o fitnotes-response.json -w '%{http_code}' "$FITNOTES_URL")
+
+          if [ "$status" != "200" ]; then
+            echo "::error::Apps Script returned HTTP $status"
+            echo "--- first 300 bytes of the response ---"
+            head -c 300 fitnotes-response.json || true
+            echo
+            exit 1
+          fi
           echo "fetched $(wc -c < fitnotes-response.json) bytes"
 
       - name: Derive the summary
