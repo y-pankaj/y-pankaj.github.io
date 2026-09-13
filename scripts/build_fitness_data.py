@@ -26,7 +26,31 @@ Usage
 
 Exits non-zero without writing anything if the input does not look like a
 FitNotes export, or if it has fewer rows than the archive already on disk --
-one bad response should not quietly truncate your training history.
+one bad response should not quietly truncate your training history. Neither
+file is rewritten when nothing material changed, so running twice in a day is
+a genuine no-op. ``generated_at`` is excluded from that comparison. The summary
+does change once a day even with no new training, because ``window.end`` tracks
+today: the calendar grows a square and the streak counters shift.
+
+What the export actually looks like
+-----------------------------------
+Worth knowing before changing anything below, because most of it is surprising:
+
+* **Running is in the same file.** Cardio entries carry ``Category: "Cardio"``
+  and an ``Exercise`` of "Running (Outdoor)", with ``Distance`` in km and
+  ``Time`` as ``H:MM:SS``. Strava is never queried -- it is only a profile link.
+* **Exact duplicate rows are real.** FitNotes has no set index, so two identical
+  sets on the same day serialise identically. ``sort_key`` sorts without
+  deduping; a ``set()`` or ``sort -u`` anywhere in the pipeline silently deletes
+  them. The first export had 21.
+* **``Comment`` is the run title** -- "5hr sleep run", "Listened to Huberman".
+  Only cardio rows use it; strength rows leave it null.
+* **``Category`` is already the muscle split** -- Chest, Back, Triceps, Biceps,
+  Shoulders, Legs, Abs. No mapping table needed.
+* **There is no start time**, only a date, so activities cannot be ordered
+  within a day.
+* Everything arrives as strings with nulls; units are always ``kgs`` and ``km``
+  so far, but the unit columns are there and worth respecting.
 """
 
 import argparse
