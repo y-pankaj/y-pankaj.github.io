@@ -81,17 +81,17 @@ BENCH_TARGET_REPS = 10
 MILESTONES = [(5.0, "5K", None), (10.0, "10K", None), (21.1, "Half", 4),
               (30.0, "30K", None), (42.2, "Marathon", 5)]
 
-# Placeholders -- swap in the real handles and URLs.
+# Where to point the "where this comes from" links. A null url means the app is
+# worth naming but has nothing public to link to -- render the label as plain
+# text rather than a dead link.
 PROFILES = {
     "strava": {
         "label": "Strava",
-        "handle": "@pankaj-yadav",
-        "url": "https://www.strava.com/athletes/00000000",
+        "url": "https://www.strava.com/athletes/32680655",
     },
     "nrc": {
         "label": "Nike Run Club",
-        "handle": "pankaj.y",
-        "url": "https://www.nike.com/nrc-app",
+        "url": None,
     },
 }
 
