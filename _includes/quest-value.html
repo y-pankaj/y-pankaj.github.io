@@ -1,10 +1,15 @@
 {%- comment -%}
   Resolves one tracked side quest against live site data.
 
-  Call it wrapped in a capture, which is how a Liquid include returns anything:
+  Call it wrapped in a capture, which is how a Liquid include returns anything.
+  Tag delimiters are deliberately left off below: Liquid parses tags inside a
+  comment block too -- it suppresses their output, not their parsing -- so a
+  literal example here is compiled as part of the template and a malformed one
+  fails the build.
 
-      {% capture raw %}{% include quest-value.html quest=q %}{% endcapture %}
-      {% assign parts = raw | strip | split: '|' %}
+      capture raw / include quest-value.html quest=q / endcapture
+      assign parts = raw | strip | split: '|'
+
       parts[0] -- the current value, as a bare number
       parts[1] -- a human caption for it
 

@@ -1,17 +1,21 @@
 {%- comment -%}
   One photo in a strip, shared by /side-quests/ and /travel/.
 
-      {% include photo-tile.html photo=shot alt="Kuari Pass" %}
+  Usage -- tag delimiters deliberately left off below, because Liquid parses
+  tags inside a comment block too. It suppresses their output, not their
+  parsing, so a literal example here is compiled as part of the template and a
+  malformed one fails the build:
+
+      include photo-tile.html photo=shot alt="Kuari Pass"
 
   `photo` is { src, caption }. An entry with no `src` renders as a labelled
   grey tile instead of a broken image, so captions can be written before the
   files exist -- which is the normal order of events.
 
-  Note the absence of `{% assign %}`. A Liquid include shares the caller's
-  scope, so assigning to a short name here would both leak outwards and, worse,
-  be shadowed by a loop variable of the same name in the caller -- which is
-  exactly what `assign p = include.photo` did when /travel/ looped over
-  `for p in places`. Reading `include.photo` directly cannot collide.
+  Note that nothing here is assigned to a local variable. A Liquid include
+  shares the caller's scope, so a short local name can be shadowed by a loop
+  variable of the same name in the caller -- reading include.photo directly
+  cannot collide.
 {%- endcomment -%}
 {%- if include.photo.src -%}
   <figure class="shot">
