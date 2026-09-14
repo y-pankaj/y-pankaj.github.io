@@ -1,11 +1,20 @@
+# The header nav. Commented-out entries are switched off, not gone -- uncomment
+# to bring one back.
+#
+# Years and Tags are off while the archive is small: five posts across two tags
+# make both pages thinner than the menu item promises. The pages themselves
+# still build and are still linked from where they are actually useful -- post
+# footers link each tag to /tags/#slug, and side quest #16 links to /years/ --
+# so nothing 404s and turning them back on is uncommenting two entries.
+
 # - title: About
 #   url: /about/
-- title: Years
-  url: /years/
+# - title: Years
+#   url: /years/
 # - title: Categories
 #   url: /categories/
-- title: Tags
-  url: /tags/
+# - title: Tags
+#   url: /tags/
 - title: Side-Quests
   url: /side-quests/
 - title: Fitness
