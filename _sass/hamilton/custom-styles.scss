@@ -1,13 +1,21 @@
-// Styles for the /fitness/ page.
+// Styles for the data pages: /fitness/, /side-quests/ and /travel/.
 //
-// Everything is scoped under `.fitness` so these fairly generic names --
-// `.grid`, `.panel`, `.rank`, `table.native` -- cannot reach a post.
+// Everything is scoped under a page class so these fairly generic names --
+// `.grid`, `.panel`, `.rank`, `.chip`, `.shot`, `table.native` -- cannot reach
+// a post.
 //
 // Colours come from `custom-skin.scss`, which republishes the active skin's
 // Sass palette as CSS custom properties. The one colour that is not the
-// theme's is the accent, which every chart uses.
+// theme's is the accent, which every chart, bar and pin uses.
+//
+// The file goes: shared tokens and chrome, then one block per page.
 
-.fitness {
+// =========================================================================
+// Shared
+// =========================================================================
+.fitness,
+.quests,
+.travel {
   --font-base: #{$base-font-family}, -apple-system, Helvetica, Arial, sans-serif;
   --font-headline: #{$headline-font-family}, Helvetica, Arial, sans-serif;
   --accent: #fc4c02;
@@ -50,7 +58,13 @@
 
     &.c4 { grid-template-columns: repeat(4, 1fr); }
 
-    @include media-query(700px) { grid-template-columns: repeat(2, 1fr); }
+    @include media-query(700px) {
+      grid-template-columns: repeat(2, 1fr);
+
+      // An odd number of cards would otherwise leave a hole in the last row,
+      // which reads as a missing card rather than as empty space.
+      > :last-child:nth-child(odd) { grid-column: 1 / -1; }
+    }
   }
   .stat-card {
     background: var(--panel);
@@ -76,6 +90,99 @@
     .hint { font-size: .64rem; color: var(--text-light); margin-top: .15rem; }
   }
 
+  // --- photo strips ------------------------------------------------------
+  // Quests and places both take a list of { src, caption }. A tile with no
+  // `src` is a labelled dashed box rather than a broken image, so captions can
+  // be written before the photos exist.
+  .shots {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 8px;
+    margin-top: .7rem;
+  }
+  .shot {
+    margin: 0;
+    min-width: 0;
+
+    img,
+    .shot-box {
+      display: block;
+      width: 100%;
+      min-height: 90px;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      border: 1px solid var(--border-light);
+    }
+    .shot-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--fill);
+      border-style: dashed;
+      color: var(--text-light);
+      font-size: 1.1rem;
+    }
+    figcaption {
+      font-size: .68rem;
+      line-height: 1.35;
+      color: var(--text-light);
+      margin-top: .3rem;
+    }
+    &.is-blank figcaption { font-style: italic; }
+  }
+
+  // --- shared text -------------------------------------------------------
+  .intro {
+    font-size: .88rem;
+    line-height: 1.65;
+    color: var(--text-light);
+    max-width: 62ch;
+    margin: 0 0 1.4rem;
+  }
+  .sect {
+    font-family: var(--font-headline);
+    font-size: .78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--text-light);
+    margin: 2rem 0 .9rem;
+    padding-bottom: .5rem;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .empty {
+    font-size: .82rem;
+    color: var(--text-light);
+    padding: 1rem 0;
+  }
+  .foot-note {
+    font-size: .72rem;
+    line-height: 1.55;
+    color: var(--text-light);
+    border-top: 1px solid var(--border-light);
+    padding-top: .8rem;
+    margin-top: 1.6rem;
+  }
+
+  // Visible to a screen reader, not to the eye. Used for pin labels, which
+  // are otherwise just coloured dots.
+  .sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+// =========================================================================
+// /fitness/
+// =========================================================================
+.fitness {
   // --- panel grid --------------------------------------------------------
   .grid {
     display: grid;
@@ -426,4 +533,377 @@
     padding: .7rem 1rem;
     margin-bottom: 1.4rem;
   }
+}
+
+
+// =========================================================================
+// /side-quests/
+// =========================================================================
+.quests {
+
+  // --- scoreboard --------------------------------------------------------
+  .score { margin: 0 0 1.3rem; }
+
+  .score-bar {
+    display: flex;
+    height: 10px;
+    background: var(--fill);
+    border: 1px solid var(--border-light);
+    overflow: hidden;
+
+    // Widths are percentages of the whole list, so the segments must not be
+    // allowed to flex away from them.
+    i { display: block; height: 100%; flex: none; }
+    .b-done { background: var(--accent); }
+    .b-prog { background: var(--a28); }
+  }
+
+  .score-keys {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .3rem 1.2rem;
+    margin-top: .55rem;
+    font-size: .72rem;
+    color: var(--text-light);
+  }
+  .key {
+    display: inline-flex;
+    align-items: baseline;
+    gap: .35em;
+
+    &::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      align-self: center;
+      border: 1px solid var(--border);
+    }
+    &.k-done::before { background: var(--accent); border-color: var(--accent); }
+    &.k-prog::before { background: var(--a28); border-color: var(--a50); }
+    &.k-todo::before { background: var(--fill); }
+
+    b {
+      font-family: var(--font-headline);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
+  // --- filter chips ------------------------------------------------------
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 1.1rem;
+    padding-bottom: 1.1rem;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .chip {
+    font-family: var(--font-base);
+    font-size: .72rem;
+    line-height: 1;
+    padding: .45rem .6rem;
+    background: var(--panel);
+    color: var(--text-light);
+    border: 1px solid var(--border-light);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+
+    em {
+      font-style: normal;
+      font-variant-numeric: tabular-nums;
+      opacity: .55;
+      margin-left: .35em;
+    }
+    &:hover { color: var(--text); border-color: var(--border); }
+    &.on {
+      background: var(--text);
+      border-color: var(--text);
+      color: var(--bg);
+
+      em { opacity: .7; }
+    }
+
+    // Pushed to the far end of the row: it is a different kind of control.
+    &.toggle { margin-left: auto; }
+    &.toggle.on {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    @include media-query(520px) {
+      &.toggle { margin-left: 0; }
+    }
+  }
+
+  // --- the list ----------------------------------------------------------
+  .qlist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .q {
+    display: grid;
+    grid-template-columns: 24px 16px minmax(0, 1fr);
+    gap: 0 .6rem;
+    align-items: start;
+    margin: 0 -.6rem;
+    padding: .8rem .6rem;
+    border-bottom: 1px solid var(--border-light);
+
+    // The filter sets `hidden`, which the UA stylesheet cannot enforce over
+    // an explicit `display`.
+    &[hidden] { display: none; }
+
+    // Deep links from /travel/ and from the numbers themselves.
+    &:target { background: var(--zebra); }
+  }
+
+  .q-num {
+    font-family: var(--font-headline);
+    font-size: .7rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    text-decoration: none;
+    padding-top: .2rem;
+    color: var(--text-light);
+    opacity: .5;
+
+    &:visited { color: var(--text-light); }
+    &:hover { opacity: 1; color: var(--accent); }
+  }
+
+  .q-box {
+    width: 15px;
+    height: 15px;
+    margin-top: .2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .55rem;
+    border: 1px solid var(--border);
+    color: transparent;
+  }
+  .q.done .q-box {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  // Tracked, not finished: part-filled, so scanning the column tells you
+  // which ones are actually moving.
+  .q.live .q-box {
+    background: var(--a28);
+    border-color: var(--a74);
+  }
+
+  .q-body { min-width: 0; }
+
+  .q-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: .8rem;
+  }
+  .q-text { font-size: .95rem; line-height: 1.4; }
+  .q.done .q-text { color: var(--text-light); }
+  .q-when {
+    font-size: .68rem;
+    color: var(--text-light);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .q-note {
+    font-size: .78rem;
+    line-height: 1.5;
+    color: var(--text-light);
+    margin: .22rem 0 0;
+  }
+
+  .q-track {
+    margin-top: .55rem;
+    max-width: 420px;
+  }
+  .q-bar {
+    height: 5px;
+    background: var(--fill);
+
+    i { display: block; height: 100%; background: var(--accent); }
+  }
+  .q-cap {
+    display: flex;
+    justify-content: space-between;
+    gap: .8rem;
+    font-size: .68rem;
+    color: var(--text-light);
+    margin-top: .3rem;
+
+    em {
+      font-style: normal;
+      font-variant-numeric: tabular-nums;
+      color: var(--text);
+    }
+  }
+
+  .q-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .2rem 1rem;
+    font-size: .72rem;
+    margin: .45rem 0 0;
+
+    i { font-size: .85em; opacity: .55; margin-right: .2em; }
+  }
+}
+
+
+// =========================================================================
+// /travel/
+// =========================================================================
+.travel {
+
+  // --- map ---------------------------------------------------------------
+  // No padding here on purpose: a pin is positioned as a percentage of this
+  // box, so anything between the border and the SVG shifts every pin.
+  .map-wrap {
+    position: relative;
+    border: 1px solid var(--border-light);
+    background: var(--panel);
+    margin: 0 0 1rem;
+  }
+
+  .world {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  // The viewBox is in degrees, so stroke-width is too -- 0.15 deg lands at
+  // about a quarter of a pixel at the width this renders at.
+  .world .land path {
+    fill: var(--fill);
+    stroke: var(--panel);
+    stroke-width: .15;
+  }
+
+  .pin {
+    position: absolute;
+    width: 11px;
+    height: 11px;
+    margin: -5.5px 0 0 -5.5px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 2px var(--panel);
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+      z-index: 2;
+      box-shadow: 0 0 0 2px var(--panel), 0 0 0 4px var(--a50);
+    }
+  }
+
+  // --- continents --------------------------------------------------------
+  .conts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: .9rem;
+  }
+  .cont {
+    font-size: .7rem;
+    line-height: 1;
+    padding: .4rem .6rem;
+    color: var(--text-light);
+    border: 1px solid var(--border-light);
+
+    i { font-size: .8em; margin-right: .1em; }
+    &.on {
+      color: var(--text);
+      border-color: var(--accent);
+      background: rgba(252, 76, 2, .08);
+    }
+  }
+
+  .map-note {
+    font-size: .7rem;
+    line-height: 1.55;
+    color: var(--text-light);
+    margin: 0 0 1.2rem;
+  }
+
+  // --- the list ----------------------------------------------------------
+  .places {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .place {
+    margin: 0 -.6rem;
+    padding: 1rem .6rem;
+    border-bottom: 1px solid var(--border-light);
+
+    &:target { background: var(--zebra); }
+  }
+  .place-head {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: .2rem .7rem;
+
+    h3 {
+      font-family: var(--font-headline);
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -.4px;
+      margin: 0;
+    }
+  }
+  .place-where { font-size: .72rem; color: var(--text-light); }
+  .place-when {
+    margin-left: auto;
+    font-size: .7rem;
+    color: var(--text-light);
+    font-variant-numeric: tabular-nums;
+  }
+  .place-note {
+    font-size: .82rem;
+    line-height: 1.55;
+    color: var(--text-light);
+    margin: .3rem 0 0;
+  }
+  .place-quest {
+    font-size: .72rem;
+    margin: .4rem 0 0;
+
+    i { opacity: .55; margin-right: .2em; }
+  }
+}
+
+
+// =========================================================================
+// Comments (giscus)
+// =========================================================================
+// Not scoped to a page class -- comments hang off posts too. The colours have
+// to come through the custom properties rather than the Sass palette: this
+// file is in the `main.scss` chain, which never sees a skin.
+.comments {
+  margin-top: $spacing-unit * 1.5;
+  padding-top: $spacing-unit;
+  border-top: 1px solid var(--border-light);
+}
+.comments-title {
+  font-family: $headline-font-family, Helvetica, Arial, sans-serif;
+  font-size: .78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-light);
+  margin: 0 0 .8rem;
 }

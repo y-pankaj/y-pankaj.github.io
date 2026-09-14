@@ -20,9 +20,21 @@ skin: daylight
 #
 google_analytics: G-BXS3XY0WT3
 
-# Uncomment the below lines and set the Disqus shortname for enabling Disqus
+# Comments, via giscus -> GitHub Discussions on this repo.
 #
-disqus: y-pankaj
+# repo_id and category_id come from https://giscus.app -- paste the repo in,
+# pick the "Comments" discussion category, and copy them out of the snippet it
+# generates. Comments stay switched off until both are filled in; see
+# _includes/comments.html.
+giscus:
+  repo: y-pankaj/y-pankaj.github.io
+  repo_id: ""
+  category: Comments
+  category_id: ""
+  mapping: pathname
+  # light | dark | preferred_color_scheme. The site pins the daylight skin, so
+  # light matches; switch to preferred_color_scheme if `skin` above is removed.
+  theme: light
 
 # Jekyll
 # ======

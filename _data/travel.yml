@@ -1,0 +1,67 @@
+# Places that get a pin on /travel/.
+#
+# The map is plate carree, so lat/lon go straight to a position -- no
+# projection maths, just add a row here and it appears.
+#
+# Fields
+# ------
+#   place      required   what to call it
+#   country    required   display name, shown under the place
+#   iso        required   ISO 3166-1 alpha-3, UPPERCASE. This fills the country
+#                         on the map, so it has to match an id in
+#                         _includes/world-map.svg -- IND, FRA, JPN, USA...
+#   continent  required   Africa | Antarctica | Asia | Europe |
+#                         North America | Oceania | South America
+#                         (feeds the "all seven continents" side quest)
+#   lat, lon   required   decimal degrees. South and West are negative.
+#   when       optional   "2023" or "2023-06". Sorts the list; undated goes last.
+#   note       optional   one line, shown on the card
+#   quest      optional   side-quest id this one ticks off, e.g. 17
+#   photos     optional   list of entries. A photo with no `src` renders as a
+#                         labelled placeholder tile, so you can write the
+#                         captions now and drop the files in later:
+#                             photos:
+#                               - src: /assets/images/travel/kuari-ridge.jpg
+#                                 caption: First light on the ridge
+#                               - caption: Camp at Gorson Bugyal   # placeholder
+#
+# Only the two below are things the site already knows about. Everything else
+# is yours to fill in -- the page counts whatever is here.
+
+- place: Kuari Pass
+  country: India
+  iso: IND
+  continent: Asia
+  lat: 30.4833
+  lon: 79.6167
+  when: "2023"
+  note: Snow trek in the Garhwal Himalaya, 3,650 m at the top.
+  quest: 17
+  photos:
+    - caption: The pass, looking at Nanda Devi
+    - caption: Camp at Gorson Bugyal
+
+- place: Bengaluru
+  country: India
+  iso: IND
+  continent: Asia
+  lat: 12.9716
+  lon: 77.5946
+  note: Home base. Wrote a whole post about the traffic.
+  photos:
+    - caption: Placeholder
+
+# Copy this for the next one:
+#
+# - place: Zermatt
+#   country: Switzerland
+#   iso: CHE
+#   continent: Europe
+#   lat: 46.0207
+#   lon: 7.7491
+#   when: "2027-07"
+#   note: Base for the Alps hike.
+#   quest: 3
+#   photos:
+#     - src: /assets/images/travel/zermatt-matterhorn.jpg
+#       caption: The Matterhorn at 6 a.m.

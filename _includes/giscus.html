@@ -1,0 +1,31 @@
+{%- comment -%}
+  giscus: comments backed by GitHub Discussions on this repo.
+
+  Config lives under `giscus:` in _config.yml. Do not include this directly --
+  go through _includes/comments.html, which holds the "should there be comments
+  here at all" decision in one place.
+{%- endcomment -%}
+<div class="comments">
+  <h2 class="comments-title">Comments</h2>
+  <script src="https://giscus.app/client.js"
+          data-repo="{{ site.giscus.repo }}"
+          data-repo-id="{{ site.giscus.repo_id }}"
+          data-category="{{ site.giscus.category | default: 'Comments' }}"
+          data-category-id="{{ site.giscus.category_id }}"
+          data-mapping="{{ site.giscus.mapping | default: 'pathname' }}"
+          data-strict="1"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="top"
+          data-theme="{{ site.giscus.theme | default: 'light' }}"
+          data-lang="en"
+          data-loading="lazy"
+          crossorigin="anonymous"
+          async>
+  </script>
+  <noscript>
+    Comments live in
+    <a href="https://github.com/{{ site.giscus.repo }}/discussions">GitHub Discussions</a>
+    and need JavaScript to appear here.
+  </noscript>
+</div>

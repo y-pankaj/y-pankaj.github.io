@@ -1,0 +1,174 @@
+# The side-quest list behind /side-quests/.
+#
+# Fields
+# ------
+#   id      required  stable number. It is what the list is numbered by, what
+#                     _data/travel.yml points at, and what _data/fitness.json
+#                     refers to -- so renumbering breaks links. Add new ones at
+#                     the end; never reuse an id.
+#   text    required  the quest itself
+#   theme   required  body | travel | live | thrill | craft | career
+#   done    optional  true once it is done. Tracked quests (see below) also
+#                     flip themselves when they reach their target.
+#   when    optional  "2023" or "2023-06", shown next to a finished quest
+#   note    optional  one line of colour
+#   link    optional  { text: ..., url: ... }  -- the receipt
+#   see     optional  internal page with more, e.g. /travel/
+#   photos  optional  same shape as _data/travel.yml: a list of
+#                     { src, caption }. An entry with no `src` renders as a
+#                     labelled placeholder tile, so captions can go in now and
+#                     the files can follow.
+#
+#   track   optional  makes the quest self-updating. See _includes/quest-value.html
+#                     for the sources that exist:
+#                       posts                 -- count of published posts
+#                       books                 -- `current` below, until a feed exists
+#                       travel.continents     -- distinct continents in _data/travel.yml
+#                       travel.countries      -- distinct countries in _data/travel.yml
+#                       fitness.longest_run   -- longest single run, km
+#                       fitness.bench         -- flat barbell bench, % of target
+#                     plus `target`, and `current` for the manual ones.
+
+- id: 1
+  text: Work for a start-up with fewer than 200 employees
+  theme: career
+
+- id: 2
+  text: Watch a Lakers game in LA
+  theme: live
+
+- id: 3
+  text: Hike the Alps
+  theme: travel
+  see: /travel/
+
+- id: 4
+  text: Run a half marathon under 2 hrs
+  theme: body
+  see: /fitness/
+  track:
+    source: fitness.longest_run
+    target: 21.1
+
+- id: 5
+  text: Run a full marathon
+  theme: body
+  see: /fitness/
+  track:
+    source: fitness.longest_run
+    target: 42.2
+
+- id: 6
+  text: Bench 70 kg x 10 clean reps
+  theme: body
+  see: /fitness/
+  track:
+    source: fitness.bench
+    target: 100
+
+- id: 7
+  text: Scuba dive
+  theme: thrill
+  done: true
+  note: Saw a shipwreck 10 m down.
+  photos:
+    - caption: The wreck
+
+- id: 8
+  text: Work in Silicon Valley
+  theme: career
+
+- id: 9
+  text: Travel across Europe
+  theme: travel
+  see: /travel/
+
+- id: 10
+  text: Fire a machine gun
+  theme: thrill
+  done: true
+
+- id: 11
+  text: Watch the 100 m final at the Olympics live
+  theme: live
+
+- id: 12
+  text: Visit all seven continents
+  theme: travel
+  see: /travel/
+  track:
+    source: travel.continents
+    target: 7
+
+- id: 13
+  text: Learn to surf
+  theme: body
+
+- id: 14
+  text: Get featured in a news article
+  theme: career
+
+- id: 15
+  text: Go to a concert
+  theme: live
+  done: true
+  note: The Local Train, Sanam, Sonu Nigam, Divine, Guru, KK, Javed Ali, Papon.
+
+- id: 16
+  text: Write 100 blogs on my website
+  theme: craft
+  see: /years/
+  track:
+    source: posts
+    target: 100
+
+- id: 17
+  text: Go on a snow trek
+  theme: body
+  done: true
+  when: "2023"
+  note: Kuari Pass.
+  see: /travel/
+
+- id: 18
+  text: Visit Ladakh
+  theme: travel
+  see: /travel/
+
+- id: 19
+  text: Fly in a glider
+  theme: thrill
+  done: true
+
+- id: 20
+  text: Go to an F1 race
+  theme: live
+
+- id: 21
+  text: Watch sumo wrestling in Japan
+  theme: live
+
+- id: 22
+  text: Make a LinkedIn post that gets 5,000 likes
+  theme: career
+  link:
+    text: LinkedIn
+    url: https://www.linkedin.com/in/y-pankaj
+
+- id: 23
+  text: Read 1,000 books, starting 1 Jan 2025
+  theme: craft
+  link:
+    text: The list
+    url: https://www.goodreads.com/review/list/120282270-pankaj
+  track:
+    source: books
+    target: 1000
+    target_label: "1,000"
+    # Bump this by hand for now. Swapping it for a Goodreads feed later means
+    # changing the `books` branch in _includes/quest-value.html and nothing else.
+    current: 7
+
+- id: 24
+  text: Learn a musical instrument decently well
+  theme: craft

@@ -19,7 +19,7 @@ Please check out the [demo](https://ngzhio.github.io/jekyll-theme-hamilton/).
 - [Jekyll Sitemap](https://github.com/jekyll/jekyll-sitemap)
 - [Google Analytics](https://analytics.google.com/)
 - [MathJax](https://www.mathjax.org/)
-- [Disqus](https://disqus.com/)
+- [giscus](https://giscus.app/)
 - [Font Awesome](https://fontawesome.com/)
 - TOC
 - Customizable head
@@ -76,7 +76,7 @@ After installation, you can run `jekyll serve` to check out your site, but befor
 | Parameters | Types | Specifications |
 |:---------- |:----- |:-------------- |
 | `title`    | string | The site title |
-| `disqus`   | string | The Disqus shortname; Unless you don't want to enable the comments system, you must specify this parameter. It is used in the production environment. |
+| `giscus`   | mapping | giscus configuration (`repo`, `repo_id`, `category`, `category_id`, `mapping`, `theme`). Comments render only when `repo_id` and `category_id` are both set, and only in the production environment. |
 | `google_analytics` | string | The Google Analytics tracking ID; It is used in the production environment. |
 
 ### Optional Parameters

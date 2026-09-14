@@ -1,0 +1,130 @@
+---
+layout: default
+title: Travel
+permalink: /travel/
+description: Everywhere I have been, and the seven-continent side quest it feeds.
+comments: true
+---
+
+{%- comment -%}
+  Places come from _data/travel.yml; the outlines from _includes/world-map.svg,
+  which scripts/build_world_map.py generates from Natural Earth.
+
+  Both the country fills and the pin positions are resolved at build time --
+  the fills through the <style> block below, the pins through plain arithmetic
+  on the bounding box in _data/world_map.yml. Nothing here needs JavaScript,
+  which matters because this page is mostly one big image.
+{%- endcomment -%}
+
+{%- assign places = site.data.travel | sort: 'when' | reverse -%}
+{%- assign isos = site.data.travel | map: 'iso' | compact | uniq -%}
+{%- assign visited = site.data.travel | map: 'continent' | compact | uniq -%}
+{%- assign wm = site.data.world_map -%}
+{%- assign all_continents = 'Asia,Europe,Africa,North America,South America,Oceania,Antarctica' | split: ',' -%}
+
+{%- if isos.size > 0 -%}
+<style>
+  {% for iso in isos %}.travel #c-{{ iso }}{% unless forloop.last %},{% endunless %}{% endfor %} { fill: var(--accent); }
+</style>
+{%- endif -%}
+
+<div class="travel" id="travel">
+
+  <div class="dash-head">
+    <h1 class="post-title">Travel</h1>
+    <div class="post-meta">
+      {{ places | size }} places &middot; {{ isos | size }}
+      {% if isos.size == 1 %}country{% else %}countries{% endif %} &middot;
+      {{ visited | size }} of 7 continents
+    </div>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="n">{{ isos | size }}</div>
+      <div class="l">Countries</div>
+    </div>
+    <div class="stat-card">
+      <div class="n">{{ places | size }}</div>
+      <div class="l">Places pinned</div>
+    </div>
+    <div class="stat-card">
+      <div class="n">{{ visited | size }}<small> / 7</small></div>
+      <div class="l">Continents</div>
+      <div class="hint"><a href="{{ '/side-quests/#q12' | relative_url }}">side quest #12</a></div>
+    </div>
+  </div>
+
+  <div class="map-wrap">
+    {% include world-map.svg %}
+    {%- for p in places -%}
+      {%- comment -%}
+        Plate carree, so a pin is a straight linear map from degrees onto the
+        box. The numbers come from the same run that wrote the SVG.
+      {%- endcomment -%}
+      {%- assign px = p.lon | minus: wm.lon_min | times: 100.0 | divided_by: wm.width -%}
+      {%- assign py = wm.lat_max | minus: p.lat | times: 100.0 | divided_by: wm.height -%}
+      <a class="pin" href="#place-{{ forloop.index }}"
+         style="left: {{ px }}%; top: {{ py }}%"
+         title="{{ p.place }}, {{ p.country }}">
+        <span class="sr">{{ p.place }}, {{ p.country }}</span>
+      </a>
+    {%- endfor -%}
+  </div>
+
+  <div class="conts">
+    {%- for c in all_continents -%}
+      <span class="cont{% if visited contains c %} on{% endif %}">
+        {%- if visited contains c -%}<i class="fas fa-check"></i> {% endif -%}{{ c }}
+      </span>
+    {%- endfor -%}
+  </div>
+
+  <p class="map-note">
+    Natural Earth outlines, plate carr&eacute;e projection. Antarctica is off the
+    bottom of the map but still counts as a continent, which feels like cheating
+    in its favour.
+  </p>
+
+  <h2 class="sect">The list</h2>
+
+  {%- if places.size == 0 -%}
+    <p class="empty">Nothing pinned yet.</p>
+  {%- endif -%}
+
+  <ol class="places">
+    {%- for p in places -%}
+      <li class="place" id="place-{{ forloop.index }}">
+        <div class="place-head">
+          <h3>{{ p.place }}</h3>
+          <span class="place-where">{{ p.country }} &middot; {{ p.continent }}</span>
+          {%- if p.when -%}<span class="place-when">{{ p.when }}</span>{%- endif -%}
+        </div>
+        {%- if p.note -%}<p class="place-note">{{ p.note }}</p>{%- endif -%}
+        {%- if p.quest -%}
+          <p class="place-quest">
+            <a href="{{ '/side-quests/#q' | append: p.quest | relative_url }}">
+              <i class="fas fa-check-square"></i> side quest #{{ p.quest }}
+            </a>
+          </p>
+        {%- endif -%}
+        {%- if p.photos -%}
+          <div class="shots">
+            {%- for shot in p.photos -%}
+              {%- include photo-tile.html photo=shot alt=p.place -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </li>
+    {%- endfor -%}
+  </ol>
+
+  <p class="foot-note">
+    Adding a place is one entry in <code>_data/travel.yml</code> &mdash; name,
+    country, ISO code, lat/lon &mdash; and the map, the counts and the continent
+    quest all move on their own.
+  </p>
+
+</div>
+
+{% include comments.html %}

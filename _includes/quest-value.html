@@ -1,0 +1,59 @@
+{%- comment -%}
+  Resolves one tracked side quest against live site data.
+
+  Call it wrapped in a capture, which is how a Liquid include returns anything:
+
+      {% capture raw %}{% include quest-value.html quest=q %}{% endcapture %}
+      {% assign parts = raw | strip | split: '|' %}
+      parts[0] -- the current value, as a bare number
+      parts[1] -- a human caption for it
+
+  Both halves live here on purpose: the caption phrasing depends on what the
+  number means ("longest run so far" vs "of 100 posts"), and splitting that
+  across two files means they drift.
+
+  Adding a source is a new `when` branch and nothing else. The quest opts in
+  through `track.source` in _data/quests.yml.
+
+  The locals below are deliberately long-winded. A Liquid include shares the
+  caller's scope, so a short name here is liable to collide with one of the
+  caller's loop variables -- `assign q = include.quest` inside a page looping
+  `for q in quests` is a bug waiting for the two to diverge.
+{%- endcomment -%}
+{%- assign qv_track = include.quest.track -%}
+{%- assign qv_goal = qv_track.target_label | default: qv_track.target -%}
+{%- case qv_track.source -%}
+
+{%- when 'posts' -%}
+  {%- assign qv_n = site.posts | size -%}
+  {{ qv_n }}|{{ qv_n }} of {{ qv_goal }} published
+
+{%- when 'books' -%}
+  {%- comment -%} Hand-maintained until there is a Goodreads feed. {%- endcomment -%}
+  {%- assign qv_n = qv_track.current | default: 0 -%}
+  {{ qv_n }}|{{ qv_n }} of {{ qv_goal }} read
+
+{%- when 'travel.continents' -%}
+  {%- assign qv_n = site.data.travel | map: 'continent' | compact | uniq | size -%}
+  {{ qv_n }}|{{ qv_n }} of {{ qv_goal }} continents
+
+{%- when 'travel.countries' -%}
+  {%- assign qv_n = site.data.travel | map: 'iso' | compact | uniq | size -%}
+  {{ qv_n }}|{{ qv_n }} countries so far
+
+{%- when 'fitness.longest_run' -%}
+  {%- assign qv_n = site.data.fitness.ladder.longest_km | default: 0 -%}
+  {{ qv_n }}|longest run {{ qv_n }} km of {{ qv_goal }}
+
+{%- when 'fitness.bench' -%}
+  {%- comment -%}
+    The fitness build already reduces this two-dimensional goal (weight AND
+    reps) to one percentage and writes a sentence to go with it, so take both
+    rather than re-deriving them here.
+  {%- endcomment -%}
+  {{ site.data.fitness.bench_quest.pct | default: 0 }}|{{ site.data.fitness.bench_quest.status | default: 'nothing logged yet' }}
+
+{%- else -%}
+  0|unknown source &ldquo;{{ qv_track.source }}&rdquo;
+
+{%- endcase -%}

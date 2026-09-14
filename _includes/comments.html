@@ -1,0 +1,17 @@
+{%- comment -%}
+  Whether a page gets comments, decided once.
+
+  A page opts out with `comments: false` in its front matter. Everything else
+  needs the build to be production and giscus to be fully configured -- an
+  empty repo_id renders a giscus error box rather than nothing, which is worse
+  than having no comments, so it is checked explicitly.
+{%- endcomment -%}
+{%- assign repo_id = site.giscus.repo_id | default: '' -%}
+{%- assign category_id = site.giscus.category_id | default: '' -%}
+{%- if page.comments != false
+       and jekyll.environment == 'production'
+       and site.giscus.repo
+       and repo_id != ''
+       and category_id != '' -%}
+  {% include giscus.html %}
+{%- endif -%}

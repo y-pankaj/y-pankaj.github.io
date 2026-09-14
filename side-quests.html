@@ -1,0 +1,164 @@
+---
+layout: default
+title: Side Quests
+permalink: /side-quests/
+description: A lifetime list, where some of the entries keep their own score.
+comments: true
+---
+
+{%- comment -%}
+  The list itself lives in _data/quests.yml. Quests with a `track` block
+  resolve against live site data through _includes/quest-value.html, so the
+  half marathon, the bench, the continent count and the post count update
+  themselves and cannot go stale the way a hand-edited checklist does.
+
+  The counting pass below has to repeat that resolution, because Liquid has no
+  way to carry a computed list out of one loop and into another. It is 24
+  items; the duplication is cheaper than a build step.
+{%- endcomment -%}
+
+{%- assign quests = site.data.quests -%}
+{%- assign total = quests | size -%}
+{%- assign done_n = 0 -%}
+{%- assign prog_n = 0 -%}
+
+{%- for q in quests -%}
+  {%- assign is_done = false -%}
+  {%- if q.done -%}{%- assign is_done = true -%}{%- endif -%}
+  {%- if q.track -%}
+    {%- capture raw %}{% include quest-value.html quest=q %}{% endcapture -%}
+    {%- assign val = raw | strip | split: '|' | first | plus: 0.0 -%}
+    {%- assign tgt = q.track.target | plus: 0.0 -%}
+    {%- if val >= tgt -%}
+      {%- assign is_done = true -%}
+    {%- elsif val > 0 -%}
+      {%- assign prog_n = prog_n | plus: 1 -%}
+    {%- endif -%}
+  {%- endif -%}
+  {%- if is_done -%}{%- assign done_n = done_n | plus: 1 -%}{%- endif -%}
+{%- endfor -%}
+
+{%- assign todo_n = total | minus: done_n | minus: prog_n -%}
+{%- assign done_pct = done_n | times: 100.0 | divided_by: total -%}
+{%- assign prog_pct = prog_n | times: 100.0 | divided_by: total -%}
+
+<div class="quests" id="quests">
+
+  <div class="dash-head">
+    <h1 class="post-title">Side Quests</h1>
+    <div class="post-meta">{{ done_n }} of {{ total }} done &middot; {{ prog_n }} under way</div>
+  </div>
+
+  <p class="intro">
+    I&rsquo;m a big fan of to-dos and checklists, and I&rsquo;ve always wanted a list of
+    personal side quests to complete in my lifetime. After seeing
+    <a href="https://huyenchip.com/list-100/">Chip Huyen&rsquo;s list</a>, I couldn&rsquo;t resist
+    making my own. A few of these keep their own score &mdash; the running and lifting
+    ones read straight off <a href="{{ '/fitness/' | relative_url }}">the training log</a>,
+    the continents off <a href="{{ '/travel/' | relative_url }}">the map</a>, and the
+    writing one off this site &mdash; so the numbers below are whatever is true today.
+  </p>
+
+  <div class="score">
+    <div class="score-bar" role="img"
+         aria-label="{{ done_n }} of {{ total }} quests done, {{ prog_n }} under way">
+      <i class="b-done" style="width: {{ done_pct }}%"></i>
+      <i class="b-prog" style="width: {{ prog_pct }}%"></i>
+    </div>
+    <div class="score-keys">
+      <span class="key k-done"><b>{{ done_n }}</b> done</span>
+      <span class="key k-prog"><b>{{ prog_n }}</b> under way</span>
+      <span class="key k-todo"><b>{{ todo_n }}</b> not started</span>
+    </div>
+  </div>
+
+  <div class="chips" id="chips">
+    <button type="button" class="chip on" data-theme="all">All <em>{{ total }}</em></button>
+    {%- for th in site.data.quest_themes -%}
+      {%- assign n = quests | where: 'theme', th.key | size -%}
+      {%- if n > 0 -%}
+        <button type="button" class="chip" data-theme="{{ th.key }}">{{ th.label }} <em>{{ n }}</em></button>
+      {%- endif -%}
+    {%- endfor -%}
+    <button type="button" class="chip toggle" id="hide-done" aria-pressed="false">Hide done</button>
+  </div>
+
+  <ol class="qlist" id="qlist">
+    {%- for q in quests -%}
+
+      {%- assign is_done = false -%}
+      {%- if q.done -%}{%- assign is_done = true -%}{%- endif -%}
+      {%- assign pct = 0 -%}
+      {%- assign caption = '' -%}
+
+      {%- if q.track -%}
+        {%- capture raw %}{% include quest-value.html quest=q %}{% endcapture -%}
+        {%- assign parts = raw | strip | split: '|' -%}
+        {%- assign val = parts | first | plus: 0.0 -%}
+        {%- assign caption = parts | last -%}
+        {%- assign tgt = q.track.target | plus: 0.0 -%}
+        {%- assign pct = val | times: 100.0 | divided_by: tgt -%}
+        {%- if pct >= 100 -%}
+          {%- assign pct = 100 -%}
+          {%- assign is_done = true -%}
+        {%- endif -%}
+      {%- endif -%}
+
+      <li class="q{% if is_done %} done{% endif %}{% if pct > 0 and is_done == false %} live{% endif %}"
+          id="q{{ q.id }}" data-theme="{{ q.theme }}">
+
+        <a class="q-num" href="#q{{ q.id }}" title="Link to quest {{ q.id }}">{{ q.id }}</a>
+
+        <span class="q-box" aria-hidden="true">
+          {%- if is_done -%}<i class="fas fa-check"></i>{%- endif -%}
+        </span>
+
+        <div class="q-body">
+          <div class="q-head">
+            <span class="q-text">{{ q.text }}</span>
+            {%- if q.when and is_done -%}<span class="q-when">{{ q.when }}</span>{%- endif -%}
+          </div>
+
+          {%- if q.note -%}<p class="q-note">{{ q.note }}</p>{%- endif -%}
+
+          {%- if q.track -%}
+            <div class="q-track">
+              <div class="q-bar"><i style="width: {{ pct }}%"></i></div>
+              <div class="q-cap">{{ caption }} <em>{{ pct | round }}%</em></div>
+            </div>
+          {%- endif -%}
+
+          {%- if q.link or q.see -%}
+            <p class="q-links">
+              {%- if q.see -%}
+                <a href="{{ q.see | relative_url }}"><i class="fas fa-arrow-right"></i> {{ q.see | remove: '/' | capitalize }}</a>
+              {%- endif -%}
+              {%- if q.link -%}
+                <a href="{{ q.link.url }}"><i class="fas fa-external-link-alt"></i> {{ q.link.text }}</a>
+              {%- endif -%}
+            </p>
+          {%- endif -%}
+
+          {%- if q.photos -%}
+            <div class="shots">
+              {%- for p in q.photos -%}
+                {%- include photo-tile.html photo=p alt=q.text -%}
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
+      </li>
+    {%- endfor -%}
+  </ol>
+
+  <p class="foot-note">
+    Numbering is stable &mdash; a quest keeps its id forever, so
+    <a href="#q17">#17</a> always points at the same thing.
+    New ones get added to the end.
+  </p>
+
+</div>
+
+<script src="{{ '/assets/js/quests.js' | relative_url }}" defer></script>
+
+{% include comments.html %}

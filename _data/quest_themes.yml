@@ -1,0 +1,15 @@
+# Buckets for the /side-quests/ filter chips. Order here is the order shown.
+# The `key` has to match the `theme` field in _data/quests.yml.
+
+- key: body
+  label: Body
+- key: travel
+  label: Places
+- key: live
+  label: Live
+- key: thrill
+  label: Thrills
+- key: craft
+  label: Craft
+- key: career
+  label: Work
