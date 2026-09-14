@@ -22,16 +22,16 @@ google_analytics: G-BXS3XY0WT3
 
 # Comments, via giscus -> GitHub Discussions on this repo.
 #
-# Still to do: enable Discussions on the repo, add a category called Comments
-# with the "Announcement" format, install https://github.com/apps/giscus, then
-# reload https://giscus.app -- it can only offer the category dropdown once all
-# three are true, which is why category_id is blank. Comments render nowhere
-# until it is filled in; see _includes/comments.html.
+# `category` and `category_id` have to name the same category, and both come
+# from https://giscus.app. General is the repo's default category; a dedicated
+# one in the "Announcement" format would be tidier, since only a maintainer can
+# open a discussion there. Moving later is just these two values plus a manual
+# re-home of any threads that already exist.
 giscus:
   repo: y-pankaj/y-pankaj.github.io
   repo_id: "MDEwOlJlcG9zaXRvcnkzNzc1NTA2NDk="
-  category: Comments
-  category_id: ""
+  category: General
+  category_id: "DIC_kwDOFoD3Oc4DFlqG"
   mapping: pathname
   # light | dark | preferred_color_scheme. The site pins the daylight skin, so
   # light matches; switch to preferred_color_scheme if `skin` above is removed.
