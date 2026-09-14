@@ -22,13 +22,14 @@ google_analytics: G-BXS3XY0WT3
 
 # Comments, via giscus -> GitHub Discussions on this repo.
 #
-# repo_id and category_id come from https://giscus.app -- paste the repo in,
-# pick the "Comments" discussion category, and copy them out of the snippet it
-# generates. Comments stay switched off until both are filled in; see
-# _includes/comments.html.
+# Still to do: enable Discussions on the repo, add a category called Comments
+# with the "Announcement" format, install https://github.com/apps/giscus, then
+# reload https://giscus.app -- it can only offer the category dropdown once all
+# three are true, which is why category_id is blank. Comments render nowhere
+# until it is filled in; see _includes/comments.html.
 giscus:
   repo: y-pankaj/y-pankaj.github.io
-  repo_id: ""
+  repo_id: "MDEwOlJlcG9zaXRvcnkzNzc1NTA2NDk="
   category: Comments
   category_id: ""
   mapping: pathname
