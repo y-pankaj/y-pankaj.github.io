@@ -63,7 +63,7 @@
 
       // An odd number of cards would otherwise leave a hole in the last row,
       // which reads as a missing card rather than as empty space.
-      > :last-child:nth-child(odd) { grid-column: 1 / -1; }
+      > *:last-child:nth-child(odd) { grid-column: 1 / -1; }
     }
   }
   .stat-card {
@@ -173,7 +173,7 @@
     margin: -1px;
     padding: 0;
     overflow: hidden;
-    clip: rect(0 0 0 0);
+    clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
   }

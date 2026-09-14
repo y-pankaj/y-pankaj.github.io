@@ -3,15 +3,18 @@
 
   A page opts out with `comments: false` in its front matter. Everything else
   needs the build to be production and giscus to be fully configured -- an
-  empty repo_id renders a giscus error box rather than nothing, which is worse
-  than having no comments, so it is checked explicitly.
+  empty repo_id or category_id renders a giscus error box rather than nothing,
+  which is worse than having no comments, so both are checked explicitly.
+
+  `default` is what turns a missing key and an empty string into the same
+  thing, so the check works whether the key is blank or absent entirely.
 {%- endcomment -%}
-{%- assign repo_id = site.giscus.repo_id | default: '' -%}
-{%- assign category_id = site.giscus.category_id | default: '' -%}
-{%- if page.comments != false
-       and jekyll.environment == 'production'
-       and site.giscus.repo
-       and repo_id != ''
-       and category_id != '' -%}
+{%- assign giscus_repo_id = site.giscus.repo_id | default: '' -%}
+{%- assign giscus_category_id = site.giscus.category_id | default: '' -%}
+{%- assign giscus_ready = false -%}
+{%- if site.giscus.repo and giscus_repo_id != '' and giscus_category_id != '' -%}
+  {%- assign giscus_ready = true -%}
+{%- endif -%}
+{%- if giscus_ready and page.comments != false and jekyll.environment == 'production' -%}
   {% include giscus.html %}
 {%- endif -%}
