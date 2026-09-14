@@ -1,19 +1,18 @@
 #!/usr/bin/env python3
 """Generate the world map the /travel/ page draws on.
 
-This is a one-shot generator, not part of the nightly sync. It reads the
-Natural Earth 1:110m "admin 0 countries" shapefile that ships inside
-geopandas, simplifies it, and writes two files:
+This is a one-shot generator, not part of the nightly sync. It reads a Natural
+Earth 1:110m "admin 0 countries" shapefile, simplifies it, and writes:
 
-  * ``_includes/world-map.svg`` -- one ``<path>`` per country, each carrying
-    ``id="c-XXX"`` (ISO 3166-1 alpha-3). The travel page inlines this and
-    emits a tiny ``<style>`` block that fills the visited ones, so the
-    highlighting is resolved at build time and needs no JavaScript.
+  * ``_includes/world-land.svg`` -- a bare ``<g class="land">`` fragment, one
+    ``<path>`` per country carrying ``id="c-XXX"`` (ISO 3166-1 alpha-3). It is
+    not a standalone SVG on purpose: /travel/ supplies the ``<svg>`` wrapper
+    because the page, not this script, decides the framing -- the default view
+    is fitted to wherever the pins happen to be.
 
-  * ``_data/world_map.yml`` -- the bounding box in degrees. Pins are placed by
-    Liquid arithmetic on ``lat``/``lon``, and it needs the same numbers the
-    viewBox was built from. Hardcoding them in the template would silently
-    drift the moment the projection or the clip changes.
+  * ``_data/world_map.yml`` -- the world bounding box in degrees. Pins are
+    placed by arithmetic on ``lat``/``lon``, and both the page and the zoom
+    script need the same numbers this was built from.
 
 Projection is plate carree (x = lon, y = -lat) purely so that placing a pin
 stays a subtraction and a divide. Anything prettier -- Robinson, Natural
@@ -24,10 +23,27 @@ whole point is that you can add a line of YAML to it.
 Antarctica is dropped: it is a third of the map's height, nobody has a pin
 there, and the seventh continent is tracked as a chip on the page instead.
 
+Boundaries and Kashmir
+----------------------
+By default this reads the copy of Natural Earth bundled inside geopandas,
+which is the *de facto* edition: it splits Jammu and Kashmir between India,
+Pakistan and China, and shows Aksai Chin as Chinese. That is not the boundary
+India recognises, and it is not the boundary an Indian site should publish.
+
+Natural Earth also ships point-of-view editions. To use the Indian one:
+
+    curl -LO https://naciscdn.org/naturalearth/110m/cultural/ne_110m_admin_0_countries_ind.zip
+    python3 scripts/build_world_map.py --source ne_110m_admin_0_countries_ind.zip
+
+The zip is read in place, no unpacking needed. Column names differ between
+the bundled copy (lowercase) and the published files (uppercase), so both are
+accepted. Regenerate, eyeball northern India, and commit the result.
+
 Usage
 -----
     python3 scripts/build_world_map.py
-    python3 scripts/build_world_map.py --tolerance 0.4   # smaller, coarser
+    python3 scripts/build_world_map.py --source ne_110m_admin_0_countries_ind.zip
+    python3 scripts/build_world_map.py --tolerance 0.6   # smaller, coarser
 
 Natural Earth is public domain; no attribution is required, though the page
 carries one anyway.
@@ -50,16 +66,44 @@ ISO_FIXUPS = {
 }
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SVG_PATH = os.path.join(ROOT, "_includes", "world-map.svg")
+SVG_PATH = os.path.join(ROOT, "_includes", "world-land.svg")
 META_PATH = os.path.join(ROOT, "_data", "world_map.yml")
+
+
+def normalise_columns(frame):
+    """Lowercase the attribute names and settle on one spelling for each.
+
+    The copy bundled in geopandas has already been tidied to `iso_a3`, `name`,
+    `continent`. The files Natural Earth publishes use `ISO_A3`, `NAME`,
+    `CONTINENT`, and recent releases add `ISO_A3_EH` -- the "everything has a
+    code" variant, which fills in several of the -99s. Accepting all of them
+    is what lets --source take a point-of-view edition unmodified.
+    """
+    frame = frame.rename(columns={c: c.lower() for c in frame.columns})
+    for wanted, candidates in (
+            ("iso_a3", ("iso_a3", "iso_a3_eh", "adm0_a3", "sov_a3")),
+            ("name", ("name", "name_en", "admin", "sovereignt")),
+            ("continent", ("continent", "region_un")),
+    ):
+        if wanted in frame.columns:
+            continue
+        for candidate in candidates:
+            if candidate in frame.columns:
+                frame[wanted] = frame[candidate]
+                break
+        else:
+            raise SystemExit(
+                f"source has no column for {wanted!r}; got {sorted(frame.columns)}")
+    return frame
 
 
 def iso_for(row):
     """A stable, unique element id for a country."""
-    iso = (row.get("iso_a3") or "").strip()
-    if iso and iso != "-99":
-        return iso
-    name = (row.get("name") or "").strip()
+    for column in ("iso_a3", "iso_a3_eh", "adm0_a3"):
+        iso = str(row.get(column) or "").strip()
+        if iso and iso not in ("-99", "nan"):
+            return iso
+    name = str(row.get("name") or "").strip()
     if name in ISO_FIXUPS:
         return ISO_FIXUPS[name]
     return "x-" + "".join(c.lower() if c.isalnum() else "-" for c in name)
@@ -116,11 +160,18 @@ def geometry_to_path(geom, min_area, precision):
     return "".join(parts)
 
 
-def build(tolerance, min_area, precision):
+def build(tolerance, min_area, precision, source=None):
     import geopandas  # imported late so --help works without the dependency
 
-    world = geopandas.read_file(
-        geopandas.datasets.get_path("naturalearth_lowres"))
+    if source:
+        # Fiona reads a shapefile straight out of a zip; no unpacking step.
+        if source.lower().endswith(".zip") and "://" not in source:
+            source = "zip://" + os.path.abspath(source)
+        world = geopandas.read_file(source)
+    else:
+        world = geopandas.read_file(
+            geopandas.datasets.get_path("naturalearth_lowres"))
+    world = normalise_columns(world)
     world = world[world["continent"] != "Antarctica"]
     world = world[~world.geometry.is_empty & world.geometry.notna()]
 
@@ -145,6 +196,7 @@ def build(tolerance, min_area, precision):
             "name": str(row["name"]),
             "continent": str(row["continent"]),
             "path": path,
+            "bounds": (west, south, east, north),
         })
 
     if not entries:
@@ -163,48 +215,59 @@ def build(tolerance, min_area, precision):
     return entries, (lon_min, lon_max, lat_min, lat_max)
 
 
-def render_svg(entries, bounds, precision):
-    lon_min, lon_max, lat_min, lat_max = bounds
-    width = lon_max - lon_min
-    height = lat_max - lat_min
+def render_svg(entries, source_label):
+    """The land as a bare <g>, for /travel/ to drop inside its own <svg>.
 
+    No <svg> element and no viewBox here: the page computes those, because the
+    default view is fitted to the pins rather than to the world.
+    """
     lines = [
         "<!-- Generated by scripts/build_world_map.py -- do not edit by hand.",
-        "     Natural Earth 1:110m admin 0 countries (public domain), plate carree.",
-        "     Country fills are set by the <style> block on the page that includes",
-        "     this, keyed on the id below. -->",
-        f'<svg class="world" xmlns="http://www.w3.org/2000/svg"',
-        f'     viewBox="{lon_min:.2f} {-lat_max:.2f} {width:.2f} {height:.2f}"',
-        '     preserveAspectRatio="xMidYMid meet" role="img"',
-        '     aria-label="World map with visited countries highlighted">',
-        '  <g class="land">',
+        f"     {source_label}, plate carree, coordinates in degrees",
+        "     (x = longitude, y = -latitude).",
+        "",
+        "     This is a fragment, not a standalone SVG. /travel/ wraps it in an",
+        "     <svg> whose viewBox it works out from the pins, and fills the",
+        "     visited countries with a <style> block keyed on the ids below. -->",
+        '<g class="land">',
     ]
     for entry in entries:
         name = (entry["name"].replace("&", "&amp;")
                 .replace("<", "&lt;").replace(">", "&gt;")
                 .replace('"', "&quot;"))
         lines.append(
-            f'    <path id="c-{entry["id"]}" data-name="{name}" d="{entry["path"]}"/>')
-    lines.append("  </g>")
-    lines.append("</svg>")
+            f'  <path id="c-{entry["id"]}" data-name="{name}" d="{entry["path"]}"/>')
+    lines.append("</g>")
     return "\n".join(lines) + "\n"
 
 
-def render_meta(entries, bounds):
+def render_meta(entries, bounds, source_label):
     lon_min, lon_max, lat_min, lat_max = bounds
     return (
         "# Generated by scripts/build_world_map.py -- do not edit by hand.\n"
         "#\n"
-        "# The bounding box of _includes/world-map.svg, in degrees. The travel\n"
-        "# page turns a lat/lon into a percentage offset with these, so they have\n"
-        "# to stay in step with the viewBox the SVG was written with.\n"
+        "# The bounding box of _includes/world-land.svg, in degrees. /travel/ and\n"
+        "# assets/js/travel.js both turn a lat/lon into a position with these, and\n"
+        "# clamp zooming out to them, so they have to stay in step with the\n"
+        "# geometry they were measured from.\n"
+        f"# Source: {source_label}\n"
         f"lon_min: {lon_min:.4f}\n"
         f"lon_max: {lon_max:.4f}\n"
         f"lat_min: {lat_min:.4f}\n"
         f"lat_max: {lat_max:.4f}\n"
         f"width: {lon_max - lon_min:.4f}\n"
         f"height: {lat_max - lat_min:.4f}\n"
-        f"countries: {len(entries)}\n"
+        f"count: {len(entries)}\n"
+        "\n"
+        "# Per-country bounding boxes: [west, south, east, north].\n"
+        "# /travel/ unions the ones it has visited to work out the default view,\n"
+        "# so framing on India shows all of India and not just the part with pins\n"
+        "# in it.\n"
+        "countries:\n"
+        + "".join(
+            f"  {e['id']}: [{e['bounds'][0]:.2f}, {e['bounds'][1]:.2f},"
+            f" {e['bounds'][2]:.2f}, {e['bounds'][3]:.2f}]\n"
+            for e in entries)
     )
 
 
@@ -231,23 +294,37 @@ def main(argv=None):
     ap = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
-    # The map renders about 700px wide, i.e. ~2px per degree of longitude, so
-    # 0.4 deg of simplification is under a pixel of error. Finer tolerances
-    # cost real bytes and are invisible.
-    ap.add_argument("--tolerance", type=float, default=0.4,
-                    help="Douglas-Peucker tolerance in degrees (default 0.4)")
+    # The page opens zoomed in on wherever the pins are -- currently about 39
+    # degrees of longitude across 690px, so ~18px per degree. At that scale 0.4
+    # deg of simplification is a visible 7px of error. 0.15 keeps very nearly
+    # everything the 1:110m source has (94 KB against 133 KB unsimplified); the
+    # remaining blockiness is the source resolution, not this.
+    ap.add_argument("--tolerance", type=float, default=0.15,
+                    help="Douglas-Peucker tolerance in degrees (default 0.15)")
     ap.add_argument("--min-area", type=float, default=0.02,
                     help="drop polygons smaller than this, in square degrees "
                          "(default 0.02, which keeps Mauritius and loses reefs)")
     ap.add_argument("--precision", type=int, default=2,
                     help="decimal places kept per coordinate (default 2, "
                          "about 1 km at the equator)")
+    ap.add_argument("--source", default=None, metavar="PATH",
+                    help="a Natural Earth admin-0 shapefile or zip to use "
+                         "instead of the copy bundled in geopandas. Use this "
+                         "with ne_110m_admin_0_countries_ind to get India's "
+                         "boundary rather than the de facto one -- see the "
+                         "module docstring")
     args = ap.parse_args(argv)
 
-    entries, bounds = build(args.tolerance, args.min_area, args.precision)
-    svg = render_svg(entries, bounds, args.precision)
+    source_label = (f"Natural Earth admin 0 countries from {os.path.basename(args.source)}"
+                    if args.source else
+                    "Natural Earth 1:110m admin 0 countries, de facto edition "
+                    "bundled with geopandas (public domain)")
+
+    entries, bounds = build(args.tolerance, args.min_area, args.precision,
+                            args.source)
+    svg = render_svg(entries, source_label)
     write_atomic(SVG_PATH, svg)
-    write_atomic(META_PATH, render_meta(entries, bounds))
+    write_atomic(META_PATH, render_meta(entries, bounds, source_label))
 
     print(f"{len(entries)} countries, {len(svg) / 1024:.0f} KB "
           f"-> {os.path.relpath(SVG_PATH, ROOT)}")

@@ -772,40 +772,93 @@
   // --- map ---------------------------------------------------------------
   // No padding here on purpose: a pin is positioned as a percentage of this
   // box, so anything between the border and the SVG shifts every pin.
+  //
+  // The aspect ratio is fixed rather than left to the SVG, because zooming
+  // rewrites the viewBox and `height: auto` would then resize the whole box on
+  // every wheel notch. 1.6 is what travel.html fits the default view to.
   .map-wrap {
     position: relative;
+    aspect-ratio: 1.6;
+    min-height: 200px;
+    overflow: hidden;
     border: 1px solid var(--border-light);
     background: var(--panel);
     margin: 0 0 1rem;
+
+    &.zoomable {
+      cursor: grab;
+      // Without this the browser claims the gesture and the map never sees
+      // the second pointer. It does mean a drag on the map does not scroll
+      // the page, which is why the box is capped well short of full height.
+      touch-action: none;
+
+      .map-tools { display: flex; }
+    }
+    &.is-panning { cursor: grabbing; }
+    &:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    // Leave room to scroll past it on a phone.
+    @include media-query(600px) { max-height: 62vh; }
   }
 
   .world {
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
   }
-  // The viewBox is in degrees, so stroke-width is too -- 0.15 deg lands at
-  // about a quarter of a pixel at the width this renders at.
+
+  // --- zoom controls ------------------------------------------------------
+  .map-tools {
+    display: none;   // switched on by .zoomable, i.e. only once JS is running
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    gap: 4px;
+
+    button {
+      font-family: var(--font-base);
+      font-size: .72rem;
+      line-height: 1;
+      min-width: 26px;
+      padding: .4rem .5rem;
+      background: var(--panel);
+      color: var(--text-light);
+      border: 1px solid var(--border-light);
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+
+      &:hover { color: var(--text); border-color: var(--border); }
+      &:active { background: var(--fill); }
+    }
+  }
+  // The viewBox is in degrees, so stroke-width is too -- and the view scales,
+  // so a fixed value would thicken as you zoom out and vanish as you zoom in.
+  // vector-effect pins it to screen pixels instead.
   .world .land path {
     fill: var(--fill);
     stroke: var(--panel);
-    stroke-width: .15;
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
   }
 
+  // Dark with a light halo, deliberately not the accent: a visited country is
+  // already filled accent, so an accent pin sitting on one disappears.
   .pin {
     position: absolute;
     width: 11px;
     height: 11px;
     margin: -5.5px 0 0 -5.5px;
     border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 0 2px var(--panel);
+    background: var(--text);
+    box-shadow: 0 0 0 2.5px var(--panel);
     text-decoration: none;
 
     &:hover,
     &:focus {
       z-index: 2;
-      box-shadow: 0 0 0 2px var(--panel), 0 0 0 4px var(--a50);
+      background: var(--accent);
+      box-shadow: 0 0 0 2.5px var(--panel), 0 0 0 5px var(--text);
     }
   }
 

@@ -7,13 +7,15 @@ comments: true
 ---
 
 {%- comment -%}
-  Places come from _data/travel.yml; the outlines from _includes/world-map.svg,
+  Places come from _data/travel.yml; the outlines from _includes/world-land.svg,
   which scripts/build_world_map.py generates from Natural Earth.
 
-  Both the country fills and the pin positions are resolved at build time --
-  the fills through the <style> block below, the pins through plain arithmetic
-  on the bounding box in _data/world_map.yml. Nothing here needs JavaScript,
-  which matters because this page is mostly one big image.
+  Country fills are resolved at build time by the style block below, and the
+  default view is worked out here rather than in JavaScript so that the first
+  paint is already the right one -- assets/js/travel.js reads this viewBox back
+  as its "home" view instead of recomputing the fit, which keeps the fitting
+  logic in one place. Without JavaScript you get a correct, static, pre-framed
+  map; the zooming is the enhancement on top.
 {%- endcomment -%}
 
 {%- assign places = site.data.travel | sort: 'when' | reverse -%}
@@ -21,6 +23,68 @@ comments: true
 {%- assign visited = site.data.travel | map: 'continent' | compact | uniq -%}
 {%- assign wm = site.data.world_map -%}
 {%- assign all_continents = 'Asia,Europe,Africa,North America,South America,Oceania,Antarctica' | split: ',' -%}
+
+{%- comment -%}
+  The default view.
+
+  Fitted to the pins unioned with the full extent of every country visited --
+  the countries matter because framing on the pins alone crops the country they
+  sit in. The southernmost Indian pin is Bengaluru, so a pin-only fit cut off
+  everything below it, Kanyakumari and all. Country extents come from
+  _data/world_map.yml, which the generator writes alongside the outlines.
+
+  That box is then padded, floored at 16 degrees of latitude so two pins in one
+  city do not zoom to street level, and widened to the 1.6 aspect ratio the
+  stylesheet gives the map box. Today it lands on the subcontinent. Add a pin
+  in Europe and it opens out on its own, which is why it is fitted rather than
+  hardcoded to India.
+{%- endcomment -%}
+{%- assign map_aspect = 1.6 -%}
+{%- assign lons = site.data.travel | map: 'lon' | compact | sort -%}
+{%- assign lats = site.data.travel | map: 'lat' | compact | sort -%}
+
+{%- if lons.size > 0 -%}
+  {%- assign lon_lo = lons | first -%}
+  {%- assign lon_hi = lons | last -%}
+  {%- assign lat_lo = lats | first -%}
+  {%- assign lat_hi = lats | last -%}
+
+  {%- for iso in isos -%}
+    {%- assign bounds = wm.countries[iso] -%}
+    {%- if bounds -%}
+      {%- if bounds[0] < lon_lo -%}{%- assign lon_lo = bounds[0] -%}{%- endif -%}
+      {%- if bounds[1] < lat_lo -%}{%- assign lat_lo = bounds[1] -%}{%- endif -%}
+      {%- if bounds[2] > lon_hi -%}{%- assign lon_hi = bounds[2] -%}{%- endif -%}
+      {%- if bounds[3] > lat_hi -%}{%- assign lat_hi = bounds[3] -%}{%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- assign lat_span = lat_hi | minus: lat_lo | times: 1.12 -%}
+  {%- if lat_span < 16 -%}{%- assign lat_span = 16 -%}{%- endif -%}
+  {%- assign lon_span = lon_hi | minus: lon_lo | times: 1.12 -%}
+  {%- assign lon_needed = lat_span | times: map_aspect -%}
+  {%- if lon_span < lon_needed -%}{%- assign lon_span = lon_needed -%}{%- endif -%}
+  {%- if lon_span > wm.width -%}{%- assign lon_span = wm.width -%}{%- endif -%}
+  {%- assign lat_span = lon_span | divided_by: map_aspect -%}
+
+  {%- assign half_lon = lon_span | divided_by: 2.0 -%}
+  {%- assign half_lat = lat_span | divided_by: 2.0 -%}
+  {%- assign centre_lon = lon_lo | plus: lon_hi | divided_by: 2.0 -%}
+  {%- assign centre_lat = lat_lo | plus: lat_hi | divided_by: 2.0 -%}
+
+  {%- assign vb_x = centre_lon | minus: half_lon -%}
+  {%- assign vb_y = 0.0 | minus: centre_lat | minus: half_lat -%}
+
+  {%- comment -%} Keep it inside the world; the script re-clamps on every move. {%- endcomment -%}
+  {%- assign x_limit = wm.lon_max | minus: lon_span -%}
+  {%- if vb_x > x_limit -%}{%- assign vb_x = x_limit -%}{%- endif -%}
+  {%- if vb_x < wm.lon_min -%}{%- assign vb_x = wm.lon_min -%}{%- endif -%}
+{%- else -%}
+  {%- assign lon_span = wm.width -%}
+  {%- assign lat_span = wm.height -%}
+  {%- assign vb_x = wm.lon_min -%}
+  {%- assign vb_y = 0.0 | minus: wm.lat_max -%}
+{%- endif -%}
 
 {%- if isos.size > 0 -%}
 <style>
@@ -55,21 +119,40 @@ comments: true
     </div>
   </div>
 
-  <div class="map-wrap">
-    {% include world-map.svg %}
+  <div class="map-wrap" id="map-wrap"
+       data-lon-min="{{ wm.lon_min }}" data-lon-max="{{ wm.lon_max }}"
+       data-lat-min="{{ wm.lat_min }}" data-lat-max="{{ wm.lat_max }}">
+
+    <svg class="world" id="world" xmlns="http://www.w3.org/2000/svg"
+         viewBox="{{ vb_x | round: 4 }} {{ vb_y | round: 4 }} {{ lon_span | round: 4 }} {{ lat_span | round: 4 }}"
+         preserveAspectRatio="xMidYMid meet" role="img"
+         aria-label="Map with visited countries filled and a pin on each place listed below">
+      {% include world-land.svg %}
+    </svg>
+
     {%- for p in places -%}
       {%- comment -%}
         Plate carree, so a pin is a straight linear map from degrees onto the
-        box. The numbers come from the same run that wrote the SVG.
+        view. The lat/lon ride along as data attributes because the zoom script
+        has to redo this every time the view moves.
       {%- endcomment -%}
-      {%- assign px = p.lon | minus: wm.lon_min | times: 100.0 | divided_by: wm.width -%}
-      {%- assign py = wm.lat_max | minus: p.lat | times: 100.0 | divided_by: wm.height -%}
+      {%- assign px = p.lon | minus: vb_x | times: 100.0 | divided_by: lon_span -%}
+      {%- assign py = 0.0 | minus: p.lat | minus: vb_y | times: 100.0 | divided_by: lat_span -%}
       <a class="pin" href="#place-{{ forloop.index }}"
-         style="left: {{ px }}%; top: {{ py }}%"
+         data-lon="{{ p.lon }}" data-lat="{{ p.lat }}"
+         style="left: {{ px | round: 3 }}%; top: {{ py | round: 3 }}%"
          title="{{ p.place }}, {{ p.country }}">
         <span class="sr">{{ p.place }}, {{ p.country }}</span>
       </a>
     {%- endfor -%}
+
+    {%- comment -%} Inert until travel.js switches them on. {%- endcomment -%}
+    <div class="map-tools">
+      <button type="button" data-zoom="in" title="Zoom in" aria-label="Zoom in">+</button>
+      <button type="button" data-zoom="out" title="Zoom out" aria-label="Zoom out">&minus;</button>
+      <button type="button" data-view="home" title="Back to the default view">Reset</button>
+      <button type="button" data-view="world" title="Zoom out to the whole world">World</button>
+    </div>
   </div>
 
   <div class="conts">
@@ -81,9 +164,9 @@ comments: true
   </div>
 
   <p class="map-note">
-    Natural Earth outlines, plate carr&eacute;e projection. Antarctica is off the
-    bottom of the map but still counts as a continent, which feels like cheating
-    in its favour.
+    Scroll to zoom, drag to pan, or use the buttons. Natural Earth outlines,
+    plate carr&eacute;e projection. Antarctica is off the bottom of the map but
+    still counts as a continent, which feels like cheating in its favour.
   </p>
 
   <h2 class="sect">The list</h2>
@@ -121,10 +204,12 @@ comments: true
 
   <p class="foot-note">
     Adding a place is one entry in <code>_data/travel.yml</code> &mdash; name,
-    country, ISO code, lat/lon &mdash; and the map, the counts and the continent
-    quest all move on their own.
+    country, ISO code, lat/lon &mdash; and the map, the counts, the default
+    zoom and the continent quest all move on their own.
   </p>
 
 </div>
+
+<script src="{{ '/assets/js/travel.js' | relative_url }}" defer></script>
 
 {% include comments.html %}
