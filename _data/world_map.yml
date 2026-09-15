@@ -4,7 +4,7 @@
 # assets/js/travel.js both turn a lat/lon into a position with these, and
 # clamp zooming out to them, so they have to stay in step with the
 # geometry they were measured from.
-# Source: Natural Earth 1:110m admin 0 countries, de facto edition bundled with geopandas (public domain)
+# Source: Natural Earth 1:110m admin 0 countries bundled with geopandas (public domain), Jammu and Kashmir reassigned to India's claimed boundary
 lon_min: -180.0000
 lon_max: 180.0000
 lat_min: -55.6118
@@ -90,7 +90,7 @@ countries:
   HTI: [-74.46, 18.03, -71.70, 19.92]
   HUN: [16.20, 45.76, 22.71, 48.62]
   IDN: [95.29, -10.26, 141.03, 5.48]
-  IND: [68.18, 7.97, 97.40, 35.49]
+  IND: [68.18, 7.97, 97.40, 37.13]
   IRL: [-9.98, 51.67, -6.03, 55.13]
   IRN: [44.11, 25.08, 63.32, 39.71]
   IRQ: [38.79, 29.10, 48.57, 37.39]
@@ -138,7 +138,7 @@ countries:
   NPL: [80.09, 26.40, 88.12, 30.42]
   NZL: [166.51, -46.64, 178.52, -34.45]
   OMN: [52.00, 16.65, 59.81, 26.40]
-  PAK: [60.87, 23.69, 77.84, 37.13]
+  PAK: [60.87, 23.69, 76.02, 37.13]
   PAN: [-82.97, 7.22, -77.24, 9.61]
   PER: [-81.41, -18.35, -68.67, -0.06]
   PHL: [117.17, 5.58, 126.54, 18.51]

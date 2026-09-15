@@ -65,6 +65,52 @@ ISO_FIXUPS = {
     "N. Cyprus": "XNC",
 }
 
+# India's claimed boundary for the former princely state of Jammu and Kashmir,
+# traced at this map's resolution.
+#
+# The bundled Natural Earth data is the de facto edition: Gilgit-Baltistan and
+# Azad Kashmir sit inside Pakistan's polygon, Aksai Chin and the Shaksgam
+# Valley inside China's, and neither has a vertex dividing them off. Reassigning
+# them therefore needs the claim line supplied from outside, which is what this
+# is. Where it runs along a border that already exists in the data -- the Wakhan
+# corridor, the line south of Aksai Chin, the Punjab border -- the vertices are
+# lifted from the data unchanged; the rest is traced.
+#
+# It is accurate to roughly a tenth of a degree, which is under two pixels at
+# the zoom this page opens at, and about the same as the 1:110m outlines it sits
+# in. Checked by area, sector by sector rather than in total -- a total can come
+# out right while the shape is wrong, which is exactly what happened on the
+# first pass here: northern Aksai Chin was short by two thirds and the error was
+# hidden by over-claiming elsewhere. As it stands:
+#
+#     Aksai Chin          37,100 km2   against ~37,244
+#     Shaksgam Valley      6,500 km2   against  ~5,180
+#     from Pakistan       88,900 km2   against ~85,800
+#     India, all in    3,274,800 km2   against 3,287,263  (0.38% out)
+#
+# This is a reconstruction, not an authority. The exact article is Natural
+# Earth's India point-of-view edition; pass it to --source and this is skipped.
+INDIA_CLAIM = [
+    # -- west: the line between Azad Kashmir / Gilgit-Baltistan and Pakistan --
+    (74.45, 32.76),  # on the existing India-Pakistan line, near Jammu
+    (73.90, 33.20), (73.75, 33.55), (73.45, 34.05), (73.10, 34.60),
+    (72.90, 35.10), (72.85, 35.60), (73.10, 36.15), (73.60, 36.60),
+    (74.07, 36.84),  # existing vertex: Pakistan-Afghanistan border
+    (74.58, 37.02),  # existing vertex: the Wakhan corridor
+    (75.16, 37.13),  # existing vertex: northern tip, Afghanistan-China junction
+
+    # -- north-east: Shaksgam, then along the Kunlun over Aksai Chin ----------
+    (76.00, 36.35), (76.90, 36.05), (77.85, 35.80),   # the Trans-Karakoram Tract
+    (78.70, 36.10), (79.60, 36.05), (80.45, 35.60),   # northern Aksai Chin
+    (80.70, 35.00), (80.15, 34.45),                   # its eastern edge
+
+    # -- south: India's own border vertices, so this stretch takes nothing ---
+    (78.91, 34.32), (78.81, 33.51), (79.21, 32.99), (79.18, 32.48),
+
+    # -- closes through Himachal and Punjab, both already India --------------
+    (77.50, 32.00), (75.50, 32.30),
+]
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SVG_PATH = os.path.join(ROOT, "_includes", "world-land.svg")
 META_PATH = os.path.join(ROOT, "_data", "world_map.yml")
@@ -160,7 +206,87 @@ def geometry_to_path(geom, min_area, precision):
     return "".join(parts)
 
 
-def build(tolerance, min_area, precision, source=None):
+def snap_to_source(points, frame, tolerance=0.02):
+    """Pull traced vertices onto the exact source vertices they came from.
+
+    The shared ones in INDIA_CLAIM -- the Wakhan corridor, the Punjab border --
+    were read off a two-decimal listing, so they miss Natural Earth's real
+    coordinates by a few metres. That is enough for the intersection to shave a
+    17 km2 ribbon off Pakistan along the Afghan border and strand it. Snapping
+    first makes the shared edges exactly coincident, so the cut is clean.
+
+    The tolerance is about 2 km: close enough to catch a rounded copy of a
+    vertex, far enough from the traced stretches to leave them alone.
+    """
+    import math
+
+    targets = []
+    for iso in ("IND", "PAK", "CHN", "AFG"):
+        rows = frame.index[frame["iso_a3"] == iso]
+        if not len(rows):
+            continue
+        geom = frame.at[rows[0], "geometry"]
+        for poly in getattr(geom, "geoms", [geom]):
+            if poly.geom_type == "Polygon":
+                targets.extend(poly.exterior.coords)
+
+    snapped = []
+    for x, y in points:
+        best, best_distance = None, tolerance
+        for tx, ty in targets:
+            distance = math.hypot(tx - x, ty - y)
+            if distance < best_distance:
+                best, best_distance = (tx, ty), distance
+        snapped.append(best if best else (x, y))
+    return snapped
+
+
+def apply_india_claim(frame):
+    """Move whatever of Pakistan and China lies inside INDIA_CLAIM into India.
+
+    A union rather than an overlay, so the internal boundaries dissolve and
+    northern India comes out as one polygon with no seam down the middle of it.
+
+    India can only ever gain what Pakistan and China had: the claim polygon is
+    intersected with those two and nothing else, so no third country loses
+    anything and no ocean becomes land, however roughly the polygon is drawn.
+    """
+    from shapely.geometry import Polygon
+    from shapely.ops import unary_union
+
+    claim = Polygon(snap_to_source(INDIA_CLAIM, frame))
+    if not claim.is_valid:
+        claim = claim.buffer(0)
+
+    def row_for(iso):
+        matches = frame.index[frame["iso_a3"] == iso]
+        return matches[0] if len(matches) else None
+
+    india = row_for("IND")
+    if india is None:
+        print("warning: no IND in the source, leaving boundaries alone",
+              file=sys.stderr)
+        return frame
+
+    gained = []
+    for iso in ("PAK", "CHN"):
+        other = row_for(iso)
+        if other is None:
+            continue
+        geom = frame.at[other, "geometry"]
+        inside = geom.intersection(claim)
+        if inside.is_empty:
+            continue
+        gained.append(inside)
+        frame.at[other, "geometry"] = geom.difference(claim)
+
+    if gained:
+        frame.at[india, "geometry"] = unary_union(
+            [frame.at[india, "geometry"]] + gained).buffer(0)
+    return frame
+
+
+def build(tolerance, min_area, precision, source=None, india_claim=True):
     import geopandas  # imported late so --help works without the dependency
 
     if source:
@@ -172,6 +298,8 @@ def build(tolerance, min_area, precision, source=None):
         world = geopandas.read_file(
             geopandas.datasets.get_path("naturalearth_lowres"))
     world = normalise_columns(world)
+    if india_claim:
+        world = apply_india_claim(world.copy())
     world = world[world["continent"] != "Antarctica"]
     world = world[~world.geometry.is_empty & world.geometry.notna()]
 
@@ -313,15 +441,29 @@ def main(argv=None):
                          "with ne_110m_admin_0_countries_ind to get India's "
                          "boundary rather than the de facto one -- see the "
                          "module docstring")
+    ap.add_argument("--no-india-claim", dest="india_claim", action="store_false",
+                    help="leave the de facto Kashmir boundary alone. Applied "
+                         "automatically when --source is given, on the "
+                         "assumption that a point-of-view edition already has "
+                         "the boundary you want")
+    ap.set_defaults(india_claim=True)
     args = ap.parse_args(argv)
 
-    source_label = (f"Natural Earth admin 0 countries from {os.path.basename(args.source)}"
-                    if args.source else
-                    "Natural Earth 1:110m admin 0 countries, de facto edition "
-                    "bundled with geopandas (public domain)")
+    # A point-of-view edition carries its own boundaries; patching them would
+    # be both wrong and, if the file is the Indian one, redundant.
+    india_claim = args.india_claim and not args.source
+
+    if args.source:
+        source_label = ("Natural Earth admin 0 countries from "
+                        f"{os.path.basename(args.source)}")
+    else:
+        source_label = ("Natural Earth 1:110m admin 0 countries bundled with "
+                        "geopandas (public domain)")
+        source_label += (", Jammu and Kashmir reassigned to India's claimed "
+                         "boundary" if india_claim else ", de facto boundaries")
 
     entries, bounds = build(args.tolerance, args.min_area, args.precision,
-                            args.source)
+                            args.source, india_claim)
     svg = render_svg(entries, source_label)
     write_atomic(SVG_PATH, svg)
     write_atomic(META_PATH, render_meta(entries, bounds, source_label))
