@@ -21,4 +21,5 @@ I came up with a framework to fix this, and I call it To Do Driven Life. There a
 This habit has changed my life for the better. Try this once, and thank me later. I recommend the To Do app by Microsoft.
 
 Some tasks that I completed recently:
+
 <img src="/assets/images/To-Do-List.jpg" alt="To Do List" style="width: 50%; height: auto;">
