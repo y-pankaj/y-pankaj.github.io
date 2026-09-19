@@ -1,14 +1,35 @@
-// Styles for the data pages: /fitness/, /side-quests/ and /travel/.
+// Styles for the data pages -- /fitness/, /side-quests/, /travel/ -- and the
+// blog index's title strip.
 //
 // Everything is scoped under a page class so these fairly generic names --
 // `.grid`, `.panel`, `.rank`, `.chip`, `.shot`, `table.native` -- cannot reach
-// a post.
+// a post. Custom properties are the exception: they style nothing on their
+// own, so the accent sits at :root where the site nav can also read it.
 //
 // Colours come from `custom-skin.scss`, which republishes the active skin's
 // Sass palette as CSS custom properties. The one colour that is not the
 // theme's is the accent, which every chart, bar and pin uses.
 //
-// The file goes: shared tokens and chrome, then one block per page.
+// The file goes: the accent, site chrome, shared tokens, then one block
+// per page.
+
+// =========================================================================
+// Site chrome
+// =========================================================================
+:root { --accent: #fc4c02; }
+
+// Hamilton strikes through the nav entry for the page you are on, which reads
+// as "this link is dead" rather than "you are here". An accent rule under it
+// says the same thing without the word looking cancelled.
+//
+// Scoped to .site-nav to match the rule it overrides, which layout.scss nests
+// there for a reason: the paginator reuses `.current-page` for the page
+// number, and that one wants neither treatment.
+.site-nav .current-page {
+  text-decoration: none;
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 1px;
+}
 
 // =========================================================================
 // Shared
@@ -18,7 +39,6 @@
 .travel {
   --font-base: #{$base-font-family}, -apple-system, Helvetica, Arial, sans-serif;
   --font-headline: #{$headline-font-family}, Helvetica, Arial, sans-serif;
-  --accent: #fc4c02;
   --a28: rgba(252, 76, 2, .28);
   --a50: rgba(252, 76, 2, .50);
   --a74: rgba(252, 76, 2, .74);
