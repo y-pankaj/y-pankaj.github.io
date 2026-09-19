@@ -276,11 +276,64 @@
   }
 
   // --- contribution calendar ---------------------------------------------
+  // The tooltip is a sibling of the scrolling wrapper, not a child: inside it,
+  // `overflow-x: auto` would clip the panel the moment it reached an edge.
+  .hm-host { position: relative; }
+
   .hm-wrap {
     overflow-x: auto;
     padding-bottom: .2rem;
 
     svg { display: block; }
+  }
+  rect.hm { cursor: pointer; }
+
+  .hm-tip {
+    position: absolute;
+    z-index: 5;
+    pointer-events: none;          // never sits between the cursor and a square
+    // Not `min(22rem, 90%)`: Ruby Sass, which is what GitHub Pages builds
+    // with, evaluates min() itself and errors on mixed units. The JS clamps
+    // the panel inside the host anyway.
+    max-width: 22rem;
+    padding: .5rem .6rem;
+    border: 1px solid var(--border-light);
+    border-radius: .4em;
+    background: var(--panel);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .18);
+    font-size: .72em;
+    line-height: 1.45;
+    color: var(--text);
+
+    &[hidden] { display: none; }
+
+    b {
+      display: block;
+      margin-bottom: .25rem;
+      color: var(--text-light);
+      font-weight: 600;
+    }
+    // The numbers line up on the right and stay whole; a long exercise name
+    // is the thing that gives way.
+    .row {
+      display: flex;
+      justify-content: space-between;
+      gap: .8rem;
+
+      i {
+        font-style: normal;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      em {
+        flex: none;
+        font-style: normal;
+        white-space: nowrap;
+        color: var(--text-light);
+      }
+    }
+    .rest { color: var(--text-light); }
   }
   rect.hm { fill: var(--hm0); }
   rect.hm.l1 { fill: var(--a28); }

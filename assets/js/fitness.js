@@ -44,6 +44,12 @@
   /** "2026-09-12" -> Date at local midnight (no timezone drift). */
   const d8 = (iso) => new Date(iso + 'T00:00:00');
 
+  /** Date -> "2026-09-12", local, matching the keys the build script writes. */
+  function iso8(d) {
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') +
+           '-' + String(d.getDate()).padStart(2, '0');
+  }
+
   /** "2026-09-12" -> "12 Sep". */
   function dShort(iso) {
     const d = d8(iso);
@@ -127,12 +133,15 @@
       const bits = [];
       if (kg) bits.push(nf(kg) + ' kg lifted');
       if (km) bits.push(km.toFixed(1) + ' km run' + (cal.run_sec[i] ? ' in ' + hms(cal.run_sec[i]) : ''));
-      const tip = day.getDate() + ' ' + MONTHS[day.getMonth()] + ' ' + day.getFullYear() +
-                  ' — ' + (bits.length ? bits.join(' · ') : 'rest');
+      // The label is the day's totals; the hover panel below expands it into
+      // the actual exercises. Screen readers get this, which is why it stays
+      // even though nothing draws it.
+      const label = day.getDate() + ' ' + MONTHS[day.getMonth()] + ' ' + day.getFullYear() +
+                    ': ' + (bits.length ? bits.join(', ') : 'rest');
 
       cells += '<rect class="hm l' + lvl(load[i]) +
                '" x="' + x + '" y="' + y + '" width="' + CELL + '" height="' + CELL +
-               '" rx="2"><title>' + esc(tip) + '</title></rect>';
+               '" rx="2" data-d="' + iso8(day) + '" aria-label="' + esc(label) + '"/>';
 
       // Month label over the column that contains the 1st.
       if (day.getDate() === 1 && day.getMonth() !== lastMonth) {
@@ -148,10 +157,87 @@
                 name + '</text>';
     });
 
-    host.innerHTML = '<div class="hm-wrap">' +
+    host.innerHTML = '<div class="hm-host">' +
+      '<div class="hm-wrap">' +
       '<svg width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H +
       '" role="img" aria-label="Training contribution calendar">' +
-      labels + cells + '</svg></div>';
+      labels + cells + '</svg></div>' +
+      '<div class="hm-tip" role="tooltip" hidden></div></div>';
+
+    wireHeatTip(host.firstChild);
+  }
+
+  /** The day's exercises, as the hover panel shows them. */
+  function dayCard(isoDate) {
+    const det = (DATA.calendar.days || {})[isoDate] || {};
+    const runs = det.run || [];
+    const lifts = det.lift || [];
+    const d = d8(isoDate);
+
+    let out = '<b>' + d.getDate() + ' ' + MONTHS[d.getMonth()] + ' ' +
+              d.getFullYear() + '</b>';
+    if (!runs.length && !lifts.length) {
+      return out + '<span class="rest">Rest day</span>';
+    }
+
+    const row = (name, bits) =>
+      '<span class="row"><i>' + esc(name) + '</i>' +
+      '<em>' + esc(bits.join(' · ')) + '</em></span>';
+
+    runs.forEach((r) => {
+      const bits = [r.km.toFixed(2) + ' km'];
+      if (r.sec) {
+        bits.push(hms(r.sec));
+        if (r.km > 0) bits.push(paceStr(r.sec / r.km) + ' /km');
+      }
+      out += row(r.name, bits);
+    });
+    lifts.forEach((g) => {
+      // kg and reps are the day's best set, not a total. Bodyweight work
+      // logs at 0 kg, where "0 kg x 12 reps" would be daft.
+      const best = g.kg ? nf(g.kg) + ' kg × ' + g.reps + ' reps'
+                        : g.reps + ' reps';
+      out += row(g.name, [g.sets + (g.sets === 1 ? ' set' : ' sets'), best]);
+    });
+    return out;
+  }
+
+  /* Hover panel over the calendar. Delegated from the scroll wrapper, so it
+     survives the squares being redrawn on every mode switch, and measured off
+     getBoundingClientRect so a horizontally scrolled calendar still lines up.
+
+     There is no <title> on the squares any more: it would open the browser's
+     own tooltip on top of this one. The aria-label carries the same summary
+     for screen readers. */
+  function wireHeatTip(hostEl) {
+    const wrap = hostEl.querySelector('.hm-wrap');
+    const tip = hostEl.querySelector('.hm-tip');
+    if (!wrap || !tip) { return; }
+
+    function show(cell) {
+      tip.innerHTML = dayCard(cell.getAttribute('data-d'));
+      tip.hidden = false;
+
+      const c = cell.getBoundingClientRect();
+      const h = hostEl.getBoundingClientRect();
+      const x = c.left - h.left + c.width / 2 - tip.offsetWidth / 2;
+      tip.style.left = Math.max(0, Math.min(x, h.width - tip.offsetWidth)) + 'px';
+
+      // Above the square, unless that would clip off the top of the panel.
+      const above = c.top - h.top - tip.offsetHeight - 8;
+      tip.style.top = (above < 0 ? c.bottom - h.top + 8 : above) + 'px';
+    }
+
+    const hide = () => { tip.hidden = true; };
+    const onCell = (e) => {
+      const cell = e.target;
+      if (cell && cell.classList && cell.classList.contains('hm')) { show(cell); }
+    };
+
+    wrap.addEventListener('mouseover', onCell);
+    wrap.addEventListener('click', onCell);   // so a tap works too
+    wrap.addEventListener('mouseleave', hide);
+    wrap.addEventListener('scroll', hide);    // the anchor moves out from under it
   }
 
   function heatLegend(extra) {
@@ -218,7 +304,7 @@
       const h = Math.max(1, Math.round((w[key] / max) * PH));
       bars += '<rect class="bar" x="' + x + '" y="' + (BASE - h) + '" width="' + BW +
               '" height="' + h + '" rx="1"><title>' + esc('Week of ' + dLong(w.w) +
-              ' — ' + nf(w[key]) + ' ' + unit) + '</title></rect>';
+              ': ' + nf(w[key]) + ' ' + unit) + '</title></rect>';
       const win = weeks.slice(Math.max(0, i - 3), i + 1);
       const avg = win.reduce((a, b) => a + b[key], 0) / win.length;
       pts.push((x + BW / 2) + ',' + (BASE - (avg / max) * PH));
@@ -304,7 +390,7 @@
       const day = new Date(start.getTime() + p[2] * 86400000);
       return '<circle cx="' + X(p[0]).toFixed(1) + '" cy="' + Y(p[1]).toFixed(1) +
         '" r="3.4" fill="var(--accent)" opacity="0.5"><title>' +
-        esc(day.getDate() + ' ' + MONTHS[day.getMonth()] + ' — ' + p[0].toFixed(1) +
+        esc(day.getDate() + ' ' + MONTHS[day.getMonth()] + ': ' + p[0].toFixed(1) +
             ' km at ' + paceStr(p[1]) + ' /km') + '</title></circle>';
     }).join('');
 
@@ -347,7 +433,7 @@
       out += '<circle cx="' + x.toFixed(1) + '" cy="' + cy + '" r="7" ' +
              'fill="var(--panel)" stroke="' + (m.done ? 'var(--accent)' : 'var(--border)') +
              '" stroke-width="' + (m.done ? 2.5 : 1.5) + '"><title>' +
-             esc(m.label + ' — ' + m.km + ' km' + (m.done ? ' — done' : ' — not yet')) +
+             esc(m.label + ': ' + m.km + ' km' + (m.done ? ', done' : ', not yet')) +
              '</title></circle>';
       if (m.done) {
         out += '<circle cx="' + x.toFixed(1) + '" cy="' + cy +
@@ -456,7 +542,7 @@
 
     if (lad.next) {
       out += 'Next is <b>' + lad.next.label + '</b> at ' + lad.next.km +
-        ' km &mdash; <b>' + lad.next.gap_km + ' km</b> further than anything run yet. ';
+        ' km, <b>' + lad.next.gap_km + ' km</b> further than anything run yet. ';
     }
 
     const quest = lad.milestones.find((m) => m.quest && !m.done);

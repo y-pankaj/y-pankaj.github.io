@@ -160,6 +160,46 @@ def epley(weight, reps):
 # Aggregation
 # --------------------------------------------------------------------------
 
+def per_day_detail(lifts, runs):
+    """What was actually done each day, keyed by ISO date.
+
+    The calendar squares are drawn from day totals, which is enough to shade
+    them but not enough to say what the day was. This is the rest: the
+    exercises by name, and the runs by title, for the hover panel.
+
+    Only days with something logged appear. Rest days are the majority and
+    would double the size of this for nothing; the page treats a missing key
+    as a rest day.
+
+    Sets of one exercise collapse into a single line: how many sets, and the
+    best single set of them, as ``kg`` and ``reps``. Best means the heaviest
+    weight, and the most reps at that weight -- not the biggest volume and not
+    an estimated 1RM, both of which can crown a set that is not the one you
+    would name if asked what your best was. The totals the page needs are
+    already in ``calendar.lift``, so nothing is lost by not summing here.
+
+    Exercises stay in the order ``sort_key`` put them, which is alphabetical
+    within a day, so re-running this produces the same bytes.
+    """
+    groups = collections.OrderedDict()
+    for x in lifts:
+        key = (x["date"], x["name"])
+        g = groups.get(key)
+        if g is None:
+            g = groups[key] = {"name": x["name"], "sets": 0, "kg": 0.0, "reps": 0}
+        g["sets"] += 1
+        if (x["kg"], x["reps"]) > (g["kg"], g["reps"]):
+            g["kg"], g["reps"] = x["kg"], x["reps"]
+
+    detail = {}
+    for (date, _), g in groups.items():
+        detail.setdefault(date.isoformat(), {}).setdefault("lift", []).append(g)
+    for x in runs:
+        detail.setdefault(x["date"].isoformat(), {}).setdefault("run", []).append(
+            {"name": x["name"], "km": round(x["km"], 2), "sec": x["sec"]})
+    return detail
+
+
 def summarise(rows, today, top_n):
     lifts, runs = [], []
     for r in rows:
@@ -197,6 +237,8 @@ def summarise(rows, today, top_n):
         series_lift.append(round(lift_by_day.get(d, 0.0)))
         series_km.append(round(run_km_by_day.get(d, 0.0), 2))
         series_sec.append(run_sec_by_day.get(d, 0))
+
+    day_detail = per_day_detail(lifts, runs)
 
     # --- streaks over any training ----------------------------------------
     active = [1 if (series_lift[i] or series_km[i]) else 0 for i in range(days)]
@@ -365,7 +407,8 @@ def summarise(rows, today, top_n):
         "running": running,
         "lifting": lifting,
         "calendar": {"start": start.isoformat(), "lift": series_lift,
-                     "run": series_km, "run_sec": series_sec},
+                     "run": series_km, "run_sec": series_sec,
+                     "days": day_detail},
         "streaks": {"current": current, "longest": longest,
                     "active_days": sum(active), "this_week": sum(active[-7:])},
         "ladder": ladder,
