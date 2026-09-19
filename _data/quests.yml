@@ -103,6 +103,7 @@
 - id: 13
   text: Learn to surf
   theme: body
+  done: true
 
 - id: 14
   text: Get featured in a news article
@@ -167,7 +168,7 @@
     target_label: "1,000"
     # Bump this by hand for now. Swapping it for a Goodreads feed later means
     # changing the `books` branch in _includes/quest-value.html and nothing else.
-    current: 7
+    current: 22
 
 - id: 24
   text: Learn a musical instrument decently well
