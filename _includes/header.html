@@ -44,7 +44,17 @@
                 </div>
               </li>
             {% else %}
-              <li><a class="{% if page.url == nav.url %}current-page{% endif %}" href="{{ nav.url | relative_url }}">{{ nav.title | escape }}</a></li>
+              {%- comment -%}
+                A post belongs to the blog, so the entry pointing at `/` stays
+                lit while one is open. Without it the highlight vanishes the
+                moment you click a title, which reads as having left the
+                section. Kept as separate single-line ifs: Ruby Liquid, which
+                is what GitHub Pages runs, is fussier about multi-line tags.
+              {%- endcomment -%}
+              {%- assign nav_on = false -%}
+              {%- if page.url == nav.url %}{% assign nav_on = true %}{% endif -%}
+              {%- if nav.url == '/' and page.layout == 'post' %}{% assign nav_on = true %}{% endif -%}
+              <li><a class="{% if nav_on %}current-page{% endif %}" href="{{ nav.url | relative_url }}">{{ nav.title | escape }}</a></li>
             {% endif %}
           {%- endif -%}
         {%- endfor -%}

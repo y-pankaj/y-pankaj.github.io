@@ -1,3 +1,26 @@
 ---
 layout: home
 ---
+
+{%- comment -%}
+  The title strip the other pages have. It lives here rather than in the home
+  layout so the layout stays generic, and `home.html` renders `content` above
+  the post list, which is exactly where this wants to be.
+
+  `.blog` is only on the header, not the list, so the shared block it opts into
+  in custom-styles.scss cannot reach the posts below.
+
+  site.posts is newest first, so `last` is the oldest one.
+{%- endcomment -%}
+{%- assign post_n = site.posts | size -%}
+{%- assign first_post = site.posts | last -%}
+
+<div class="blog">
+  <div class="dash-head">
+    <h1 class="post-title">Blogs</h1>
+    <div class="post-meta">
+      {{ post_n }} post{% if post_n != 1 %}s{% endif %}
+      {%- if first_post %} &middot; since {{ first_post.date | date: "%b %Y" }}{% endif -%}
+    </div>
+  </div>
+</div>
