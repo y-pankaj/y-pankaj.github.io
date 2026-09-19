@@ -13,7 +13,9 @@ Recently, I was feeling overwhelmed with the number of mundane errands on my pla
 I came up with a framework to fix this, and I call it To Do Driven Life. There are three rules to this framework.
 
 **Write it down**:  Note down anything and everything in a to-do app when it crosses your mind. You don’t have to act on it now.
+
 **Revisit the list often**: The most important and difficult step. Anytime you pick up your phone to doomscroll, just have a look at the to-do list. More often than not, you will find a task that you can knock off the list.
+
 **Cross it off**: Get done with the item. Give yourself a pat on the back, while you are at it.
 
 This habit has changed my life for the better. Try this once, and thank me later. I recommend the To Do app by Microsoft.
