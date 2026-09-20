@@ -162,8 +162,6 @@
 {"Category": "Shoulders", "Comment": null, "Date": "2026-06-14", "Distance": null, "Distance Unit": null, "Exercise": "Lateral Dumbbell Raise", "Reps": "10", "Time": null, "Weight": "10.0", "Weight Unit": "kgs"}
 {"Category": "Shoulders", "Comment": null, "Date": "2026-06-14", "Distance": null, "Distance Unit": null, "Exercise": "Lateral Dumbbell Raise", "Reps": "13", "Time": null, "Weight": "10.0", "Weight Unit": "kgs"}
 {"Category": "Cardio", "Comment": "Evening run", "Date": "2026-06-15", "Distance": "2.23", "Distance Unit": "km", "Exercise": "Running (Outdoor)", "Reps": null, "Time": "0:13:16", "Weight": null, "Weight Unit": null}
-{"Category": "Legs", "Comment": null, "Date": "2026-06-17", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "10", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-06-17", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "11", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
 {"Category": "Abs", "Comment": null, "Date": "2026-06-17", "Distance": null, "Distance Unit": null, "Exercise": "Cable Crunch", "Reps": "12", "Time": null, "Weight": "75.0", "Weight Unit": "kgs"}
 {"Category": "Abs", "Comment": null, "Date": "2026-06-17", "Distance": null, "Distance Unit": null, "Exercise": "Cable Crunch", "Reps": "14", "Time": null, "Weight": "75.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-06-17", "Distance": null, "Distance Unit": null, "Exercise": "Dumbell Lunges", "Reps": "5", "Time": null, "Weight": "20.0", "Weight Unit": "kgs"}
@@ -171,6 +169,8 @@
 {"Category": "Legs", "Comment": null, "Date": "2026-06-17", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "9", "Time": null, "Weight": "80.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-06-17", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "12", "Time": null, "Weight": "80.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-06-17", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "14", "Time": null, "Weight": "80.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-06-17", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "10", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-06-17", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "11", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
 {"Category": "Cardio", "Comment": "Evening run", "Date": "2026-06-17", "Distance": "1.57", "Distance Unit": "km", "Exercise": "Running (Outdoor)", "Reps": null, "Time": "0:09:55", "Weight": null, "Weight Unit": null}
 {"Category": "Back", "Comment": null, "Date": "2026-06-18", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Row", "Reps": "10", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
 {"Category": "Back", "Comment": null, "Date": "2026-06-18", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Row", "Reps": "13", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
@@ -216,13 +216,13 @@
 {"Category": "Triceps", "Comment": null, "Date": "2026-06-24", "Distance": null, "Distance Unit": null, "Exercise": "EZ-Bar Skullcrusher", "Reps": "9", "Time": null, "Weight": "21.0", "Weight Unit": "kgs"}
 {"Category": "Shoulders", "Comment": null, "Date": "2026-06-24", "Distance": null, "Distance Unit": null, "Exercise": "Lateral Dumbbell Raise", "Reps": "10", "Time": null, "Weight": "10.0", "Weight Unit": "kgs"}
 {"Category": "Shoulders", "Comment": null, "Date": "2026-06-24", "Distance": null, "Distance Unit": null, "Exercise": "Lateral Dumbbell Raise", "Reps": "14", "Time": null, "Weight": "10.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-06-25", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "10", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-06-25", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "13", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
 {"Category": "Abs", "Comment": null, "Date": "2026-06-25", "Distance": null, "Distance Unit": null, "Exercise": "Cable Crunch", "Reps": "16", "Time": null, "Weight": "75.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-06-25", "Distance": null, "Distance Unit": null, "Exercise": "Dumbell Lunges", "Reps": "7", "Time": null, "Weight": "20.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-06-25", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "11", "Time": null, "Weight": "80.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-06-25", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "13", "Time": null, "Weight": "80.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-06-25", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "14", "Time": null, "Weight": "80.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-06-25", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "10", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-06-25", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "13", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
 {"Category": "Back", "Comment": null, "Date": "2026-06-26", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Row", "Reps": "9", "Time": null, "Weight": "50.0", "Weight Unit": "kgs"}
 {"Category": "Back", "Comment": null, "Date": "2026-06-26", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Row", "Reps": "11", "Time": null, "Weight": "50.0", "Weight Unit": "kgs"}
 {"Category": "Chest", "Comment": null, "Date": "2026-06-26", "Distance": null, "Distance Unit": null, "Exercise": "Cable Fly", "Reps": "11", "Time": null, "Weight": "15.0", "Weight Unit": "kgs"}
@@ -248,13 +248,13 @@
 {"Category": "Shoulders", "Comment": null, "Date": "2026-07-07", "Distance": null, "Distance Unit": null, "Exercise": "Lateral Dumbbell Raise", "Reps": "16", "Time": null, "Weight": "7.5", "Weight Unit": "kgs"}
 {"Category": "Triceps", "Comment": null, "Date": "2026-07-07", "Distance": null, "Distance Unit": null, "Exercise": "Rope Push Down", "Reps": "9", "Time": null, "Weight": "35.0", "Weight Unit": "kgs"}
 {"Category": "Triceps", "Comment": null, "Date": "2026-07-07", "Distance": null, "Distance Unit": null, "Exercise": "Rope Push Down", "Reps": "11", "Time": null, "Weight": "35.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-07-08", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "7", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-07-08", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "9", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-07-08", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "11", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
 {"Category": "Abs", "Comment": null, "Date": "2026-07-08", "Distance": null, "Distance Unit": null, "Exercise": "Cable Crunch", "Reps": "16", "Time": null, "Weight": "70.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-07-08", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "10", "Time": null, "Weight": "80.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-07-08", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "11", "Time": null, "Weight": "80.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-07-08", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "12", "Time": null, "Weight": "80.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-07-08", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "7", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-07-08", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "9", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-07-08", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "11", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
 {"Category": "Cardio", "Comment": "Evening run", "Date": "2026-07-09", "Distance": "2.49", "Distance Unit": "km", "Exercise": "Running (Outdoor)", "Reps": null, "Time": "0:15:56", "Weight": null, "Weight Unit": null}
 {"Category": "Back", "Comment": null, "Date": "2026-07-10", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Row", "Reps": "9", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
 {"Category": "Back", "Comment": null, "Date": "2026-07-10", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Row", "Reps": "10", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
@@ -275,12 +275,12 @@
 {"Category": "Shoulders", "Comment": null, "Date": "2026-07-12", "Distance": null, "Distance Unit": null, "Exercise": "Lateral Dumbbell Raise", "Reps": "12", "Time": null, "Weight": "7.5", "Weight Unit": "kgs"}
 {"Category": "Shoulders", "Comment": null, "Date": "2026-07-12", "Distance": null, "Distance Unit": null, "Exercise": "Lateral Dumbbell Raise", "Reps": "14", "Time": null, "Weight": "7.5", "Weight Unit": "kgs"}
 {"Category": "Cardio", "Comment": "Evening run", "Date": "2026-07-12", "Distance": "1.57", "Distance Unit": "km", "Exercise": "Running (Outdoor)", "Reps": null, "Time": "0:10:10", "Weight": null, "Weight Unit": null}
-{"Category": "Legs", "Comment": null, "Date": "2026-07-13", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "10", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-07-13", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "10", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-07-13", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "14", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-07-13", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "11", "Time": null, "Weight": "80.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-07-13", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "11", "Time": null, "Weight": "80.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-07-13", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "12", "Time": null, "Weight": "80.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-07-13", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "10", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-07-13", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "10", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-07-13", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "14", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
 {"Category": "Chest", "Comment": null, "Date": "2026-07-17", "Distance": null, "Distance Unit": null, "Exercise": "Incline Dumbbell Bench Press", "Reps": "12", "Time": null, "Weight": "15.0", "Weight Unit": "kgs"}
 {"Category": "Chest", "Comment": null, "Date": "2026-07-17", "Distance": null, "Distance Unit": null, "Exercise": "Incline Dumbbell Bench Press", "Reps": "15", "Time": null, "Weight": "15.0", "Weight Unit": "kgs"}
 {"Category": "Back", "Comment": null, "Date": "2026-07-17", "Distance": null, "Distance Unit": null, "Exercise": "Lat Pulldown", "Reps": "11", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
@@ -299,14 +299,14 @@
 {"Category": "Biceps", "Comment": null, "Date": "2026-07-22", "Distance": null, "Distance Unit": null, "Exercise": "Dumbbell Preacher Curl", "Reps": "8", "Time": null, "Weight": "10.0", "Weight Unit": "kgs"}
 {"Category": "Biceps", "Comment": null, "Date": "2026-07-22", "Distance": null, "Distance Unit": null, "Exercise": "Dumbbell Preacher Curl", "Reps": "10", "Time": null, "Weight": "10.0", "Weight Unit": "kgs"}
 {"Category": "Biceps", "Comment": null, "Date": "2026-07-22", "Distance": null, "Distance Unit": null, "Exercise": "EZ-Bar Curl", "Reps": "11", "Time": null, "Weight": "25.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-07-23", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "8", "Time": null, "Weight": "55.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-07-23", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "8", "Time": null, "Weight": "55.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-07-23", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "9", "Time": null, "Weight": "55.0", "Weight Unit": "kgs"}
 {"Category": "Abs", "Comment": null, "Date": "2026-07-23", "Distance": null, "Distance Unit": null, "Exercise": "Cable Crunch", "Reps": "14", "Time": null, "Weight": "70.0", "Weight Unit": "kgs"}
 {"Category": "Abs", "Comment": null, "Date": "2026-07-23", "Distance": null, "Distance Unit": null, "Exercise": "Cable Crunch", "Reps": "18", "Time": null, "Weight": "70.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-07-23", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "10", "Time": null, "Weight": "80.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-07-23", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "12", "Time": null, "Weight": "80.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-07-23", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "13", "Time": null, "Weight": "80.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-07-23", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "8", "Time": null, "Weight": "55.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-07-23", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "8", "Time": null, "Weight": "55.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-07-23", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "9", "Time": null, "Weight": "55.0", "Weight Unit": "kgs"}
 {"Category": "Back", "Comment": null, "Date": "2026-07-25", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Row", "Reps": "10", "Time": null, "Weight": "51.0", "Weight Unit": "kgs"}
 {"Category": "Back", "Comment": null, "Date": "2026-07-25", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Row", "Reps": "10", "Time": null, "Weight": "51.0", "Weight Unit": "kgs"}
 {"Category": "Chest", "Comment": null, "Date": "2026-07-25", "Distance": null, "Distance Unit": null, "Exercise": "Cable Fly", "Reps": "10", "Time": null, "Weight": "15.0", "Weight Unit": "kgs"}
@@ -340,9 +340,6 @@
 {"Category": "Shoulders", "Comment": null, "Date": "2026-08-04", "Distance": null, "Distance Unit": null, "Exercise": "Lateral Dumbbell Raise", "Reps": "11", "Time": null, "Weight": "10.0", "Weight Unit": "kgs"}
 {"Category": "Triceps", "Comment": null, "Date": "2026-08-04", "Distance": null, "Distance Unit": null, "Exercise": "Rope Push Down", "Reps": "9", "Time": null, "Weight": "35.0", "Weight Unit": "kgs"}
 {"Category": "Triceps", "Comment": null, "Date": "2026-08-04", "Distance": null, "Distance Unit": null, "Exercise": "Rope Push Down", "Reps": "11", "Time": null, "Weight": "35.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-08-05", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "8", "Time": null, "Weight": "55.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-08-05", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "9", "Time": null, "Weight": "55.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-08-05", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "10", "Time": null, "Weight": "55.0", "Weight Unit": "kgs"}
 {"Category": "Abs", "Comment": null, "Date": "2026-08-05", "Distance": null, "Distance Unit": null, "Exercise": "Cable Crunch", "Reps": "12", "Time": null, "Weight": "70.0", "Weight Unit": "kgs"}
 {"Category": "Abs", "Comment": null, "Date": "2026-08-05", "Distance": null, "Distance Unit": null, "Exercise": "Cable Crunch", "Reps": "16", "Time": null, "Weight": "70.0", "Weight Unit": "kgs"}
 {"Category": "Shoulders", "Comment": null, "Date": "2026-08-05", "Distance": null, "Distance Unit": null, "Exercise": "Dumb Bell Shrug", "Reps": "15", "Time": null, "Weight": "20.0", "Weight Unit": "kgs"}
@@ -350,6 +347,9 @@
 {"Category": "Legs", "Comment": null, "Date": "2026-08-05", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "12", "Time": null, "Weight": "80.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-08-05", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "13", "Time": null, "Weight": "80.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-08-05", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "14", "Time": null, "Weight": "80.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-08-05", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "8", "Time": null, "Weight": "55.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-08-05", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "9", "Time": null, "Weight": "55.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-08-05", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "10", "Time": null, "Weight": "55.0", "Weight Unit": "kgs"}
 {"Category": "Back", "Comment": null, "Date": "2026-08-06", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Row", "Reps": "10", "Time": null, "Weight": "51.0", "Weight Unit": "kgs"}
 {"Category": "Chest", "Comment": null, "Date": "2026-08-06", "Distance": null, "Distance Unit": null, "Exercise": "Incline Dumbbell Bench Press", "Reps": "8", "Time": null, "Weight": "20.0", "Weight Unit": "kgs"}
 {"Category": "Chest", "Comment": null, "Date": "2026-08-06", "Distance": null, "Distance Unit": null, "Exercise": "Incline Dumbbell Bench Press", "Reps": "10", "Time": null, "Weight": "20.0", "Weight Unit": "kgs"}
@@ -375,9 +375,6 @@
 {"Category": "Triceps", "Comment": null, "Date": "2026-08-09", "Distance": null, "Distance Unit": null, "Exercise": "EZ-Bar Skullcrusher", "Reps": "8", "Time": null, "Weight": "19.0", "Weight Unit": "kgs"}
 {"Category": "Shoulders", "Comment": null, "Date": "2026-08-09", "Distance": null, "Distance Unit": null, "Exercise": "Lateral Dumbbell Raise", "Reps": "10", "Time": null, "Weight": "10.0", "Weight Unit": "kgs"}
 {"Category": "Shoulders", "Comment": null, "Date": "2026-08-09", "Distance": null, "Distance Unit": null, "Exercise": "Lateral Dumbbell Raise", "Reps": "13", "Time": null, "Weight": "10.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-08-11", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "7", "Time": null, "Weight": "56.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-08-11", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "9", "Time": null, "Weight": "56.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-08-11", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "11", "Time": null, "Weight": "56.0", "Weight Unit": "kgs"}
 {"Category": "Abs", "Comment": null, "Date": "2026-08-11", "Distance": null, "Distance Unit": null, "Exercise": "Cable Crunch", "Reps": "9", "Time": null, "Weight": "75.0", "Weight Unit": "kgs"}
 {"Category": "Abs", "Comment": null, "Date": "2026-08-11", "Distance": null, "Distance Unit": null, "Exercise": "Cable Crunch", "Reps": "12", "Time": null, "Weight": "75.0", "Weight Unit": "kgs"}
 {"Category": "Abs", "Comment": null, "Date": "2026-08-11", "Distance": null, "Distance Unit": null, "Exercise": "Decline Crunch", "Reps": "8", "Time": null, "Weight": "12.5", "Weight Unit": "kgs"}
@@ -385,6 +382,9 @@
 {"Category": "Legs", "Comment": null, "Date": "2026-08-11", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "11", "Time": null, "Weight": "80.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-08-11", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "14", "Time": null, "Weight": "80.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-08-11", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "15", "Time": null, "Weight": "80.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-08-11", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "7", "Time": null, "Weight": "56.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-08-11", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "9", "Time": null, "Weight": "56.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-08-11", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "11", "Time": null, "Weight": "56.0", "Weight Unit": "kgs"}
 {"Category": "Back", "Comment": null, "Date": "2026-08-12", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Row", "Reps": "9", "Time": null, "Weight": "51.0", "Weight Unit": "kgs"}
 {"Category": "Back", "Comment": null, "Date": "2026-08-12", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Row", "Reps": "10", "Time": null, "Weight": "51.0", "Weight Unit": "kgs"}
 {"Category": "Chest", "Comment": null, "Date": "2026-08-12", "Distance": null, "Distance Unit": null, "Exercise": "Cable Fly", "Reps": "7", "Time": null, "Weight": "15.0", "Weight Unit": "kgs"}
@@ -411,14 +411,14 @@
 {"Category": "Triceps", "Comment": null, "Date": "2026-08-14", "Distance": null, "Distance Unit": null, "Exercise": "Handle Push Down", "Reps": "13", "Time": null, "Weight": "60.0", "Weight Unit": "kgs"}
 {"Category": "Shoulders", "Comment": null, "Date": "2026-08-14", "Distance": null, "Distance Unit": null, "Exercise": "Lateral Dumbbell Raise", "Reps": "13", "Time": null, "Weight": "10.0", "Weight Unit": "kgs"}
 {"Category": "Shoulders", "Comment": null, "Date": "2026-08-14", "Distance": null, "Distance Unit": null, "Exercise": "Lateral Dumbbell Raise", "Reps": "13", "Time": null, "Weight": "10.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-08-16", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "9", "Time": null, "Weight": "59.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-08-16", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "9", "Time": null, "Weight": "59.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-08-16", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "10", "Time": null, "Weight": "59.0", "Weight Unit": "kgs"}
 {"Category": "Abs", "Comment": null, "Date": "2026-08-16", "Distance": null, "Distance Unit": null, "Exercise": "Cable Crunch", "Reps": "12", "Time": null, "Weight": "75.0", "Weight Unit": "kgs"}
 {"Category": "Abs", "Comment": null, "Date": "2026-08-16", "Distance": null, "Distance Unit": null, "Exercise": "Cable Crunch", "Reps": "18", "Time": null, "Weight": "75.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-08-16", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "10", "Time": null, "Weight": "90.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-08-16", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "10", "Time": null, "Weight": "90.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-08-16", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "11", "Time": null, "Weight": "90.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-08-16", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "9", "Time": null, "Weight": "59.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-08-16", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "9", "Time": null, "Weight": "59.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-08-16", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "10", "Time": null, "Weight": "59.0", "Weight Unit": "kgs"}
 {"Category": "Back", "Comment": null, "Date": "2026-08-17", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Row", "Reps": "7", "Time": null, "Weight": "51.0", "Weight Unit": "kgs"}
 {"Category": "Back", "Comment": null, "Date": "2026-08-17", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Row", "Reps": "7", "Time": null, "Weight": "51.0", "Weight Unit": "kgs"}
 {"Category": "Chest", "Comment": null, "Date": "2026-08-17", "Distance": null, "Distance Unit": null, "Exercise": "Cable Fly", "Reps": "9", "Time": null, "Weight": "15.0", "Weight Unit": "kgs"}
@@ -441,11 +441,11 @@
 {"Category": "Triceps", "Comment": null, "Date": "2026-08-19", "Distance": null, "Distance Unit": null, "Exercise": "Handle Push Down", "Reps": "8", "Time": null, "Weight": "65.0", "Weight Unit": "kgs"}
 {"Category": "Shoulders", "Comment": null, "Date": "2026-08-19", "Distance": null, "Distance Unit": null, "Exercise": "Lateral Dumbbell Raise", "Reps": "13", "Time": null, "Weight": "10.0", "Weight Unit": "kgs"}
 {"Category": "Shoulders", "Comment": null, "Date": "2026-08-19", "Distance": null, "Distance Unit": null, "Exercise": "Lateral Dumbbell Raise", "Reps": "15", "Time": null, "Weight": "10.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-08-20", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "8", "Time": null, "Weight": "61.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-08-20", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "11", "Time": null, "Weight": "61.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-08-20", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "9", "Time": null, "Weight": "100.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-08-20", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "10", "Time": null, "Weight": "100.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-08-20", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "11", "Time": null, "Weight": "100.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-08-20", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "8", "Time": null, "Weight": "61.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-08-20", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "11", "Time": null, "Weight": "61.0", "Weight Unit": "kgs"}
 {"Category": "Back", "Comment": null, "Date": "2026-08-21", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Row", "Reps": "9", "Time": null, "Weight": "51.0", "Weight Unit": "kgs"}
 {"Category": "Back", "Comment": null, "Date": "2026-08-21", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Row", "Reps": "10", "Time": null, "Weight": "51.0", "Weight Unit": "kgs"}
 {"Category": "Abs", "Comment": null, "Date": "2026-08-21", "Distance": null, "Distance Unit": null, "Exercise": "Cable Crunch", "Reps": "13", "Time": null, "Weight": "80.0", "Weight Unit": "kgs"}
@@ -470,14 +470,14 @@
 {"Category": "Shoulders", "Comment": null, "Date": "2026-08-24", "Distance": null, "Distance Unit": null, "Exercise": "Lateral Dumbbell Raise", "Reps": "11", "Time": null, "Weight": "10.0", "Weight Unit": "kgs"}
 {"Category": "Shoulders", "Comment": null, "Date": "2026-08-24", "Distance": null, "Distance Unit": null, "Exercise": "Lateral Dumbbell Raise", "Reps": "12", "Time": null, "Weight": "10.0", "Weight Unit": "kgs"}
 {"Category": "Cardio", "Comment": "Evening run", "Date": "2026-08-25", "Distance": "5.15", "Distance Unit": "km", "Exercise": "Running (Outdoor)", "Reps": null, "Time": "0:32:04", "Weight": null, "Weight Unit": null}
-{"Category": "Legs", "Comment": null, "Date": "2026-08-26", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "6", "Time": null, "Weight": "65.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-08-26", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "7", "Time": null, "Weight": "65.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-08-26", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "8", "Time": null, "Weight": "65.0", "Weight Unit": "kgs"}
 {"Category": "Abs", "Comment": null, "Date": "2026-08-26", "Distance": null, "Distance Unit": null, "Exercise": "Cable Crunch", "Reps": "9", "Time": null, "Weight": "80.0", "Weight Unit": "kgs"}
 {"Category": "Abs", "Comment": null, "Date": "2026-08-26", "Distance": null, "Distance Unit": null, "Exercise": "Cable Crunch", "Reps": "13", "Time": null, "Weight": "80.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-08-26", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "9", "Time": null, "Weight": "100.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-08-26", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "11", "Time": null, "Weight": "100.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-08-26", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "12", "Time": null, "Weight": "100.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-08-26", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "6", "Time": null, "Weight": "65.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-08-26", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "7", "Time": null, "Weight": "65.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-08-26", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "8", "Time": null, "Weight": "65.0", "Weight Unit": "kgs"}
 {"Category": "Back", "Comment": null, "Date": "2026-08-27", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Row", "Reps": "9", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
 {"Category": "Back", "Comment": null, "Date": "2026-08-27", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Row", "Reps": "10", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
 {"Category": "Abs", "Comment": null, "Date": "2026-08-27", "Distance": null, "Distance Unit": null, "Exercise": "Cable Crunch", "Reps": "9", "Time": null, "Weight": "80.0", "Weight Unit": "kgs"}
@@ -503,8 +503,6 @@
 {"Category": "Shoulders", "Comment": null, "Date": "2026-08-30", "Distance": null, "Distance Unit": null, "Exercise": "Lateral Dumbbell Raise", "Reps": "15", "Time": null, "Weight": "10.0", "Weight Unit": "kgs"}
 {"Category": "Shoulders", "Comment": null, "Date": "2026-08-30", "Distance": null, "Distance Unit": null, "Exercise": "Seated Dumbbell Press", "Reps": "7", "Time": null, "Weight": "20.0", "Weight Unit": "kgs"}
 {"Category": "Shoulders", "Comment": null, "Date": "2026-08-30", "Distance": null, "Distance Unit": null, "Exercise": "Seated Dumbbell Press", "Reps": "8", "Time": null, "Weight": "20.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-09-01", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "8", "Time": null, "Weight": "65.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-09-01", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "10", "Time": null, "Weight": "65.0", "Weight Unit": "kgs"}
 {"Category": "Biceps", "Comment": null, "Date": "2026-09-01", "Distance": null, "Distance Unit": null, "Exercise": "Behind The Back Wrist Curls", "Reps": "19", "Time": null, "Weight": "32.5", "Weight Unit": "kgs"}
 {"Category": "Biceps", "Comment": null, "Date": "2026-09-01", "Distance": null, "Distance Unit": null, "Exercise": "Behind The Back Wrist Curls", "Reps": "22", "Time": null, "Weight": "32.5", "Weight Unit": "kgs"}
 {"Category": "Abs", "Comment": null, "Date": "2026-09-01", "Distance": null, "Distance Unit": null, "Exercise": "Cable Crunch", "Reps": "10", "Time": null, "Weight": "80.0", "Weight Unit": "kgs"}
@@ -513,6 +511,8 @@
 {"Category": "Legs", "Comment": null, "Date": "2026-09-01", "Distance": null, "Distance Unit": null, "Exercise": "Calf Raise Horizontal Leg Push Machine", "Reps": "18", "Time": null, "Weight": "35.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-09-01", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "11", "Time": null, "Weight": "100.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-09-01", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "13", "Time": null, "Weight": "100.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-09-01", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "8", "Time": null, "Weight": "65.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-09-01", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "10", "Time": null, "Weight": "65.0", "Weight Unit": "kgs"}
 {"Category": "Back", "Comment": null, "Date": "2026-09-02", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Row", "Reps": "9", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
 {"Category": "Back", "Comment": null, "Date": "2026-09-02", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Row", "Reps": "11", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
 {"Category": "Abs", "Comment": null, "Date": "2026-09-02", "Distance": null, "Distance Unit": null, "Exercise": "Cable Crunch", "Reps": "9", "Time": null, "Weight": "85.0", "Weight Unit": "kgs"}
@@ -538,13 +538,13 @@
 {"Category": "Shoulders", "Comment": null, "Date": "2026-09-04", "Distance": null, "Distance Unit": null, "Exercise": "Lateral Dumbbell Raise", "Reps": "16", "Time": null, "Weight": "10.0", "Weight Unit": "kgs"}
 {"Category": "Shoulders", "Comment": null, "Date": "2026-09-04", "Distance": null, "Distance Unit": null, "Exercise": "Seated Dumbbell Press", "Reps": "8", "Time": null, "Weight": "20.0", "Weight Unit": "kgs"}
 {"Category": "Shoulders", "Comment": null, "Date": "2026-09-04", "Distance": null, "Distance Unit": null, "Exercise": "Seated Dumbbell Press", "Reps": "9", "Time": null, "Weight": "20.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-09-05", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "9", "Time": null, "Weight": "65.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-09-05", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "11", "Time": null, "Weight": "65.0", "Weight Unit": "kgs"}
 {"Category": "Biceps", "Comment": null, "Date": "2026-09-05", "Distance": null, "Distance Unit": null, "Exercise": "Behind The Back Wrist Curls", "Reps": "20", "Time": null, "Weight": "35.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-09-05", "Distance": null, "Distance Unit": null, "Exercise": "Calf Raise Horizontal Leg Push Machine", "Reps": "18", "Time": null, "Weight": "40.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-09-05", "Distance": null, "Distance Unit": null, "Exercise": "Calf Raise Horizontal Leg Push Machine", "Reps": "20", "Time": null, "Weight": "40.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-09-05", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "12", "Time": null, "Weight": "100.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-09-05", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "13", "Time": null, "Weight": "100.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-09-05", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "9", "Time": null, "Weight": "65.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-09-05", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "11", "Time": null, "Weight": "65.0", "Weight Unit": "kgs"}
 {"Category": "Cardio", "Comment": "5hr sleep run", "Date": "2026-09-06", "Distance": "4.59", "Distance Unit": "km", "Exercise": "Running (Outdoor)", "Reps": null, "Time": "0:28:00", "Weight": null, "Weight Unit": null}
 {"Category": "Back", "Comment": null, "Date": "2026-09-07", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Row", "Reps": "10", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
 {"Category": "Back", "Comment": null, "Date": "2026-09-07", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Row", "Reps": "12", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
@@ -572,9 +572,6 @@
 {"Category": "Shoulders", "Comment": null, "Date": "2026-09-09", "Distance": null, "Distance Unit": null, "Exercise": "Lateral Dumbbell Raise", "Reps": "17", "Time": null, "Weight": "10.0", "Weight Unit": "kgs"}
 {"Category": "Shoulders", "Comment": null, "Date": "2026-09-09", "Distance": null, "Distance Unit": null, "Exercise": "Seated Dumbbell Press", "Reps": "9", "Time": null, "Weight": "20.0", "Weight Unit": "kgs"}
 {"Category": "Shoulders", "Comment": null, "Date": "2026-09-09", "Distance": null, "Distance Unit": null, "Exercise": "Seated Dumbbell Press", "Reps": "9", "Time": null, "Weight": "20.0", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-09-10", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "6", "Time": null, "Weight": "67.5", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-09-10", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "9", "Time": null, "Weight": "67.5", "Weight Unit": "kgs"}
-{"Category": "Legs", "Comment": null, "Date": "2026-09-10", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Hamstring Extension", "Reps": "11", "Time": null, "Weight": "67.5", "Weight Unit": "kgs"}
 {"Category": "Abs", "Comment": null, "Date": "2026-09-10", "Distance": null, "Distance Unit": null, "Exercise": "Cable Crunch", "Reps": "9", "Time": null, "Weight": "85.0", "Weight Unit": "kgs"}
 {"Category": "Abs", "Comment": null, "Date": "2026-09-10", "Distance": null, "Distance Unit": null, "Exercise": "Cable Crunch", "Reps": "9", "Time": null, "Weight": "85.0", "Weight Unit": "kgs"}
 {"Category": "Abs", "Comment": null, "Date": "2026-09-10", "Distance": null, "Distance Unit": null, "Exercise": "Cable Crunch", "Reps": "10", "Time": null, "Weight": "85.0", "Weight Unit": "kgs"}
@@ -583,6 +580,9 @@
 {"Category": "Legs", "Comment": null, "Date": "2026-09-10", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "8", "Time": null, "Weight": "110.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-09-10", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "9", "Time": null, "Weight": "110.0", "Weight Unit": "kgs"}
 {"Category": "Legs", "Comment": null, "Date": "2026-09-10", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "9", "Time": null, "Weight": "110.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-09-10", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "6", "Time": null, "Weight": "67.5", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-09-10", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "9", "Time": null, "Weight": "67.5", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-09-10", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "11", "Time": null, "Weight": "67.5", "Weight Unit": "kgs"}
 {"Category": "Back", "Comment": null, "Date": "2026-09-11", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Row", "Reps": "13", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
 {"Category": "Chest", "Comment": null, "Date": "2026-09-11", "Distance": null, "Distance Unit": null, "Exercise": "Cable Fly", "Reps": "6", "Time": null, "Weight": "20.0", "Weight Unit": "kgs"}
 {"Category": "Chest", "Comment": null, "Date": "2026-09-11", "Distance": null, "Distance Unit": null, "Exercise": "Cable Fly", "Reps": "8", "Time": null, "Weight": "20.0", "Weight Unit": "kgs"}
@@ -593,3 +593,55 @@
 {"Category": "Back", "Comment": null, "Date": "2026-09-11", "Distance": null, "Distance Unit": null, "Exercise": "Lat Pulldown", "Reps": "10", "Time": null, "Weight": "50.0", "Weight Unit": "kgs"}
 {"Category": "Back", "Comment": null, "Date": "2026-09-11", "Distance": null, "Distance Unit": null, "Exercise": "Lat Pulldown", "Reps": "12", "Time": null, "Weight": "50.0", "Weight Unit": "kgs"}
 {"Category": "Cardio", "Comment": "It's done broo", "Date": "2026-09-12", "Distance": "6.66", "Distance Unit": "km", "Exercise": "Running (Outdoor)", "Reps": null, "Time": "0:40:41", "Weight": null, "Weight Unit": null}
+{"Category": "Biceps", "Comment": null, "Date": "2026-09-13", "Distance": null, "Distance Unit": null, "Exercise": "Cross Body Hammer Curl", "Reps": "11", "Time": null, "Weight": "15.0", "Weight Unit": "kgs"}
+{"Category": "Biceps", "Comment": null, "Date": "2026-09-13", "Distance": null, "Distance Unit": null, "Exercise": "Cross Body Hammer Curl", "Reps": "14", "Time": null, "Weight": "15.0", "Weight Unit": "kgs"}
+{"Category": "Triceps", "Comment": null, "Date": "2026-09-13", "Distance": null, "Distance Unit": null, "Exercise": "Dumbbell Overhead Triceps Extension", "Reps": "11", "Time": null, "Weight": "10.0", "Weight Unit": "kgs"}
+{"Category": "Triceps", "Comment": null, "Date": "2026-09-13", "Distance": null, "Distance Unit": null, "Exercise": "Dumbbell Overhead Triceps Extension", "Reps": "12", "Time": null, "Weight": "10.0", "Weight Unit": "kgs"}
+{"Category": "Biceps", "Comment": null, "Date": "2026-09-13", "Distance": null, "Distance Unit": null, "Exercise": "EZ Bar Reverse Curl", "Reps": "8", "Time": null, "Weight": "25.0", "Weight Unit": "kgs"}
+{"Category": "Biceps", "Comment": null, "Date": "2026-09-13", "Distance": null, "Distance Unit": null, "Exercise": "EZ Bar Reverse Curl", "Reps": "10", "Time": null, "Weight": "25.0", "Weight Unit": "kgs"}
+{"Category": "Triceps", "Comment": null, "Date": "2026-09-13", "Distance": null, "Distance Unit": null, "Exercise": "EZ-Bar Skullcrusher", "Reps": "9", "Time": null, "Weight": "21.0", "Weight Unit": "kgs"}
+{"Category": "Triceps", "Comment": "Went a bit deeper, below the forehead", "Date": "2026-09-13", "Distance": null, "Distance Unit": null, "Exercise": "EZ-Bar Skullcrusher", "Reps": "10", "Time": null, "Weight": "21.0", "Weight Unit": "kgs"}
+{"Category": "Shoulders", "Comment": null, "Date": "2026-09-13", "Distance": null, "Distance Unit": null, "Exercise": "Lateral Dumbbell Raise", "Reps": "8", "Time": null, "Weight": "12.5", "Weight Unit": "kgs"}
+{"Category": "Shoulders", "Comment": null, "Date": "2026-09-13", "Distance": null, "Distance Unit": null, "Exercise": "Lateral Dumbbell Raise", "Reps": "8", "Time": null, "Weight": "12.5", "Weight Unit": "kgs"}
+{"Category": "Shoulders", "Comment": null, "Date": "2026-09-13", "Distance": null, "Distance Unit": null, "Exercise": "Seated Dumbbell Press", "Reps": "8", "Time": null, "Weight": "20.0", "Weight Unit": "kgs"}
+{"Category": "Shoulders", "Comment": null, "Date": "2026-09-13", "Distance": null, "Distance Unit": null, "Exercise": "Seated Dumbbell Press", "Reps": "9", "Time": null, "Weight": "20.0", "Weight Unit": "kgs"}
+{"Category": "Abs", "Comment": null, "Date": "2026-09-14", "Distance": null, "Distance Unit": null, "Exercise": "Cable Crunch", "Reps": "10", "Time": null, "Weight": "85.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-09-14", "Distance": null, "Distance Unit": null, "Exercise": "Calf Raise Horizontal Leg Push Machine", "Reps": "17", "Time": null, "Weight": "45.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-09-14", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "7", "Time": null, "Weight": "110.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-09-14", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "10", "Time": null, "Weight": "110.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-09-14", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "7", "Time": null, "Weight": "69.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-09-14", "Distance": null, "Distance Unit": null, "Exercise": "Romanian Dead lift", "Reps": "8", "Time": null, "Weight": "69.0", "Weight Unit": "kgs"}
+{"Category": "Chest", "Comment": null, "Date": "2026-09-15", "Distance": null, "Distance Unit": null, "Exercise": "Flat Barbell Bench Press", "Reps": "12", "Time": null, "Weight": "40.0", "Weight Unit": "kgs"}
+{"Category": "Chest", "Comment": null, "Date": "2026-09-15", "Distance": null, "Distance Unit": null, "Exercise": "Flat Barbell Bench Press", "Reps": "13", "Time": null, "Weight": "40.0", "Weight Unit": "kgs"}
+{"Category": "Back", "Comment": null, "Date": "2026-09-15", "Distance": null, "Distance Unit": null, "Exercise": "Lat Pulldown", "Reps": "10", "Time": null, "Weight": "50.0", "Weight Unit": "kgs"}
+{"Category": "Back", "Comment": null, "Date": "2026-09-15", "Distance": null, "Distance Unit": null, "Exercise": "Lat Pulldown", "Reps": "12", "Time": null, "Weight": "50.0", "Weight Unit": "kgs"}
+{"Category": "Back", "Comment": null, "Date": "2026-09-16", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Row", "Reps": "10", "Time": null, "Weight": "49.0", "Weight Unit": "kgs"}
+{"Category": "Back", "Comment": null, "Date": "2026-09-16", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Row", "Reps": "11", "Time": null, "Weight": "49.0", "Weight Unit": "kgs"}
+{"Category": "Abs", "Comment": null, "Date": "2026-09-16", "Distance": null, "Distance Unit": null, "Exercise": "Cable Crunch", "Reps": "12", "Time": null, "Weight": "85.0", "Weight Unit": "kgs"}
+{"Category": "Abs", "Comment": null, "Date": "2026-09-16", "Distance": null, "Distance Unit": null, "Exercise": "Cable Crunch", "Reps": "12", "Time": null, "Weight": "85.0", "Weight Unit": "kgs"}
+{"Category": "Chest", "Comment": null, "Date": "2026-09-16", "Distance": null, "Distance Unit": null, "Exercise": "Cable Fly", "Reps": "8", "Time": null, "Weight": "20.0", "Weight Unit": "kgs"}
+{"Category": "Chest", "Comment": null, "Date": "2026-09-16", "Distance": null, "Distance Unit": null, "Exercise": "Cable Fly", "Reps": "9", "Time": null, "Weight": "20.0", "Weight Unit": "kgs"}
+{"Category": "Shoulders", "Comment": null, "Date": "2026-09-16", "Distance": null, "Distance Unit": null, "Exercise": "Lateral Dumbbell Raise", "Reps": "8", "Time": null, "Weight": "12.5", "Weight Unit": "kgs"}
+{"Category": "Shoulders", "Comment": null, "Date": "2026-09-16", "Distance": null, "Distance Unit": null, "Exercise": "Lateral Dumbbell Raise", "Reps": "9", "Time": null, "Weight": "12.5", "Weight Unit": "kgs"}
+{"Category": "Biceps", "Comment": null, "Date": "2026-09-17", "Distance": null, "Distance Unit": null, "Exercise": "Cross Body Hammer Curl", "Reps": "13", "Time": null, "Weight": "15.0", "Weight Unit": "kgs"}
+{"Category": "Biceps", "Comment": null, "Date": "2026-09-17", "Distance": null, "Distance Unit": null, "Exercise": "Cross Body Hammer Curl", "Reps": "15", "Time": null, "Weight": "15.0", "Weight Unit": "kgs"}
+{"Category": "Triceps", "Comment": null, "Date": "2026-09-17", "Distance": null, "Distance Unit": null, "Exercise": "Dumbbell Overhead Triceps Extension", "Reps": "10", "Time": null, "Weight": "10.0", "Weight Unit": "kgs"}
+{"Category": "Triceps", "Comment": null, "Date": "2026-09-17", "Distance": null, "Distance Unit": null, "Exercise": "Dumbbell Overhead Triceps Extension", "Reps": "12", "Time": null, "Weight": "10.0", "Weight Unit": "kgs"}
+{"Category": "Biceps", "Comment": null, "Date": "2026-09-17", "Distance": null, "Distance Unit": null, "Exercise": "EZ Bar Reverse Curl", "Reps": "8", "Time": null, "Weight": "25.0", "Weight Unit": "kgs"}
+{"Category": "Biceps", "Comment": null, "Date": "2026-09-17", "Distance": null, "Distance Unit": null, "Exercise": "EZ Bar Reverse Curl", "Reps": "11", "Time": null, "Weight": "25.0", "Weight Unit": "kgs"}
+{"Category": "Triceps", "Comment": null, "Date": "2026-09-17", "Distance": null, "Distance Unit": null, "Exercise": "EZ-Bar Skullcrusher", "Reps": "9", "Time": null, "Weight": "21.0", "Weight Unit": "kgs"}
+{"Category": "Triceps", "Comment": null, "Date": "2026-09-17", "Distance": null, "Distance Unit": null, "Exercise": "EZ-Bar Skullcrusher", "Reps": "11", "Time": null, "Weight": "21.0", "Weight Unit": "kgs"}
+{"Category": "Abs", "Comment": null, "Date": "2026-09-18", "Distance": null, "Distance Unit": null, "Exercise": "Cable Crunch", "Reps": "14", "Time": null, "Weight": "85.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-09-18", "Distance": null, "Distance Unit": null, "Exercise": "Calf Raise Horizontal Leg Push Machine", "Reps": "15", "Time": null, "Weight": "50.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-09-18", "Distance": null, "Distance Unit": null, "Exercise": "Calf Raise Horizontal Leg Push Machine", "Reps": "17", "Time": null, "Weight": "50.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-09-18", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "9", "Time": null, "Weight": "110.0", "Weight Unit": "kgs"}
+{"Category": "Legs", "Comment": null, "Date": "2026-09-18", "Distance": null, "Distance Unit": null, "Exercise": "Leg Extension Machine", "Reps": "10", "Time": null, "Weight": "110.0", "Weight Unit": "kgs"}
+{"Category": "Cardio", "Comment": null, "Date": "2026-09-19", "Distance": "500.0", "Distance Unit": "m", "Exercise": "Swimming", "Reps": null, "Time": "0:20:00", "Weight": null, "Weight Unit": null}
+{"Category": "Back", "Comment": null, "Date": "2026-09-20", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Row", "Reps": "10", "Time": null, "Weight": "49.0", "Weight Unit": "kgs"}
+{"Category": "Back", "Comment": null, "Date": "2026-09-20", "Distance": null, "Distance Unit": null, "Exercise": "Barbell Row", "Reps": "12", "Time": null, "Weight": "49.0", "Weight Unit": "kgs"}
+{"Category": "Chest", "Comment": null, "Date": "2026-09-20", "Distance": null, "Distance Unit": null, "Exercise": "Cable Fly", "Reps": "9", "Time": null, "Weight": "20.0", "Weight Unit": "kgs"}
+{"Category": "Chest", "Comment": null, "Date": "2026-09-20", "Distance": null, "Distance Unit": null, "Exercise": "Cable Fly", "Reps": "9", "Time": null, "Weight": "20.0", "Weight Unit": "kgs"}
+{"Category": "Chest", "Comment": null, "Date": "2026-09-20", "Distance": null, "Distance Unit": null, "Exercise": "Incline Dumbbell Bench Press", "Reps": "12", "Time": null, "Weight": "20.0", "Weight Unit": "kgs"}
+{"Category": "Chest", "Comment": null, "Date": "2026-09-20", "Distance": null, "Distance Unit": null, "Exercise": "Incline Dumbbell Bench Press", "Reps": "14", "Time": null, "Weight": "20.0", "Weight Unit": "kgs"}
+{"Category": "Back", "Comment": null, "Date": "2026-09-20", "Distance": null, "Distance Unit": null, "Exercise": "Lat Pulldown", "Reps": "8", "Time": null, "Weight": "55.0", "Weight Unit": "kgs"}
+{"Category": "Back", "Comment": null, "Date": "2026-09-20", "Distance": null, "Distance Unit": null, "Exercise": "Lat Pulldown", "Reps": "9", "Time": null, "Weight": "55.0", "Weight Unit": "kgs"}
