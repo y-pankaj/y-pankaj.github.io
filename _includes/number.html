@@ -1,0 +1,15 @@
+{%- comment -%}
+  A whole number with a thousands separator, 3814 as 3,814, since Liquid has
+  no filter for it. Good up to 999,999, which is plenty for metres and
+  reviews. Call it as: include number.html n=some_number
+
+  The locals start with `num_` because an include shares its caller's scope.
+{%- endcomment -%}
+{%- assign num_n = include.n | plus: 0 | round -%}
+{%- if num_n >= 1000 -%}
+  {%- assign num_hi = num_n | divided_by: 1000 -%}
+  {%- assign num_lo = num_n | modulo: 1000 | prepend: '00' | slice: -3, 3 -%}
+  {{- num_hi }},{{ num_lo -}}
+{%- else -%}
+  {{- num_n -}}
+{%- endif -%}

@@ -13,8 +13,11 @@ comments: true
   themselves and cannot go stale the way a hand-edited checklist does.
 
   The counting pass below has to repeat that resolution, because Liquid has no
-  way to carry a computed list out of one loop and into another. It is 24
-  items; the duplication is cheaper than a build step.
+  way to carry a computed list out of one loop and into another. It is a
+  couple of dozen items; the duplication is cheaper than a build step.
+
+  A stepped quest (track.source: steps) has no target: it scores itself in
+  percent, so both passes read it out of 100.
 {%- endcomment -%}
 
 {%- assign quests = site.data.quests -%}
@@ -28,7 +31,7 @@ comments: true
   {%- if q.track -%}
     {%- capture raw %}{% include quest-value.html quest=q %}{% endcapture -%}
     {%- assign val = raw | strip | split: '|' | first | plus: 0.0 -%}
-    {%- assign tgt = q.track.target | plus: 0.0 -%}
+    {%- assign tgt = q.track.target | default: 100 | plus: 0.0 -%}
     {%- if val >= tgt -%}
       {%- assign is_done = true -%}
     {%- elsif val > 0 -%}
@@ -93,7 +96,7 @@ comments: true
         {%- assign parts = raw | strip | split: '|' -%}
         {%- assign val = parts | first | plus: 0.0 -%}
         {%- assign caption = parts | last -%}
-        {%- assign tgt = q.track.target | plus: 0.0 -%}
+        {%- assign tgt = q.track.target | default: 100 | plus: 0.0 -%}
         {%- assign pct = val | times: 100.0 | divided_by: tgt -%}
         {%- if pct >= 100 -%}
           {%- assign pct = 100 -%}
@@ -120,7 +123,24 @@ comments: true
 
           {%- if q.track -%}
             <div class="q-track">
-              <div class="q-bar"><i style="width: {{ pct }}%"></i></div>
+              {%- if q.track.steps -%}
+                {%- comment -%}
+                  A ladder gets one segment per rung instead of the bar, filled
+                  as each is reached. The same tests as quest-value.html's
+                  `steps` branch, which works out the percentage.
+                {%- endcomment -%}
+                {%- assign cur = q.track.current | default: 0 -%}
+                <ol class="q-steps">
+                  {%- for st in q.track.steps -%}
+                    <li{% if cur >= st %} class="hit"{% endif %}><i></i>{% include number.html n=st %}{% if cur >= st %}<span class="sr">, reached</span>{% endif %}</li>
+                  {%- endfor -%}
+                  {%- for st in q.track.also -%}
+                    <li class="word{% if st.done %} hit{% endif %}"><i></i>{{ st.label }}{% if st.done %}<span class="sr">, reached</span>{% endif %}</li>
+                  {%- endfor -%}
+                </ol>
+              {%- else -%}
+                <div class="q-bar"><i style="width: {{ pct }}%"></i></div>
+              {%- endif -%}
               <div class="q-cap">{{ caption }} <em>{{ pct | round }}%</em></div>
             </div>
           {%- endif -%}

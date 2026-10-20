@@ -2,7 +2,7 @@
  *
  * Progressive enhancement only: the list, the progress bars and the counts are
  * all rendered by Liquid at build time. Without this file every quest is
- * simply visible, which is the correct fallback for a list of 24 things.
+ * simply visible, which is the correct fallback for a list this short.
  */
 (function () {
   'use strict';

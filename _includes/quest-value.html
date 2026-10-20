@@ -58,6 +58,25 @@
   {%- endcomment -%}
   {{ site.data.fitness.bench_quest.pct | default: 0 }}|{{ site.data.fitness.bench_quest.status | default: 'nothing logged yet' }}
 
+{%- when 'steps' -%}
+  {%- comment -%}
+    A ladder, done one rung at a time: `current` reaches each of the numeric
+    `steps` it is at least, and each of `also` is reached by its own `done`.
+    The value is the share of rungs reached, in percent -- which is why a
+    stepped quest needs no `target`; the page reads it out of 100, as it
+    does the bench.
+  {%- endcomment -%}
+  {%- assign qv_n = qv_track.current | default: 0 -%}
+  {%- assign qv_total = qv_track.steps.size | plus: qv_track.also.size -%}
+  {%- assign qv_hit = 0 -%}
+  {%- for qv_step in qv_track.steps -%}
+    {%- if qv_n >= qv_step -%}{%- assign qv_hit = qv_hit | plus: 1 -%}{%- endif -%}
+  {%- endfor -%}
+  {%- for qv_step in qv_track.also -%}
+    {%- if qv_step.done -%}{%- assign qv_hit = qv_hit | plus: 1 -%}{%- endif -%}
+  {%- endfor -%}
+  {{ qv_hit | times: 100.0 | divided_by: qv_total }}|{% include number.html n=qv_n %} {{ qv_track.unit }}{% if qv_track.current_note %} {{ qv_track.current_note }}{% endif %}
+
 {%- else -%}
   0|unknown source &ldquo;{{ qv_track.source }}&rdquo;
 

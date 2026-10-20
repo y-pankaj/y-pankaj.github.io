@@ -27,7 +27,23 @@
 #                       travel.countries      -- distinct countries in _data/travel.yml
 #                       fitness.longest_run   -- longest single run, km
 #                       fitness.bench         -- flat barbell bench, % of target
+#                       steps                 -- a ladder, see below
 #                     plus `target`, and `current` for the manual ones.
+#
+#                     A `steps` quest is done a rung at a time and needs no
+#                     `target`. `current` is the number so far, bumped by
+#                     hand, and every one of `steps` it has reached is ticked.
+#                     `also` adds rungs that are not a number, each ticked by
+#                     its own `done`. `unit` and `current_note` caption it:
+#                         track:
+#                           source: steps
+#                           current: 3814
+#                           unit: m
+#                           current_note: on Kuari Pass
+#                           steps: [3000, 4000, 5000, 6000, 7000, 8000]
+#                           also:
+#                             - label: Expedition
+#                               done: false
 
 - id: 1
   text: Work for a start-up with fewer than 200 employees
@@ -173,3 +189,27 @@
 - id: 24
   text: Learn a musical instrument decently well
   theme: craft
+
+- id: 25
+  text: Conquer a 3,000, 4,000, 5,000, 6,000, 7,000 and 8,000 m peak, and go on an expedition
+  theme: body
+  see: /travel/
+  track:
+    source: steps
+    current: 3814
+    unit: m
+    current_note: on Kuari Pass
+    steps: [3000, 4000, 5000, 6000, 7000, 8000]
+    also:
+      - label: Expedition
+        done: false
+
+- id: 26
+  text: Complete 100, 250, 500 and 1,000 reviews on Google Maps
+  theme: craft
+  track:
+    source: steps
+    # Bump this by hand, like the books.
+    current: 0
+    unit: reviews
+    steps: [100, 250, 500, 1000]
