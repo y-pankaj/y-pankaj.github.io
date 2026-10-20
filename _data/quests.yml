@@ -32,18 +32,16 @@
 #
 #                     A `steps` quest is done a rung at a time and needs no
 #                     `target`. `current` is the number so far, bumped by
-#                     hand, and every one of `steps` it has reached is ticked.
-#                     `also` adds rungs that are not a number, each ticked by
-#                     its own `done`. `unit` and `current_note` caption it:
+#                     hand, and every one of `steps` it has reached is ticked
+#                     in the checklist under the bar. Each rung is an equal
+#                     share of the bar, the way to the next one counting for
+#                     part of a share. `unit` and `current_note` caption it:
 #                         track:
 #                           source: steps
 #                           current: 3814
 #                           unit: m
 #                           current_note: on Kuari Pass
 #                           steps: [3000, 4000, 5000, 6000, 7000, 8000]
-#                           also:
-#                             - label: Expedition
-#                               done: false
 
 - id: 1
   text: Work for a start-up with fewer than 200 employees
@@ -191,7 +189,7 @@
   theme: craft
 
 - id: 25
-  text: Conquer a 3,000, 4,000, 5,000, 6,000, 7,000 and 8,000 m peak, and go on an expedition
+  text: Conquer a 3,000, 4,000, 5,000, 6,000, 7,000 and 8,000 m peak
   theme: body
   see: /travel/
   track:
@@ -200,9 +198,6 @@
     unit: m
     current_note: on Kuari Pass
     steps: [3000, 4000, 5000, 6000, 7000, 8000]
-    also:
-      - label: Expedition
-        done: false
 
 - id: 26
   text: Complete 100, 250, 500 and 1,000 reviews on Google Maps
@@ -210,6 +205,11 @@
   track:
     source: steps
     # Bump this by hand, like the books.
-    current: 0
+    current: 18
     unit: reviews
     steps: [100, 250, 500, 1000]
+
+- id: 27
+  text: Go on an expedition
+  theme: body
+  see: /travel/

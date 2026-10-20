@@ -60,20 +60,30 @@
 
 {%- when 'steps' -%}
   {%- comment -%}
-    A ladder, done one rung at a time: `current` reaches each of the numeric
-    `steps` it is at least, and each of `also` is reached by its own `done`.
-    The value is the share of rungs reached, in percent -- which is why a
-    stepped quest needs no `target`; the page reads it out of 100, as it
-    does the bench.
+    A ladder, done one rung at a time: `current` reaches each of the `steps`
+    it is at least.
+
+    Every rung is an equal share of the bar, and the way to the next one
+    counts for its part of a share -- 3,814 m is 81% of the way from
+    3,000 to 4,000 -- so the bar moves between rungs instead of sitting still
+    for a thousand metres. The value is in percent, which is why a stepped
+    quest needs no `target`; the page reads it out of 100, as it does the
+    bench.
   {%- endcomment -%}
-  {%- assign qv_n = qv_track.current | default: 0 -%}
-  {%- assign qv_total = qv_track.steps.size | plus: qv_track.also.size -%}
-  {%- assign qv_hit = 0 -%}
+  {%- assign qv_n = qv_track.current | default: 0 | plus: 0.0 -%}
+  {%- assign qv_total = qv_track.steps.size -%}
+  {%- assign qv_hit = 0.0 -%}
+  {%- assign qv_floor = 0.0 -%}
+  {%- assign qv_partial = false -%}
   {%- for qv_step in qv_track.steps -%}
-    {%- if qv_n >= qv_step -%}{%- assign qv_hit = qv_hit | plus: 1 -%}{%- endif -%}
-  {%- endfor -%}
-  {%- for qv_step in qv_track.also -%}
-    {%- if qv_step.done -%}{%- assign qv_hit = qv_hit | plus: 1 -%}{%- endif -%}
+    {%- if qv_n >= qv_step -%}
+      {%- assign qv_hit = qv_hit | plus: 1 -%}
+      {%- assign qv_floor = qv_step | plus: 0.0 -%}
+    {%- elsif qv_partial == false -%}
+      {%- assign qv_gap = qv_step | minus: qv_floor -%}
+      {%- assign qv_hit = qv_n | minus: qv_floor | divided_by: qv_gap | plus: qv_hit -%}
+      {%- assign qv_partial = true -%}
+    {%- endif -%}
   {%- endfor -%}
   {{ qv_hit | times: 100.0 | divided_by: qv_total }}|{% include number.html n=qv_n %} {{ qv_track.unit }}{% if qv_track.current_note %} {{ qv_track.current_note }}{% endif %}
 

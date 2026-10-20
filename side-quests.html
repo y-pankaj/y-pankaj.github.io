@@ -123,25 +123,21 @@ comments: true
 
           {%- if q.track -%}
             <div class="q-track">
+              <div class="q-bar"><i style="width: {{ pct }}%"></i></div>
+              <div class="q-cap">{{ caption }} <em>{{ pct | round }}%</em></div>
               {%- if q.track.steps -%}
                 {%- comment -%}
-                  A ladder gets one segment per rung instead of the bar, filled
-                  as each is reached. The same tests as quest-value.html's
-                  `steps` branch, which works out the percentage.
+                  A ladder lists its rungs under the bar, ticked as each is
+                  reached: the same tests as quest-value.html's `steps` branch,
+                  which works out the bar.
                 {%- endcomment -%}
                 {%- assign cur = q.track.current | default: 0 -%}
-                <ol class="q-steps">
+                <ul class="q-checks">
                   {%- for st in q.track.steps -%}
-                    <li{% if cur >= st %} class="hit"{% endif %}><i></i>{% include number.html n=st %}{% if cur >= st %}<span class="sr">, reached</span>{% endif %}</li>
+                    <li{% if cur >= st %} class="hit"{% endif %}>{% include number.html n=st %}{% if cur >= st %}<span class="sr">, reached</span>{% endif %}</li>
                   {%- endfor -%}
-                  {%- for st in q.track.also -%}
-                    <li class="word{% if st.done %} hit{% endif %}"><i></i>{{ st.label }}{% if st.done %}<span class="sr">, reached</span>{% endif %}</li>
-                  {%- endfor -%}
-                </ol>
-              {%- else -%}
-                <div class="q-bar"><i style="width: {{ pct }}%"></i></div>
+                </ul>
               {%- endif -%}
-              <div class="q-cap">{{ caption }} <em>{{ pct | round }}%</em></div>
             </div>
           {%- endif -%}
 

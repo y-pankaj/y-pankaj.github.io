@@ -811,39 +811,6 @@
 
     i { display: block; height: 100%; background: var(--accent); }
   }
-  // A laddered quest: one segment per rung, labelled underneath, in place of
-  // the bar. The labels are numbers only; the unit is in the caption below.
-  .q-steps {
-    display: flex;
-    gap: 3px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-
-    li {
-      flex: 1 1 0;
-      min-width: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      font-size: .62rem;
-      line-height: 1.2;
-      color: var(--text-light);
-      font-variant-numeric: tabular-nums;
-    }
-    i {
-      display: block;
-      height: 5px;
-      margin-bottom: .3rem;
-      background: var(--fill);
-    }
-    // A rung named in words -- Expedition -- takes the width its label
-    // needs; the numbered ones share what is left. On a phone a seventh of
-    // the row is narrower than the word.
-    .word { flex: 0 0 auto; }
-    .hit { color: var(--text); }
-    .hit i { background: var(--accent); }
-  }
   .q-cap {
     display: flex;
     justify-content: space-between;
@@ -856,6 +823,43 @@
       font-style: normal;
       font-variant-numeric: tabular-nums;
       color: var(--text);
+    }
+  }
+
+  // A laddered quest's rungs, under its bar: a small box for each, filled
+  // and ticked once it is reached, like the quest's own box on the left.
+  .q-checks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .25rem .85rem;
+    list-style: none;
+    margin: .45rem 0 0;
+    padding: 0;
+    font-size: .68rem;
+    color: var(--text-light);
+    font-variant-numeric: tabular-nums;
+
+    li {
+      display: inline-flex;
+      align-items: center;
+      gap: .35em;
+
+      &::before {
+        content: "";
+        width: 9px;
+        height: 9px;
+        border: 1px solid var(--border);
+        font-size: 7px;
+        line-height: 9px;
+        text-align: center;
+      }
+    }
+    .hit { color: var(--text); }
+    .hit::before {
+      content: "\2713";
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
     }
   }
 
