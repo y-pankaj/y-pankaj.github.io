@@ -27,4 +27,10 @@
   --zebra: #{mix($text-color, $background-color, 4%)};
   --fill: #{mix($text-color, $background-color, 9%)};
   --hm0: #{mix($text-color, $background-color, 13%)};
+
+  // Visited land on /travel/: the accent, let down into the background far
+  // enough that a dark marker on it still reads. The accent itself lives in
+  // custom-styles.scss, which is a different Sass chain, so it is repeated
+  // here; keep the two in step.
+  --visited: #{mix(#fc4c02, $background-color, 32%)};
 }

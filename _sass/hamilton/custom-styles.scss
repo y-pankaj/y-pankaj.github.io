@@ -844,20 +844,32 @@
 .travel {
 
   // --- map ---------------------------------------------------------------
-  // No padding here on purpose: a pin is positioned as a percentage of this
-  // box, so anything between the border and the SVG shifts every pin.
+  // The stage is the map plus the room the hover card can spill into: the
+  // card is positioned against this, outside .map-wrap, because .map-wrap
+  // clips everything in it and claims every pointer for panning.
+  .map-stage {
+    position: relative;
+    margin: 0 0 1rem;
+  }
+
+  // No padding here on purpose: a marker is positioned as a percentage of
+  // this box, so anything between the border and the SVG shifts every one.
   //
   // The aspect ratio is fixed rather than left to the SVG, because zooming
   // rewrites the viewBox and `height: auto` would then resize the whole box on
-  // every wheel notch. 1.6 is what travel.html fits the default view to.
+  // every wheel notch. 1.2 is what travel.html fits the default view to, and
+  // the two have to agree: without JavaScript nothing corrects a mismatch.
+  //
+  // `isolation` keeps the markers' z-indexes, which run into the hundreds,
+  // inside the map instead of competing with the card and the page.
   .map-wrap {
     position: relative;
-    aspect-ratio: 1.6;
+    aspect-ratio: 1.2;
     min-height: 200px;
     overflow: hidden;
+    isolation: isolate;
     border: 1px solid var(--border-light);
     background: var(--panel);
-    margin: 0 0 1rem;
 
     &.zoomable {
       cursor: grab;
@@ -885,6 +897,7 @@
   .map-tools {
     display: none;   // switched on by .zoomable, i.e. only once JS is running
     position: absolute;
+    z-index: 400;
     top: 8px;
     right: 8px;
     gap: 4px;
@@ -906,9 +919,14 @@
       &:active { background: var(--fill); }
     }
   }
+
+  // --- land ----------------------------------------------------------------
   // The viewBox is in degrees, so stroke-width is too -- and the view scales,
   // so a fixed value would thicken as you zoom out and vanish as you zoom in.
   // vector-effect pins it to screen pixels instead.
+  //
+  // Visited countries and states are filled var(--visited), a light tint of
+  // the accent, by the style block travel.html writes.
   .world .land path {
     fill: var(--fill);
     stroke: var(--panel);
@@ -916,24 +934,264 @@
     vector-effect: non-scaling-stroke;
   }
 
-  // Dark with a light halo, deliberately not the accent: a visited country is
-  // already filled accent, so an accent pin sitting on one disappears.
-  .pin {
+  // India's states and union territories, drawn only in the close-up: a
+  // world map with 36 borders inside one country is just grey noise.
+  //
+  // Each unit's fill comes through --unit, which the style block sets for the
+  // visited ones, so that the tiny units can use the same colour for the
+  // stroke that gives them a minimum size. Lakshadweep is otherwise a few
+  // specks narrower than a pixel at the default zoom.
+  .world .states path {
+    fill: var(--unit, var(--fill));
+    stroke: var(--panel);
+    stroke-width: .6;
+    vector-effect: non-scaling-stroke;
+  }
+  .world .states path.tiny {
+    stroke: var(--unit, var(--fill));
+    stroke-width: 2.5;
+  }
+  .lod-world .states { display: none; }
+
+  // In the close-up the neighbours step back, so India's border is where the
+  // land changes shade rather than one more white line among its states. And
+  // India's own country outline goes: the generator keeps it coarse, for the
+  // world map, and in the close-up the states are India.
+  .map-wrap.has-states:not(.lod-world) {
+    .land path { fill: var(--zebra); }
+    #c-IND { display: none; }
+  }
+
+  // --- markers -------------------------------------------------------------
+  // A bookmark cut to a point, standing on its place: the element is the
+  // shape, so translate(-50%, -100%) puts the tip on the coordinate. --dx is
+  // the sideways nudge travel.js gives markers it fans out at full zoom, when
+  // two places are too close to tell apart even there.
+  //
+  // Dark with a light halo, deliberately not the accent: visited land is
+  // tinted accent, and every Indian marker sits on a visited state.
+  .mark {
     position: absolute;
-    width: 11px;
-    height: 11px;
-    margin: -5.5px 0 0 -5.5px;
-    border-radius: 50%;
-    background: var(--text);
-    box-shadow: 0 0 0 2.5px var(--panel);
+    display: block;
+    width: 18px;
+    height: 24px;
+    padding: 0;
+    border: 0;
+    background: none;
+    transform: translate(calc(-50% + var(--dx, 0px)), -100%);
     text-decoration: none;
+    cursor: pointer;
+
+    // A bigger target than the shape, for fingers.
+    &::before {
+      content: "";
+      position: absolute;
+      top: -6px;
+      right: -5px;
+      bottom: -2px;
+      left: -5px;
+    }
+
+    &.is-hidden { visibility: hidden; }
 
     &:hover,
-    &:focus {
-      z-index: 2;
-      background: var(--accent);
-      box-shadow: 0 0 0 2.5px var(--panel), 0 0 0 5px var(--text);
+    &:focus-visible,
+    &.is-open,
+    &.is-lit,
+    &.is-target {
+      .mark-body { fill: var(--accent); }
     }
+    // Inline z-indexes stack south over north; the one you are looking at
+    // goes over all of them.
+    &:hover,
+    &:focus-visible,
+    &.is-open,
+    &.is-lit { z-index: 300 !important; }
+
+    &:focus { outline: none; }
+    &:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+  }
+  .mark-icon {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .25));
+  }
+  .mark-body {
+    fill: var(--text);
+    stroke: var(--panel);
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+  }
+  .mark-glyph { fill: var(--panel); }
+
+  // Several places too close to tell apart at this zoom: a stack of
+  // bookmarks with a count, which zooms in on them when clicked.
+  .mark-cluster {
+    width: 22px;
+    height: 28px;
+    font: inherit;
+    appearance: none;
+    -webkit-appearance: none;
+
+    .mark-back { fill: var(--text-light); }
+    .mark-count {
+      fill: var(--panel);
+      font-family: var(--font-base);
+      font-size: 9px;
+      font-weight: 700;
+      text-anchor: middle;
+    }
+  }
+
+  .mark-sprite {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  // --- hover card ------------------------------------------------------------
+  // Built by travel.js from the place's entry in the list. It sits beside
+  // its marker; under 600px it docks across the top or the bottom of the map
+  // instead, whichever the marker is not in.
+  .map-card {
+    position: absolute;
+    z-index: 20;
+    width: 250px;
+    padding: .7rem .8rem .65rem;
+    background: var(--panel);
+    border: 1px solid var(--border-light);
+    box-shadow: 0 6px 22px rgba(0, 0, 0, .16);
+    font-size: .8rem;
+    line-height: 1.45;
+
+    &[hidden] { display: none; }
+
+    &.is-sheet {
+      left: 0;
+      right: 0;
+      width: auto;
+      max-height: 70%;
+      overflow-y: auto;
+    }
+    &.at-top { top: 0; }
+    &.at-bottom { bottom: 0; }
+
+    p { margin: 0; }
+    a { text-decoration: none; }
+  }
+  .card-head {
+    display: flex;
+    align-items: baseline;
+    gap: .5rem;
+  }
+  .card-title {
+    font-family: var(--font-headline);
+    font-size: .95rem;
+    font-weight: 700;
+    letter-spacing: -.3px;
+    line-height: 1.25;
+    margin: 0;
+  }
+  .card-when {
+    margin-left: auto;
+    font-size: .68rem;
+    color: var(--text-light);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .map-card .card-where {
+    font-size: .68rem;
+    color: var(--text-light);
+    margin-top: .1rem;
+  }
+  // Two lines at most; the list has the rest.
+  .map-card .card-note {
+    margin-top: .35rem;
+    color: var(--text-light);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+
+  // A row of photos that scroll-snaps one at a time, so swiping is the
+  // browser's own and the buttons only have to scroll it by a width.
+  .card-shots { margin-top: .55rem; }
+  .card-frame { position: relative; }
+  .card-strip {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar { display: none; }
+
+    img {
+      flex: 0 0 100%;
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      scroll-snap-align: start;
+      background: var(--fill);
+    }
+  }
+  .card-nav {
+    position: absolute;
+    top: 50%;
+    width: 26px;
+    height: 26px;
+    margin-top: -13px;
+    padding: 0;
+    border: 1px solid var(--border-light);
+    border-radius: 50%;
+    background: var(--panel);
+    color: var(--text);
+    font-size: 1rem;
+    line-height: 1;
+    opacity: .9;
+    cursor: pointer;
+
+    &:disabled { opacity: .35; cursor: default; }
+  }
+  .card-prev { left: 6px; }
+  .card-next { right: 6px; }
+  .map-card .card-line {
+    display: flex;
+    gap: .5rem;
+    margin-top: .3rem;
+    font-size: .66rem;
+    color: var(--text-light);
+  }
+  .card-count { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  .map-card .card-foot {
+    display: flex;
+    gap: .9rem;
+    justify-content: flex-end;
+    margin-top: .5rem;
+    font-size: .7rem;
+  }
+
+  .card-list {
+    list-style: none;
+    margin: .4rem 0 0;
+    padding: 0;
+
+    li {
+      display: flex;
+      gap: .5rem;
+      padding: .15rem 0;
+      border-top: 1px solid var(--border-light);
+    }
+  }
+  .map-card .card-hint {
+    margin-top: .45rem;
+    font-size: .68rem;
+    color: var(--text-light);
   }
 
   // --- continents --------------------------------------------------------
@@ -999,17 +1257,44 @@
     color: var(--text-light);
     font-variant-numeric: tabular-nums;
   }
-  .place-note {
+  // Added by travel.js, so it is never there without the map it points at.
+  .place-locate {
+    font-family: var(--font-base);
+    font-size: .66rem;
+    line-height: 1;
+    padding: .3rem .45rem;
+    background: var(--panel);
+    color: var(--text-light);
+    border: 1px solid var(--border-light);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+
+    &:hover { color: var(--text); border-color: var(--border); }
+  }
+  // Pushed right when there is no date to push it there.
+  .place-head > h3 + .place-where + .place-locate { margin-left: auto; }
+
+  .place-note,
+  .place-story {
     font-size: .82rem;
     line-height: 1.55;
     color: var(--text-light);
     margin: .3rem 0 0;
   }
-  .place-quest {
+  .place-story p { margin: .3rem 0 0; }
+  .place-link {
     font-size: .72rem;
     margin: .4rem 0 0;
 
     i { opacity: .55; margin-right: .2em; }
+  }
+  .place-link + .place-link { margin-top: .15rem; }
+  // Only ever seen by whoever is editing travel.yml, one hopes.
+  .place-warn {
+    font-size: .72rem;
+    color: var(--accent);
+    margin: .4rem 0 0;
   }
 }
 

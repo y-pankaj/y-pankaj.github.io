@@ -12,14 +12,23 @@
   grey tile instead of a broken image, so captions can be written before the
   files exist -- which is the normal order of events.
 
-  Note that nothing here is assigned to a local variable. A Liquid include
-  shares the caller's scope, so a short local name can be shadowed by a loop
-  variable of the same name in the caller -- reading include.photo directly
-  cannot collide.
+  If scripts/build_photos.py has made a thumbnail -- the same file name in a
+  `480/` folder next to the photo -- the tile uses that instead of the full
+  size. It is looked up in site.static_files, so a photo added without
+  running the script still shows, just heavier.
+
+  A Liquid include shares the caller's scope, so a short local name here can
+  be shadowed by, or clobber, a loop variable of the same name in the caller.
+  include.photo is read directly for that reason, and the few names this does
+  assign all start with `tile_`.
 {%- endcomment -%}
 {%- if include.photo.src -%}
+  {%- assign tile_name = include.photo.src | split: '/' | last -%}
+  {%- assign tile_dir = include.photo.src.size | minus: tile_name.size -%}
+  {%- assign tile_thumb = include.photo.src | slice: 0, tile_dir | append: '480/' | append: tile_name -%}
+  {%- assign tile_found = site.static_files | where: 'path', tile_thumb | first -%}
   <figure class="shot">
-    <img src="{{ include.photo.src | relative_url }}" loading="lazy"
+    <img src="{% if tile_found %}{{ tile_thumb | relative_url }}{% else %}{{ include.photo.src | relative_url }}{% endif %}" loading="lazy"
          alt="{{ include.photo.caption | default: include.alt | escape }}">
     {%- if include.photo.caption -%}
       <figcaption>{{ include.photo.caption }}</figcaption>

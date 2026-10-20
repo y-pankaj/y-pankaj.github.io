@@ -1,6 +1,6 @@
-# Places that get a pin on /travel/.
+# Places that get a marker on /travel/.
 #
-# The map is plate carree, so lat/lon go straight to a position -- no
+# The map is equirectangular, so lat/lon go straight to a position -- no
 # projection maths, just add a row here and it appears.
 #
 # Fields
@@ -9,21 +9,39 @@
 #   country    required   display name, shown under the place
 #   iso        required   ISO 3166-1 alpha-3, UPPERCASE. This fills the country
 #                         on the map, so it has to match an id in
-#                         _includes/world-map.svg -- IND, FRA, JPN, USA...
+#                         _includes/world-land.svg -- IND, FRA, JPN, USA...
 #   continent  required   Africa | Antarctica | Asia | Europe |
 #                         North America | Oceania | South America
 #                         (feeds the "all seven continents" side quest)
 #   lat, lon   required   decimal degrees. South and West are negative.
+#   state      India      the state or union territory, spelled as in the
+#                         `states:` list of _data/world_map.yml -- Uttarakhand,
+#                         Tamil Nadu, Jammu and Kashmir, Ladakh... It fills the
+#                         state on the map and counts towards the 36. A name
+#                         the map does not know shows up as a warning on the
+#                         place's own entry rather than failing quietly.
 #   when       optional   "2023" or "2023-06". Sorts the list; undated goes last.
-#   note       optional   one line, shown on the card
+#   note       optional   one line. It is the text on the map's hover card as
+#                         well as on the list, and the card stops at two lines.
+#   story      optional   longer text for the list only. Markdown.
+#   kind       optional   trek | city | coast | home -- the glyph on the marker.
+#                         Anything else, or nothing, gets a plain dot.
+#   post       optional   URL of a post about it, e.g. /2024/11/09/Banglore-traffic.html
 #   quest      optional   side-quest id this one ticks off, e.g. 17
-#   photos     optional   list of entries. A photo with no `src` renders as a
-#                         labelled placeholder tile, so you can write the
-#                         captions now and drop the files in later:
+#   id         optional   the anchor, /travel/#<id>. Defaults to the place name
+#                         as a slug (kuari-pass), with the year added when two
+#                         entries share a name. Set it only to keep an old link
+#                         working.
+#   photos     optional   list of entries; the first is the one the card opens
+#                         on. A photo with no `src` renders as a labelled
+#                         placeholder tile, so you can write the captions now
+#                         and drop the files in later:
 #                             photos:
 #                               - src: /assets/images/travel/kuari-ridge.jpg
 #                                 caption: First light on the ridge
 #                               - caption: Camp at Gorson Bugyal   # placeholder
+#                         scripts/build_photos.py makes the web-sized copy and
+#                         the thumbnail the page prefers, and strips the GPS.
 #
 # Only the two below are things the site already knows about. Everything else
 # is yours to fill in -- the page counts whatever is here.
@@ -34,6 +52,8 @@
   continent: Asia
   lat: 30.4833
   lon: 79.6167
+  state: Uttarakhand
+  kind: trek
   when: "2023"
   note: Snow trek in the Garhwal Himalaya, 3,650 m at the top.
   quest: 17
@@ -47,7 +67,10 @@
   continent: Asia
   lat: 12.9716
   lon: 77.5946
+  state: Karnataka
+  kind: home
   note: Home base. Wrote a whole post about the traffic.
+  post: /2024/11/09/Banglore-traffic.html
   photos:
     - caption: Placeholder
 

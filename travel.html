@@ -8,14 +8,17 @@ comments: true
 
 {%- comment -%}
   Places come from _data/travel.yml; the outlines from _includes/world-land.svg,
-  which scripts/build_world_map.py generates from Natural Earth.
+  which scripts/build_world_map.py generates from Natural Earth, with India's
+  states and union territories as a second layer once it has been run with
+  --states.
 
-  Country fills are resolved at build time by the style block below, and the
-  default view is worked out here rather than in JavaScript so that the first
-  paint is already the right one -- assets/js/travel.js reads this viewBox back
-  as its "home" view instead of recomputing the fit, which keeps the fitting
-  logic in one place. Without JavaScript you get a correct, static, pre-framed
-  map; the zooming is the enhancement on top.
+  Fills are resolved at build time by the style block below, and the default
+  view is worked out here rather than in JavaScript so that the first paint is
+  already the right one -- assets/js/travel.js reads this viewBox back as its
+  "home" view instead of recomputing the fit, which keeps the fitting logic in
+  one place. Without JavaScript you get a correct, static, pre-framed map whose
+  markers link down to the list; zooming, clustering and the hover card are
+  the enhancement on top.
 {%- endcomment -%}
 
 {%- assign places = site.data.travel | sort: 'when' | reverse -%}
@@ -23,6 +26,29 @@ comments: true
 {%- assign visited = site.data.travel | map: 'continent' | compact | uniq -%}
 {%- assign wm = site.data.world_map -%}
 {%- assign all_continents = 'Asia,Europe,Africa,North America,South America,Oceania,Antarctica' | split: ',' -%}
+{%- assign kinds = 'trek,city,coast,home' | split: ',' -%}
+
+{%- comment -%}
+  States visited, as slugs, since that is what the map's ids are made of.
+  With the state layer built they are checked against it, so a misspelt
+  state neither fills anything nor counts.
+{%- endcomment -%}
+{%- capture state_slugs -%}
+  {%- for p in site.data.travel -%}
+    {%- if p.iso == 'IND' and p.state -%}
+      {%- assign s = p.state | slugify -%}
+      {%- if wm.states == nil or wm.states[s] -%}{{ s }},{%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+{%- assign state_slugs = state_slugs | split: ',' | uniq -%}
+
+{%- comment -%}
+  The map's x is longitude times x_scale (see _data/world_map.yml); y is
+  minus the latitude. Everything below works in degrees and scales x at the
+  end, so the data file can stay in degrees too.
+{%- endcomment -%}
+{%- assign k = wm.x_scale | default: 1.0 -%}
 
 {%- comment -%}
   The default view.
@@ -34,14 +60,17 @@ comments: true
   _data/world_map.yml, which the generator writes alongside the outlines.
 
   That box is then padded, floored at 16 degrees of latitude so two pins in one
-  city do not zoom to street level, and widened to the 1.6 aspect ratio the
-  stylesheet gives the map box. Today it lands on the subcontinent. Add a pin
-  in Europe and it opens out on its own, which is why it is fitted rather than
-  hardcoded to India.
+  city do not zoom to street level, and widened to the 1.2 aspect ratio the
+  stylesheet gives the map box (India is taller than it is wide, so a wider
+  box spent most of itself on sea). Today it lands on the subcontinent. Add a
+  pin in Europe and it opens out on its own, which is why it is fitted rather
+  than hardcoded to India.
 {%- endcomment -%}
-{%- assign map_aspect = 1.6 -%}
+{%- assign map_aspect = 1.2 -%}
 {%- assign lons = site.data.travel | map: 'lon' | compact | sort -%}
 {%- assign lats = site.data.travel | map: 'lat' | compact | sort -%}
+{%- assign world_w = wm.width | times: k -%}
+{%- assign world_x = wm.lon_min | times: k -%}
 
 {%- if lons.size > 0 -%}
   {%- assign lon_lo = lons | first -%}
@@ -61,34 +90,129 @@ comments: true
 
   {%- assign lat_span = lat_hi | minus: lat_lo | times: 1.12 -%}
   {%- if lat_span < 16 -%}{%- assign lat_span = 16 -%}{%- endif -%}
-  {%- assign lon_span = lon_hi | minus: lon_lo | times: 1.12 -%}
+  {%- assign lon_span = lon_hi | minus: lon_lo | times: 1.12 | times: k -%}
   {%- assign lon_needed = lat_span | times: map_aspect -%}
   {%- if lon_span < lon_needed -%}{%- assign lon_span = lon_needed -%}{%- endif -%}
-  {%- if lon_span > wm.width -%}{%- assign lon_span = wm.width -%}{%- endif -%}
+  {%- if lon_span > world_w -%}{%- assign lon_span = world_w -%}{%- endif -%}
   {%- assign lat_span = lon_span | divided_by: map_aspect -%}
 
   {%- assign half_lon = lon_span | divided_by: 2.0 -%}
   {%- assign half_lat = lat_span | divided_by: 2.0 -%}
-  {%- assign centre_lon = lon_lo | plus: lon_hi | divided_by: 2.0 -%}
+  {%- assign centre_x = lon_lo | plus: lon_hi | divided_by: 2.0 | times: k -%}
   {%- assign centre_lat = lat_lo | plus: lat_hi | divided_by: 2.0 -%}
 
-  {%- assign vb_x = centre_lon | minus: half_lon -%}
+  {%- assign vb_x = centre_x | minus: half_lon -%}
   {%- assign vb_y = 0.0 | minus: centre_lat | minus: half_lat -%}
 
   {%- comment -%} Keep it inside the world; the script re-clamps on every move. {%- endcomment -%}
-  {%- assign x_limit = wm.lon_max | minus: lon_span -%}
+  {%- assign x_limit = world_x | plus: world_w | minus: lon_span -%}
   {%- if vb_x > x_limit -%}{%- assign vb_x = x_limit -%}{%- endif -%}
-  {%- if vb_x < wm.lon_min -%}{%- assign vb_x = wm.lon_min -%}{%- endif -%}
+  {%- if vb_x < world_x -%}{%- assign vb_x = world_x -%}{%- endif -%}
 {%- else -%}
-  {%- assign lon_span = wm.width -%}
-  {%- assign lat_span = wm.height -%}
-  {%- assign vb_x = wm.lon_min -%}
-  {%- assign vb_y = 0.0 | minus: wm.lat_max -%}
+  {%- assign lon_span = world_w -%}
+  {%- assign lat_span = lon_span | divided_by: map_aspect -%}
+  {%- assign vb_x = world_x -%}
+  {%- assign centre_lat = wm.lat_max | plus: wm.lat_min | divided_by: 2.0 -%}
+  {%- assign half_lat = lat_span | divided_by: 2.0 -%}
+  {%- assign vb_y = 0.0 | minus: centre_lat | minus: half_lat -%}
 {%- endif -%}
+
+{%- comment -%}
+  Wider than this, in map units, and the map is a world map: India is drawn
+  as one visited country and its state borders are hidden. Narrower and it
+  is India's map, state by state. travel.js reads the same number back.
+{%- endcomment -%}
+{%- assign lod_span = 60 -%}
+
+{%- comment -%}
+  Markers and list entries come out of one loop so that each place's anchor
+  is worked out once. The anchor is the place name as a slug, with the year
+  added when two entries share a name, or `id` if one is given. It used to
+  be the position in the list, which renumbered every link whenever a newer
+  place went in at the top.
+{%- endcomment -%}
+{%- assign marks = '' -%}
+{%- assign items = '' -%}
+{%- for p in places -%}
+  {%- assign twins = site.data.travel | where: 'place', p.place -%}
+  {%- if p.id -%}
+    {%- assign pid = p.id | slugify -%}
+  {%- elsif twins.size > 1 -%}
+    {%- assign pid = p.place | append: ' ' | append: p.when | slugify -%}
+  {%- else -%}
+    {%- assign pid = p.place | slugify -%}
+  {%- endif -%}
+
+  {%- assign kind = p.kind | default: 'place' -%}
+  {%- unless kinds contains kind -%}{%- assign kind = 'place' -%}{%- endunless -%}
+
+  {%- comment -%}
+    A straight linear map from degrees onto the view. The lat/lon ride along
+    as data attributes because the zoom script has to redo this every time
+    the view moves. The marker points down at its place and stands up from
+    it, so ones further south are stacked over the ones they would hide.
+  {%- endcomment -%}
+  {%- assign px = p.lon | times: k | minus: vb_x | times: 100.0 | divided_by: lon_span -%}
+  {%- assign py = 0.0 | minus: p.lat | minus: vb_y | times: 100.0 | divided_by: lat_span -%}
+  {%- assign z = 200 | minus: p.lat | round -%}
+  {%- capture label -%}
+    {{ p.place }}{% if p.state %}, {{ p.state }}{% endif %}, {{ p.country }}{% if p.when %}, {{ p.when }}{% endif %}
+  {%- endcapture -%}
+
+  {%- capture marks -%}{{ marks }}
+      <a class="mark" href="#{{ pid }}" data-lon="{{ p.lon }}" data-lat="{{ p.lat }}"
+         style="left: {{ px | round: 3 }}%; top: {{ py | round: 3 }}%; z-index: {{ z }}">
+        <svg class="mark-icon" viewBox="0 0 18 24" aria-hidden="true" focusable="false"><use class="mark-body" href="#mk-body" width="18" height="24"/><use class="mark-glyph" href="#mk-{{ kind }}" x="4" y="3.25" width="10" height="10"/></svg>
+        <span class="sr">{{ label }}</span>
+      </a>
+  {%- endcapture -%}
+
+  {%- capture items -%}{{ items }}
+      <li class="place" id="{{ pid }}">
+        <div class="place-head">
+          <h3>{{ p.place }}</h3>
+          <span class="place-where">{% if p.state %}{{ p.state }}, {% endif %}{{ p.country }} &middot; {{ p.continent }}</span>
+          {%- if p.when -%}<span class="place-when">{{ p.when }}</span>{%- endif -%}
+        </div>
+        {%- if p.note -%}<p class="place-note">{{ p.note }}</p>{%- endif -%}
+        {%- if p.story -%}<div class="place-story">{{ p.story | markdownify }}</div>{%- endif -%}
+        {%- if p.post -%}
+          <p class="place-link place-post">
+            <a href="{{ p.post | relative_url }}"><i class="fas fa-file-alt"></i> Read the post</a>
+          </p>
+        {%- endif -%}
+        {%- if p.quest -%}
+          <p class="place-link place-quest">
+            <a href="{{ '/side-quests/#q' | append: p.quest | relative_url }}">
+              <i class="fas fa-check-square"></i> side quest #{{ p.quest }}
+            </a>
+          </p>
+        {%- endif -%}
+        {%- if wm.states and p.iso == 'IND' -%}
+          {%- assign s = p.state | slugify -%}
+          {%- if p.state == nil -%}
+            <p class="place-warn">No <code>state</code> in _data/travel.yml, so this place fills no state on the map.</p>
+          {%- elsif wm.states[s] == nil -%}
+            <p class="place-warn"><code>state: {{ p.state }}</code> is not one of the 36 in _data/world_map.yml, so this place fills no state on the map.</p>
+          {%- endif -%}
+        {%- endif -%}
+        {%- if p.photos -%}
+          <div class="shots">
+            {%- for shot in p.photos -%}
+              {%- include photo-tile.html photo=shot alt=p.place -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </li>
+  {%- endcapture -%}
+{%- endfor -%}
 
 {%- if isos.size > 0 -%}
 <style>
-  {% for iso in isos %}.travel #c-{{ iso }}{% unless forloop.last %},{% endunless %}{% endfor %} { fill: var(--accent); }
+  {% for iso in isos %}.travel #c-{{ iso }}{% unless forloop.last %},{% endunless %}{% endfor %} { fill: var(--visited); }
+  {%- if wm.states and state_slugs.size > 0 %}
+  {% for s in state_slugs %}.travel #s-{{ s }}{% unless forloop.last %},{% endunless %}{% endfor %} { --unit: var(--visited); }
+  {%- endif %}
 </style>
 {%- endif -%}
 
@@ -103,10 +227,14 @@ comments: true
     </div>
   </div>
 
-  <div class="stat-grid">
+  <div class="stat-grid c4">
     <div class="stat-card">
       <div class="n">{{ isos | size }}</div>
       <div class="l">Countries</div>
+    </div>
+    <div class="stat-card">
+      <div class="n">{{ state_slugs | size }}<small> / 36</small></div>
+      <div class="l">States &amp; UTs</div>
     </div>
     <div class="stat-card">
       <div class="n">{{ places | size }}</div>
@@ -119,39 +247,48 @@ comments: true
     </div>
   </div>
 
-  <div class="map-wrap" id="map-wrap"
-       data-lon-min="{{ wm.lon_min }}" data-lon-max="{{ wm.lon_max }}"
-       data-lat-min="{{ wm.lat_min }}" data-lat-max="{{ wm.lat_max }}">
+  {%- comment -%}
+    The marker shapes, drawn once and pointed at by every marker. Inline SVG
+    rather than icon-font glyphs: the site's Font Awesome is the JavaScript
+    build, so its icons are not there at all without it.
+  {%- endcomment -%}
+  <svg class="mark-sprite" aria-hidden="true" focusable="false" width="0" height="0">
+    <symbol id="mk-body" viewBox="0 0 18 24"><path d="M2 1.5h14V15l-7 7.5L2 15z"/></symbol>
+    <symbol id="mk-place" viewBox="0 0 10 10"><circle cx="5" cy="5" r="2.4"/></symbol>
+    <symbol id="mk-trek" viewBox="0 0 10 10"><path d="M0 9 3.6 2.4l2.1 3.5L7.2 3.8 10 9z"/></symbol>
+    <symbol id="mk-city" viewBox="0 0 10 10"><path d="M.6 9V4.6h3.2V9zM4.6 9V1.2h4.8V9z"/></symbol>
+    <symbol id="mk-coast" viewBox="0 0 10 10"><path d="M0 5.4c1.7-1.6 3.3-1.6 5 0s3.3 1.6 5 0V9H0z"/></symbol>
+    <symbol id="mk-home" viewBox="0 0 10 10"><path d="M5 .8 10 5.2H8.5V9h-7V5.2H0z"/></symbol>
+  </svg>
 
-    <svg class="world" id="world" xmlns="http://www.w3.org/2000/svg"
-         viewBox="{{ vb_x | round: 4 }} {{ vb_y | round: 4 }} {{ lon_span | round: 4 }} {{ lat_span | round: 4 }}"
-         preserveAspectRatio="xMidYMid meet" role="img"
-         aria-label="Map with visited countries filled and a pin on each place listed below">
-      {% include world-land.svg %}
-    </svg>
+  {%- comment -%}
+    The stage is the map plus room around it: the hover card lives here
+    rather than inside the map, which clips its contents and claims every
+    pointer for panning.
+  {%- endcomment -%}
+  <div class="map-stage" id="map-stage">
+    <div class="map-wrap{% if lon_span > lod_span %} lod-world{% endif %}{% if wm.states %} has-states{% endif %}" id="map-wrap"
+         data-lon-min="{{ wm.lon_min }}" data-lon-max="{{ wm.lon_max }}"
+         data-lat-min="{{ wm.lat_min }}" data-lat-max="{{ wm.lat_max }}"
+         data-x-scale="{{ k }}" data-lod-span="{{ lod_span }}"
+         {%- if wm.detail_box %} data-detail="{{ wm.detail_box | join: ' ' }}"{% endif %}>
 
-    {%- for p in places -%}
-      {%- comment -%}
-        Plate carree, so a pin is a straight linear map from degrees onto the
-        view. The lat/lon ride along as data attributes because the zoom script
-        has to redo this every time the view moves.
-      {%- endcomment -%}
-      {%- assign px = p.lon | minus: vb_x | times: 100.0 | divided_by: lon_span -%}
-      {%- assign py = 0.0 | minus: p.lat | minus: vb_y | times: 100.0 | divided_by: lat_span -%}
-      <a class="pin" href="#place-{{ forloop.index }}"
-         data-lon="{{ p.lon }}" data-lat="{{ p.lat }}"
-         style="left: {{ px | round: 3 }}%; top: {{ py | round: 3 }}%"
-         title="{{ p.place }}, {{ p.country }}">
-        <span class="sr">{{ p.place }}, {{ p.country }}</span>
-      </a>
-    {%- endfor -%}
+      <svg class="world" id="world" xmlns="http://www.w3.org/2000/svg"
+           viewBox="{{ vb_x | round: 4 }} {{ vb_y | round: 4 }} {{ lon_span | round: 4 }} {{ lat_span | round: 4 }}"
+           preserveAspectRatio="xMidYMid meet" role="img"
+           aria-label="Map with visited countries{% if wm.states %} and Indian states{% endif %} filled and a marker on each place listed below">
+        {% include world-land.svg %}
+      </svg>
 
-    {%- comment -%} Inert until travel.js switches them on. {%- endcomment -%}
-    <div class="map-tools">
-      <button type="button" data-zoom="in" title="Zoom in" aria-label="Zoom in">+</button>
-      <button type="button" data-zoom="out" title="Zoom out" aria-label="Zoom out">&minus;</button>
-      <button type="button" data-view="home" title="Back to the default view">Reset</button>
-      <button type="button" data-view="world" title="Zoom out to the whole world">World</button>
+      {{ marks }}
+
+      {%- comment -%} Inert until travel.js switches them on. {%- endcomment -%}
+      <div class="map-tools">
+        <button type="button" data-zoom="in" title="Zoom in" aria-label="Zoom in">+</button>
+        <button type="button" data-zoom="out" title="Zoom out" aria-label="Zoom out">&minus;</button>
+        <button type="button" data-view="home" title="Back to the default view">Reset</button>
+        <button type="button" data-view="world" title="Zoom out to the whole world">World</button>
+      </div>
     </div>
   </div>
 
@@ -164,9 +301,12 @@ comments: true
   </div>
 
   <p class="map-note">
-    Scroll to zoom, drag to pan, or use the buttons. Natural Earth outlines,
-    plate carr&eacute;e projection. Antarctica is off the bottom of the map but
-    still counts as a continent, which feels like cheating in its favour.
+    Scroll to zoom, drag to pan, or use the buttons; hover or tap a marker for
+    the details. Natural Earth outlines{% if wm.states %}, with India's states
+    and union territories once you zoom in on it{% endif %}. Equirectangular
+    projection, true to scale along the Tropic of Cancer. Antarctica is off the
+    bottom of the map but still counts as a continent, which feels like
+    cheating in its favour.
   </p>
 
   <h2 class="sect">The list</h2>
@@ -175,37 +315,13 @@ comments: true
     <p class="empty">Nothing pinned yet.</p>
   {%- endif -%}
 
-  <ol class="places">
-    {%- for p in places -%}
-      <li class="place" id="place-{{ forloop.index }}">
-        <div class="place-head">
-          <h3>{{ p.place }}</h3>
-          <span class="place-where">{{ p.country }} &middot; {{ p.continent }}</span>
-          {%- if p.when -%}<span class="place-when">{{ p.when }}</span>{%- endif -%}
-        </div>
-        {%- if p.note -%}<p class="place-note">{{ p.note }}</p>{%- endif -%}
-        {%- if p.quest -%}
-          <p class="place-quest">
-            <a href="{{ '/side-quests/#q' | append: p.quest | relative_url }}">
-              <i class="fas fa-check-square"></i> side quest #{{ p.quest }}
-            </a>
-          </p>
-        {%- endif -%}
-        {%- if p.photos -%}
-          <div class="shots">
-            {%- for shot in p.photos -%}
-              {%- include photo-tile.html photo=shot alt=p.place -%}
-            {%- endfor -%}
-          </div>
-        {%- endif -%}
-      </li>
-    {%- endfor -%}
+  <ol class="places">{{ items }}
   </ol>
 
   <p class="foot-note">
     Adding a place is one entry in <code>_data/travel.yml</code> (name,
-    country, ISO code, lat/lon) and the map, the counts, the default
-    zoom and the continent quest all move on their own.
+    country, ISO code, lat/lon, and the state for India) and the map, the
+    counts, the default zoom and the continent quest all move on their own.
   </p>
 
 </div>
