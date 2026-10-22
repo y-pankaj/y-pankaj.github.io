@@ -148,6 +148,8 @@
 - id: 18
   text: Visit Ladakh
   theme: travel
+  done: true
+  when: "2026-10"
   see: /travel/
 
 - id: 19

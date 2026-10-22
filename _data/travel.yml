@@ -43,8 +43,22 @@
 #                         scripts/build_photos.py makes the web-sized copy and
 #                         the thumbnail the page prefers, and strips the GPS.
 #
-# Only the two below are things the site already knows about. Everything else
+# Only the ones below are things the site already knows about. Everything else
 # is yours to fill in -- the page counts whatever is here.
+
+- place: Leh
+  country: India
+  iso: IND
+  continent: Asia
+  lat: 34.1526
+  lon: 77.5771
+  state: Ladakh
+  kind: city
+  when: "2026-10"
+  note: Ladakh, at last. The town sits at about 3,500 m.
+  quest: 18
+  photos:
+    - caption: Leh from above
 
 - place: Kuari Pass
   country: India
