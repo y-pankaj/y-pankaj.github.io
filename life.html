@@ -1,0 +1,89 @@
+---
+layout: default
+title: Life in Weeks
+permalink: /life/
+description: One square for every week of a 90-year life, with the weeks this site knows about filled in.
+comments: true
+wip: The posts, trips, quests and training fill themselves in. The eras, from school on, are still to be added.
+---
+
+{%- comment -%}
+  The grid is drawn by assets/js/life.js from the JSON block at the bottom of
+  this page. All Liquid does is gather what the site already knows: the start
+  date and eras from _data/life.yml, and the posts, places, quests and
+  training days from everywhere else. The date maths is left to the script,
+  which knows what day it is; a build only knows the day it ran.
+
+  Whatever someone typed -- titles, notes, captions -- goes through
+  replace: '</', '<\/' so that a "</script>" in it cannot end the block early.
+  Backslash-slash is JSON for a plain slash.
+{%- endcomment -%}
+
+{%- assign life = site.data.life -%}
+{%- assign cal = site.data.fitness.calendar -%}
+
+<div class="life" id="life">
+
+  <div class="dash-head">
+    <h1 class="post-title">Life in Weeks</h1>
+    <div class="post-meta" id="life-meta">{{ life.years | default: 90 }} years, a row of 52 weeks to each</div>
+    {% include wip.html %}
+  </div>
+
+  <p class="intro">
+    One square for every week of a ninety-year life, a row to each year. The
+    grey ones are behind me, and the coloured ones are weeks this site has
+    something to say about. Borrowed from Tim Urban&rsquo;s
+    <a href="https://waitbutwhy.com/2014/05/life-weeks.html">Your Life in Weeks</a>.
+  </p>
+
+  <noscript>
+    <p class="no-js-note">
+      The grid is drawn in the browser, so it needs JavaScript. It is
+      {{ life.years | default: 90 }} rows of 52 weeks, starting from {{ life.born }}.
+    </p>
+  </noscript>
+
+  <div class="life-stage" id="life-stage">
+    <div class="life-grid" id="life-grid"></div>
+    <div class="life-card" id="life-card" aria-hidden="true" hidden></div>
+  </div>
+
+  <p class="foot-note">
+    A row is a year of 52 squares, so the day or two left over each year folds
+    into its last one. A ring rather than a filled square is a week known only
+    to the month or the year, placed mid-month or mid-year until the date is
+    filled in. The start date and the eras live in <code>_data/life.yml</code>;
+    the rest comes from the posts, <code>_data/travel.yml</code>,
+    <code>_data/quests.yml</code> and the fitness sync.
+  </p>
+
+</div>
+
+<script type="application/json" id="life-data">
+{
+  "born": {{ life.born | jsonify }},
+  "years": {{ life.years | default: 90 | jsonify }},
+  "eras": {{ life.eras | jsonify | replace: '</', '<\/' }},
+  "posts": [
+    {%- for post in site.posts %}
+    {"date": "{{ post.date | date: '%Y-%m-%d' }}", "title": {{ post.title | jsonify | replace: '</', '<\/' }}, "url": {{ post.url | relative_url | jsonify }}}{% unless forloop.last %},{% endunless %}
+    {%- endfor %}
+  ],
+  "places": {{ site.data.travel | jsonify | replace: '</', '<\/' }},
+  "quests": {{ site.data.quests | jsonify | replace: '</', '<\/' }},
+  "training": {
+    "start": {{ cal.start | jsonify }},
+    "lift": {{ cal.lift | jsonify }},
+    "run": {{ cal.run | jsonify }}
+  },
+  "links": {
+    "travel": {{ '/travel/' | relative_url | jsonify }},
+    "quests": {{ '/side-quests/' | relative_url | jsonify }},
+    "fitness": {{ '/fitness/' | relative_url | jsonify }}
+  }
+}
+</script>
+<script src="{{ '/assets/js/life.js' | relative_url }}" defer></script>
+
+{% include comments.html %}

@@ -1,0 +1,26 @@
+# The data behind /life/, the life-in-weeks grid.
+#
+# One square for every week of a 90-year life. Most of the page fills itself
+# in from what the site already keeps -- the posts, the places in travel.yml
+# that have a `when`, the side quests that are done and have a `when`, and the
+# training days in fitness.json -- so this file only holds what it cannot know.
+#
+# Fields
+# ------
+#   born   required   a year, 2000, or a quoted date, "2000-05-12". A year
+#                     starts the grid on 1 January, so the page does not give
+#                     away a birthday; a date makes each row turn over on it.
+#   years  optional   how many rows to draw. 90 if left out.
+#   eras   optional   stretches of life, bracketed down the right of the grid.
+#                     `from` and `to` take a year, a year-month or a date; leave
+#                     `to` off for one that is still going:
+#                         - label: School
+#                           from: 2006
+#                           to: 2018-03
+#                     They overlap fine -- a city and a job can run side by side.
+
+born: 2000
+years: 90
+
+# Still to fill in: school, college, jobs, cities.
+eras:

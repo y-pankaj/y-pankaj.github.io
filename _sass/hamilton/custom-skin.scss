@@ -33,4 +33,21 @@
   // custom-styles.scss, which is a different Sass chain, so it is repeated
   // here; keep the two in step.
   --visited: #{mix(#fc4c02, $background-color, 32%)};
+
+  // The squares on /life/. The grid itself is steps of grey -- weeks to come,
+  // weeks lived, weeks with training in them -- so that hue is left for the
+  // three kinds of marked week. Quests wear the accent, as on /side-quests/;
+  // posts and trips are slots 1 and 3 of the dataviz skill's default palette,
+  // which clear its all-pairs colour-blindness checks alongside the accent
+  // on every skin here. A dark skin takes that palette's dark steps.
+  --wk-future: #{mix($text-color, $background-color, 7%)};
+  --wk-lived: #{mix($text-color, $background-color, 24%)};
+  --wk-trained: #{mix($text-color, $background-color, 50%)};
+  @if lightness($background-color) < 50% {
+    --wk-post: #3987e5;
+    --wk-trip: #199e70;
+  } @else {
+    --wk-post: #2a78d6;
+    --wk-trip: #1baf7a;
+  }
 }
