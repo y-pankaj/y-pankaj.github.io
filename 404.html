@@ -1,24 +1,27 @@
 ---
 layout: default
+title: Page not found
 ---
 
-<style type="text/css" media="screen">
-  .container {
-    margin: 10px auto;
-    max-width: 600px;
-    text-align: center;
-  }
-  h1 {
-    margin: 30px 0;
-    font-size: 4em;
-    line-height: 1;
-    letter-spacing: -1px;
-  }
-</style>
+{%- comment -%}
+  GitHub Pages serves this for any address that does not exist, at that
+  address, so every link in here has to be absolute from the root -- which
+  relative_url gives, the site having no baseurl.
+{%- endcomment -%}
 
-<div class="container">
-  <h1>404</h1>
+<div class="silk">
 
-  <p><strong>Page not found :(</strong></p>
-  <p>The requested page could not be found.</p>
+  <div class="dash-head">
+    <h1 class="post-title">404</h1>
+    <div class="post-meta">Page not found</div>
+  </div>
+
+  <p class="intro">
+    There is nothing at this address. The <a href="{{ '/' | relative_url }}">blog</a>
+    is the way back. Or, since you have taken a wrong turn anyway, try crossing
+    Silk Board.
+  </p>
+
+  {% include silk-board.html %}
+
 </div>

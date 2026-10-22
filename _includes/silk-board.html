@@ -1,0 +1,68 @@
+{%- comment -%}
+  The Silk Board game: the markup assets/js/silk-board.js drives. Used by
+  /silk-board/ and by the 404 page, and fine to drop into anything else that
+  sits inside a `.silk` block -- once per page, since the help text has an id.
+
+  data-url is where "Share" points, so a score shared from a 404 is still a
+  link to the game rather than to the page that was not found.
+{%- endcomment -%}
+<div class="silk-game" tabindex="0" data-url="{{ '/silk-board/' | relative_url }}"
+     aria-label="Silk Board Simulator" aria-describedby="silk-help">
+
+  <div class="silk-hud">
+    <span>Crossings<b data-hud="score">0</b></span>
+    <span>Chances<b data-hud="lives">&#9679;&#9679;&#9679;</b></span>
+    <span>Stuck for<b data-hud="time">0m</b></span>
+    <span>Best<b data-hud="best">0</b></span>
+  </div>
+
+  <div class="silk-frame">
+    <canvas width="416" height="352" role="img"
+            aria-label="Silk Board junction from above: four lanes of traffic each way, a median with cows on it, and you at the bottom."></canvas>
+
+    <div class="silk-overlay" data-screen="ready">
+      <h2>Silk Board Simulator</h2>
+      <p>
+        Cross from HSR Layout to BTM Layout on foot. Four lanes each way, cows
+        on the median, potholes, and three chances.
+      </p>
+      <div class="silk-btns">
+        <button type="button" class="silk-btn is-main" data-act="start">Start crossing</button>
+      </div>
+    </div>
+
+    <div class="silk-overlay" data-screen="paused" hidden>
+      <h2>Paused</h2>
+      <p>The traffic, sadly, is not.</p>
+      <div class="silk-btns">
+        <button type="button" class="silk-btn is-main" data-act="resume">Resume</button>
+      </div>
+    </div>
+
+    <div class="silk-overlay" data-screen="over" hidden>
+      <h2 data-over="title">Game over</h2>
+      <p data-over="line"></p>
+      <div class="silk-btns">
+        <button type="button" class="silk-btn is-main" data-act="start">Go again</button>
+        <button type="button" class="silk-btn" data-act="share">Share</button>
+      </div>
+      <p data-over="shared" hidden></p>
+    </div>
+  </div>
+
+  <p class="silk-msg" data-hud="msg" aria-live="polite"></p>
+
+  <div class="silk-pad" aria-hidden="true">
+    <button type="button" tabindex="-1" data-move="up">&uarr;</button>
+    <button type="button" tabindex="-1" data-move="left">&larr;</button>
+    <button type="button" tabindex="-1" data-move="down">&darr;</button>
+    <button type="button" tabindex="-1" data-move="right">&rarr;</button>
+  </div>
+
+  <p class="silk-help" id="silk-help">
+    Arrow keys or WASD to move, P to pause. On a phone, swipe, tap to step
+    forward, or use the pad.
+  </p>
+</div>
+
+<script src="{{ '/assets/js/silk-board.js' | relative_url }}" defer></script>

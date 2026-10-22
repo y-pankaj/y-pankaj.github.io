@@ -1,0 +1,29 @@
+---
+layout: default
+title: Silk Board Simulator
+permalink: /silk-board/
+description: Cross Bengaluru's most famous junction on foot without getting hit. A small game.
+---
+
+{%- comment -%}
+  The game is _includes/silk-board.html and assets/js/silk-board.js; the 404
+  page carries the same one. This page is the address to share, since a 404
+  answers with a 404 status and link previews tend to give up on those.
+{%- endcomment -%}
+
+<div class="silk">
+
+  <div class="dash-head">
+    <h1 class="post-title">Silk Board Simulator</h1>
+    <div class="post-meta">A game about crossing one junction</div>
+  </div>
+
+  <p class="intro">
+    Get from HSR Layout to BTM Layout on foot. The autos, the buses, the
+    delivery riders and the odd cow all have other plans. A companion piece to
+    <a href="{{ '/2024/11/09/Banglore-traffic.html' | relative_url }}">Surviving Banglore traffic</a>.
+  </p>
+
+  {% include silk-board.html %}
+
+</div>
