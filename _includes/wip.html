@@ -1,0 +1,16 @@
+{%- comment -%}
+  The "work in progress" badge, for a page that is live but not finished.
+  A page opts in from its front matter:
+
+      wip: true                            -- the badge on its own
+      wip: Still adding the photos.        -- the badge, and that line under it
+
+  Include it in the page's .dash-head, after the title and the meta line. The
+  badge sits at the far end of the row and the note takes a line of its own.
+{%- endcomment -%}
+{%- if page.wip -%}
+  <span class="wip">Work in progress</span>
+  {%- unless page.wip == true -%}
+    <p class="wip-note">{{ page.wip | escape }}</p>
+  {%- endunless -%}
+{%- endif -%}
