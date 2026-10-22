@@ -117,6 +117,9 @@
     @include media-query(700px) {
       grid-template-columns: repeat(2, 1fr);
 
+      // .c4 is the more specific selector, so it has to be undone by name.
+      &.c4 { grid-template-columns: repeat(2, 1fr); }
+
       // An odd number of cards would otherwise leave a hole in the last row,
       // which reads as a missing card rather than as empty space.
       > *:last-child:nth-child(odd) { grid-column: 1 / -1; }
