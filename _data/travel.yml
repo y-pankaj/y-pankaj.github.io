@@ -91,19 +91,19 @@
     - src: /assets/images/travel/jaipur-albert-hall.jpg
       caption: Albert Hall Museum
 
-- place: Mangalore
+- place: Mysore
   country: India
   iso: IND
   continent: Asia
-  lat: 12.9141
-  lon: 74.8560
+  lat: 12.2958
+  lon: 76.6394
   state: Karnataka
-  kind: coast
+  kind: city
   when: "2026-04-19"
-  note: The arch and the lawns, back on the coast.
+  note: The palace arch, with the palace itself behind it.
   photos:
-    - src: /assets/images/travel/mangalore-arch.jpg
-      caption: The arch at Mangalore
+    - src: /assets/images/travel/mysore-arch.jpg
+      caption: Mysore Palace
 
 - place: Vrindavan
   country: India
