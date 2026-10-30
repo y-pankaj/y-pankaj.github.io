@@ -148,6 +148,18 @@ wip: Still adding places, and the photos to go with them.
   {%- unless kinds contains kind -%}{%- assign kind = 'place' -%}{%- endunless -%}
 
   {%- comment -%}
+    A full date is written "2 Oct 2026", a month "Oct 2026", and a bare year
+    is left alone. The raw value stays in the data because it is what sorts
+    the list and what life.js reads back for the grid.
+  {%- endcomment -%}
+  {%- assign when_text = p.when -%}
+  {%- if p.when.size == 10 -%}
+    {%- assign when_text = p.when | date: '%-d %b %Y' -%}
+  {%- elsif p.when.size == 7 -%}
+    {%- assign when_text = p.when | date: '%b %Y' -%}
+  {%- endif -%}
+
+  {%- comment -%}
     A straight linear map from degrees onto the view. The lat/lon ride along
     as data attributes because the zoom script has to redo this every time
     the view moves. The marker points down at its place and stands up from
@@ -157,7 +169,7 @@ wip: Still adding places, and the photos to go with them.
   {%- assign py = 0.0 | minus: p.lat | minus: vb_y | times: 100.0 | divided_by: lat_span -%}
   {%- assign z = 200 | minus: p.lat | round -%}
   {%- capture label -%}
-    {{ p.place }}{% if p.state %}, {{ p.state }}{% endif %}, {{ p.country }}{% if p.when %}, {{ p.when }}{% endif %}
+    {{ p.place }}{% if p.state %}, {{ p.state }}{% endif %}, {{ p.country }}{% if p.when %}, {{ when_text }}{% endif %}
   {%- endcapture -%}
 
   {%- capture marks -%}{{ marks }}
@@ -173,7 +185,7 @@ wip: Still adding places, and the photos to go with them.
         <div class="place-head">
           <h3>{{ p.place }}</h3>
           <span class="place-where">{% if p.state %}{{ p.state }}, {% endif %}{{ p.country }} &middot; {{ p.continent }}</span>
-          {%- if p.when -%}<span class="place-when">{{ p.when }}</span>{%- endif -%}
+          {%- if p.when -%}<span class="place-when">{{ when_text }}</span>{%- endif -%}
         </div>
         {%- if p.note -%}<p class="place-note">{{ p.note }}</p>{%- endif -%}
         {%- if p.story -%}<div class="place-story">{{ p.story | markdownify }}</div>{%- endif -%}
