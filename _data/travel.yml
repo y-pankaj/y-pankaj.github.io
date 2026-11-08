@@ -21,8 +21,7 @@
 #                         the map does not know shows up as a warning on the
 #                         place's own entry rather than failing quietly.
 #   when       optional   "2023", "2023-06" or "2023-06-14". Sorts the list;
-#                         undated goes last. A full date also puts the trip on
-#                         the right week of /life/.
+#                         undated goes last.
 #   note       optional   one line. It is the text on the map's hover card as
 #                         well as on the list, and the card stops at two lines.
 #   story      optional   longer text for the list only. Markdown.
