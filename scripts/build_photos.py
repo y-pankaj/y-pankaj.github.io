@@ -10,6 +10,11 @@ Camera originals go in ``_photos/``, laid out the way they will be under
 
 and the YAML points at the first: ``src: /assets/images/travel/kuari-ridge.jpg``.
 The tiles find the thumbnail on their own (see _includes/photo-tile.html).
+
+It also writes ``_data/photo_sizes.yml``, every photo's width and height,
+because Liquid cannot open an image and the film roll on /travel/ sizes each
+frame to its photo's shape. ``--sizes`` rewrites just that file, from the
+copies already in assets/images, without needing the originals.
 ``_photos/`` is gitignored and Jekyll skips it for its leading underscore, so
 the originals never leave your machine.
 
@@ -22,12 +27,14 @@ Run it after adding photos; it skips any copy newer than its original.
 
     python3 scripts/build_photos.py
     python3 scripts/build_photos.py --check   # GPS already in assets/images?
+    python3 scripts/build_photos.py --sizes   # only _data/photo_sizes.yml
 
 JPEG, PNG and WebP in. HEIC, the iPhone default, needs the pillow-heif plugin,
 or exporting as JPEG first.
 """
 
 import argparse
+import json
 import os
 import sys
 from pathlib import Path
@@ -35,6 +42,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SOURCE = ROOT / "_photos"
 DEST = ROOT / "assets" / "images"
+SIZES = ROOT / "_data" / "photo_sizes.yml"
 
 LONG_SIDE = 1600
 THUMB_WIDTH = 480
@@ -105,6 +113,42 @@ def check(dest):
     return 1 if found else 0
 
 
+def site_path(path, dest):
+    """/assets/images/travel/x.jpg, for a file under `dest`."""
+    try:
+        return "/" + path.relative_to(ROOT).as_posix()
+    except ValueError:   # a --dest outside the repo stands in for assets/images
+        return "/assets/images/" + path.relative_to(dest).as_posix()
+
+
+def write_sizes(dest, out):
+    """Record the size of every web copy that has a thumbnail beside it.
+
+    Those are the photos this script made, which is the set the photo tiles
+    and the film roll use. Keys are site paths, as the YAML writes `src`.
+    """
+    from PIL import Image
+
+    sizes = {}
+    for thumb in sorted(dest.rglob(f"{THUMB_DIR}/*.jpg")):
+        web = thumb.parent.parent / thumb.name
+        if not web.is_file():
+            continue
+        with Image.open(web) as image:
+            sizes[site_path(web, dest)] = image.size
+
+    lines = [
+        "# Written by scripts/build_photos.py -- run it again rather than editing.",
+        "# The width and height of each photo, which Liquid cannot read for itself.",
+        "",
+    ]
+    lines += [f"{json.dumps(path)}: [{w}, {h}]" for path, (w, h) in sizes.items()]
+    text = "\n".join(lines) + "\n"
+    if not out.exists() or out.read_text() != text:
+        out.write_text(text)
+    print(f"{len(sizes)} photo sizes in {out.relative_to(ROOT)}")
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(
         description=__doc__,
@@ -113,6 +157,8 @@ def main(argv=None):
                     help="rebuild every copy, not just the stale ones")
     ap.add_argument("--check", action="store_true",
                     help="only report published images that carry GPS data")
+    ap.add_argument("--sizes", action="store_true",
+                    help=f"only rewrite {SIZES.relative_to(ROOT)} from the copies")
     ap.add_argument("--originals", type=Path, default=SOURCE,
                     help=f"where the originals are (default {SOURCE.relative_to(ROOT)})")
     ap.add_argument("--dest", type=Path, default=DEST,
@@ -127,6 +173,9 @@ def main(argv=None):
 
     if args.check:
         return check(dest)
+    if args.sizes:
+        write_sizes(dest, SIZES)
+        return 0
     if not source.is_dir():
         raise SystemExit(f"no {source}/ -- put the originals there")
 
@@ -144,6 +193,7 @@ def main(argv=None):
               f"({web.stat().st_size / 1024:.0f} KB), "
               f"{thumb.relative_to(dest)} ({thumb.stat().st_size / 1024:.0f} KB)")
     print(f"{built} built, {skipped} up to date")
+    write_sizes(dest, SIZES)
     return 0
 
 

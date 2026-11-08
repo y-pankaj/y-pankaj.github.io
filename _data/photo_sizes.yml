@@ -1,0 +1,9 @@
+# Written by scripts/build_photos.py -- run it again rather than editing.
+# The width and height of each photo, which Liquid cannot read for itself.
+
+"/assets/images/travel/jaipur-albert-hall.jpg": [1600, 900]
+"/assets/images/travel/leh-valley.jpg": [1600, 707]
+"/assets/images/travel/mulki-surf.jpg": [1600, 1068]
+"/assets/images/travel/mysore-arch.jpg": [1600, 900]
+"/assets/images/travel/rishikesh-ghat.jpg": [900, 1600]
+"/assets/images/travel/vrindavan-temple.jpg": [1600, 900]
