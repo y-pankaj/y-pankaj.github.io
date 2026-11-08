@@ -33,16 +33,20 @@
 #                         as a slug (kuari-pass), with the year added when two
 #                         entries share a name. Set it only to keep an old link
 #                         working.
-#   photos     optional   list of entries; the first is the one the card opens
-#                         on. A photo with no `src` renders as a labelled
-#                         placeholder tile, so you can write the captions now
-#                         and drop the files in later:
+#   photos     optional   list of entries. They go on the film roll above the
+#                         map, in this order, and the first is the cover on
+#                         the place's entry in the list. A photo with no `src`
+#                         is an unexposed frame with its caption on it, so you
+#                         can write the captions now and drop the files in
+#                         later:
 #                             photos:
 #                               - src: /assets/images/travel/kuari-ridge.jpg
 #                                 caption: First light on the ridge
 #                               - caption: Camp at Gorson Bugyal   # placeholder
 #                         scripts/build_photos.py makes the web-sized copy and
-#                         the thumbnail the page prefers, and strips the GPS.
+#                         the thumbnail the page prefers, strips the GPS, and
+#                         records the size in _data/photo_sizes.yml, which is
+#                         what gives each frame its photo's shape.
 #
 # Only the ones below are things the site already knows about. Everything else
 # is yours to fill in -- the page counts whatever is here.

@@ -15,7 +15,8 @@
  * entry in the list below. That entry stays the real content: the card is
  * hidden from assistive tech and nothing in it takes keyboard focus, keyboard
  * focus on a marker shows it as a preview, and Enter follows the marker's
- * link down to the entry, where every photo is.
+ * link down to the entry. The photos are on the film roll above the map,
+ * which travel-roll.js runs; a click on a marker winds that to its place.
  */
 (function () {
   'use strict';
@@ -341,82 +342,6 @@
     return marks.filter(function (m) { return m.el === anchor; })[0];
   }
 
-  function carousel(images) {
-    var shots = el('div', 'card-shots');
-    var frame = el('div', 'card-frame');
-    var strip = el('div', 'card-strip');
-    var count = el('span', 'card-count');
-    var caption = el('span', 'card-caption');
-    var prev = null;
-    var next = null;
-    var index = -1;
-
-    var list = Array.prototype.map.call(images, function (img) {
-      var shot = el('img');
-      shot.alt = img.alt;
-      shot.decoding = 'async';
-      // Only the one on show and the next are fetched; the rest wait.
-      shot.setAttribute('data-src', img.currentSrc || img.src);
-      strip.appendChild(shot);
-      var figure = img.closest('figure');
-      return { img: shot, caption: figure ? textOf(figure, 'figcaption') : '' };
-    });
-
-    function load(i) {
-      var item = list[i];
-      if (item && !item.img.getAttribute('src')) {
-        item.img.src = item.img.getAttribute('data-src');
-      }
-    }
-
-    function showShot(i) {
-      if (i === index) { return; }
-      index = i;
-      load(i);
-      load(i + 1);
-      count.textContent = list.length > 1 ? (i + 1) + ' / ' + list.length : '';
-      caption.textContent = list[i].caption;
-      if (prev) {
-        prev.disabled = i === 0;
-        next.disabled = i === list.length - 1;
-      }
-    }
-
-    function go(i) {
-      i = Math.min(Math.max(i, 0), list.length - 1);
-      strip.scrollTo({ left: i * strip.clientWidth, behavior: REDUCE ? 'auto' : 'smooth' });
-      showShot(i);
-    }
-
-    frame.appendChild(strip);
-    if (list.length > 1) {
-      prev = quiet(el('button', 'card-nav card-prev', '\u2039'));
-      next = quiet(el('button', 'card-nav card-next', '\u203A'));
-      prev.type = next.type = 'button';
-      prev.setAttribute('aria-label', 'Previous photo');
-      next.setAttribute('aria-label', 'Next photo');
-      prev.addEventListener('click', function () { go(index - 1); });
-      next.addEventListener('click', function () { go(index + 1); });
-      frame.appendChild(prev);
-      frame.appendChild(next);
-      // Swiping is the strip's own scroll-snap; this just keeps up with it.
-      var pending = 0;
-      strip.addEventListener('scroll', function () {
-        window.cancelAnimationFrame(pending);
-        pending = window.requestAnimationFrame(function () {
-          if (strip.clientWidth) { showShot(Math.round(strip.scrollLeft / strip.clientWidth)); }
-        });
-      });
-    }
-    shots.appendChild(frame);
-    var line = el('p', 'card-line');
-    line.appendChild(count);
-    line.appendChild(caption);
-    shots.appendChild(line);
-    showShot(0);
-    return shots;
-  }
-
   function buildPlace(m) {
     var item = m && document.getElementById(m.id);
     if (!item) { return false; }
@@ -432,11 +357,6 @@
     if (where) { card.appendChild(el('p', 'card-where', where)); }
     var note = textOf(item, '.place-note');
     if (note) { card.appendChild(el('p', 'card-note', note)); }
-
-    // Only real photos: a caption-only placeholder in the list is a grey
-    // box, and a card full of grey boxes says nothing.
-    var images = item.querySelectorAll('.shots img');
-    if (images.length) { card.appendChild(carousel(images)); }
 
     var foot = el('p', 'card-foot');
     var post = item.querySelector('.place-post a');

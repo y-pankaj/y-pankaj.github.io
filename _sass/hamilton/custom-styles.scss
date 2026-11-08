@@ -160,9 +160,10 @@
   }
 
   // --- photo strips ------------------------------------------------------
-  // Quests and places both take a list of { src, caption }. A tile with no
-  // `src` is a labelled dashed box rather than a broken image, so captions can
-  // be written before the photos exist.
+  // Side quests take a list of { src, caption }; /travel/ puts its photos on
+  // the film roll instead. A tile with no `src` is a labelled dashed box
+  // rather than a broken image, so captions can be written before the photos
+  // exist.
   .shots {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -1196,57 +1197,6 @@
     overflow: hidden;
   }
 
-  // A row of photos that scroll-snaps one at a time, so swiping is the
-  // browser's own and the buttons only have to scroll it by a width.
-  .card-shots { margin-top: .55rem; }
-  .card-frame { position: relative; }
-  .card-strip {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-
-    &::-webkit-scrollbar { display: none; }
-
-    img {
-      flex: 0 0 100%;
-      display: block;
-      width: 100%;
-      aspect-ratio: 4 / 3;
-      object-fit: cover;
-      scroll-snap-align: start;
-      background: var(--fill);
-    }
-  }
-  .card-nav {
-    position: absolute;
-    top: 50%;
-    width: 26px;
-    height: 26px;
-    margin-top: -13px;
-    padding: 0;
-    border: 1px solid var(--border-light);
-    border-radius: 50%;
-    background: var(--panel);
-    color: var(--text);
-    font-size: 1rem;
-    line-height: 1;
-    opacity: .9;
-    cursor: pointer;
-
-    &:disabled { opacity: .35; cursor: default; }
-  }
-  .card-prev { left: 6px; }
-  .card-next { right: 6px; }
-  .map-card .card-line {
-    display: flex;
-    gap: .5rem;
-    margin-top: .3rem;
-    font-size: .66rem;
-    color: var(--text-light);
-  }
-  .card-count { font-variant-numeric: tabular-nums; white-space: nowrap; }
-
   .map-card .card-foot {
     display: flex;
     gap: .9rem;
@@ -1375,7 +1325,455 @@
     color: var(--accent);
     margin: .4rem 0 0;
   }
+
+  // --- the film roll -----------------------------------------------------
+  // Every photo on the page on one strip of film, between the stats and the
+  // map. Without travel-roll.js it is a strip that scrolls sideways, with
+  // each frame linking to its full-size photo; the script adds the gate (the
+  // frame in the middle, which the map follows), the arrows, mouse dragging
+  // and the viewer. --film and --gate-fill come from custom-skin.scss.
+  .roll {
+    // A frame's height (travel.html's `sizes` agrees), then the film above
+    // and below the frames.
+    --roll-h: 210px;
+    --edge: 28px;
+    --edge-ink: #8f857b;
+    margin: 0 0 1.1rem;
+
+    @include media-query(600px) {
+      --roll-h: 150px;
+      --edge: 26px;
+    }
+  }
+
+  // The scroller. The sprocket holes are its background, attached to the
+  // content so they travel with the frames, and cut in the page colour so
+  // they read as holes on any skin.
+  .roll-film {
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: 14px;
+    background-color: var(--film);
+    background-image:
+      linear-gradient(90deg, var(--bg) 9px, transparent 9px),
+      linear-gradient(90deg, var(--bg) 9px, transparent 9px);
+    background-size: 17px 6px;
+    background-repeat: repeat-x;
+    background-position: 4px 6px, 4px calc(100% - 6px);
+    background-attachment: local;
+    border-radius: 2px;
+
+    &:focus { outline: none; }
+    &:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+  }
+
+  .roll-track {
+    position: relative;   // what every frame's offsetLeft is measured from
+    display: flex;
+    gap: 26px;
+    width: max-content;
+    padding: 0 14px;
+  }
+
+  // The leader and the tail: what is printed on the run of film before the
+  // first frame and after the last, once the script has made that room.
+  .roll-leader,
+  .roll-tail {
+    display: none;
+    position: absolute;
+    top: 50%;
+    margin: 0;
+    transform: translateY(-50%);
+    font: 600 9px/1.7 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--edge-ink);
+
+    b { font-weight: 600; color: var(--accent); }
+    &.is-cramped { visibility: hidden; }
+  }
+  .roll-leader { left: 20px; }
+  .roll-tail { right: 20px; }
+
+  .roll-place {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: var(--edge);
+  }
+
+  // The edge print: the place and its date, above its first frame.
+  .roll-edge {
+    box-sizing: border-box;
+    height: var(--edge);
+    margin: 0;
+    padding-top: calc(var(--edge) - 13px);
+    font: 600 9px/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--accent);
+
+    b { font-weight: 600; color: var(--edge-ink); margin-left: .7em; }
+  }
+
+  .roll-frames {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: var(--roll-h);
+  }
+
+  // As tall as the film allows and as wide as the photo is, so nothing is
+  // cropped -- unless a panorama would be wider than a phone, in which case
+  // that one frame is let down a little instead. --ar is set per frame.
+  .roll-frame {
+    --fh: min(var(--roll-h), calc(80vw / var(--ar)));
+    position: relative;
+    flex: none;
+    display: block;
+    height: var(--fh);
+    width: calc(var(--fh) * var(--ar));
+    scroll-snap-align: start;
+    background: #24211f;
+    color: inherit;
+    text-decoration: none;
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: filter .25s ease;
+      -webkit-user-drag: none;
+      user-select: none;
+    }
+
+    &:focus { outline: none; }
+    &:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+  }
+
+  // The frame number, in the bottom edge.
+  .roll-no {
+    position: absolute;
+    top: 100%;
+    left: 1px;
+    margin-top: calc((var(--roll-h) - var(--fh)) / 2 + 4px);
+    font: 600 9px/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    letter-spacing: .1em;
+    color: var(--edge-ink);
+
+    &::before { content: "\25B8"; margin-right: 2px; }
+  }
+
+  // A photo that is still only a caption: an unexposed frame.
+  .roll-frame.is-blank {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .35rem;
+    box-sizing: border-box;
+    padding: .5rem;
+    text-align: center;
+    background: repeating-linear-gradient(135deg, #1f1c1a 0 7px, #1a1816 7px 14px);
+    outline: 1px dashed #3b3632;
+    outline-offset: -1px;
+  }
+  .roll-blank-tag {
+    font: 600 8px/1.2 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #6f675f;
+  }
+  .roll-blank-cap {
+    font-size: .64rem;
+    line-height: 1.35;
+    font-style: italic;
+    color: #9a9188;
+  }
+
+  // With the script: one frame is in the gate and the rest are dimmed, the
+  // way a light box would show them.
+  .roll.is-live {
+    .roll-film {
+      scroll-snap-type: x mandatory;
+      cursor: grab;
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar { display: none; }
+    }
+    .roll-leader,
+    .roll-tail { display: block; }
+    .roll-frame { scroll-snap-align: center; }
+    .roll-frame:not(.is-gate) img { filter: brightness(.6) saturate(.75); }
+    .roll-frame:not(.is-gate):hover img { filter: brightness(.85); }
+    .roll-frame:not(.is-gate).is-blank { opacity: .6; }
+    .roll-frame.is-gate .roll-no { color: var(--accent); }
+    a.roll-frame { cursor: zoom-in; }
+  }
+  .roll.is-dragging {
+    .roll-film { scroll-snap-type: none; cursor: grabbing; }
+    .roll-frame { cursor: grabbing; }
+  }
+
+  .roll-bar {
+    display: none;
+    align-items: center;
+    gap: .6rem;
+    padding-top: .5rem;
+  }
+  .roll.is-live .roll-bar { display: flex; }
+
+  // The caption gets the room it needs; the hint has whatever is left.
+  .roll-caption {
+    flex: 0 1 auto;
+    min-width: 0;
+    margin: 0;
+    font-size: .78rem;
+    line-height: 1.4;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    span { color: var(--text-light); margin-left: .45em; }
+    em { color: var(--text-light); }
+
+    // Two lines on a phone: the caption, then where and when.
+    @include media-query(600px) {
+      white-space: normal;
+
+      span { display: block; margin-left: 0; font-size: .7rem; }
+    }
+  }
+  .roll-hint {
+    flex: 1 1 0;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: right;
+    font-size: .64rem;
+    color: var(--text-light);
+    white-space: nowrap;
+
+    @include media-query(600px) { display: none; }
+  }
+  .roll-step {
+    flex: none;
+    width: 30px;
+    height: 28px;
+    padding: 0 0 2px;
+    font: 400 1.15rem/1 var(--font-base);
+    color: var(--text-light);
+    background: var(--panel);
+    border: 1px solid var(--border-light);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+
+    &:hover:not(:disabled) { color: var(--text); border-color: var(--border); }
+    &:disabled { opacity: .35; cursor: default; }
+    // At the right-hand end even when there is no hint to push it there.
+    &[data-step="1"] { margin-left: auto; }
+  }
+
+  // The map follows the gate: its place's marker, or the cluster holding it,
+  // and its state light up.
+  .map-wrap {
+    .mark.is-gate,
+    .mark-cluster.is-gate {
+      z-index: 300 !important;
+
+      .mark-body,
+      .mark-back { fill: var(--accent); }
+    }
+  }
+  #world .states path.is-gate { --unit: var(--gate-fill); }
+
+  // In the list, one cover per entry in place of the photos, which are on
+  // the roll. It opens the viewer at that place.
+  .place.has-cover {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 1rem;
+
+    & > * { grid-column: 1; }
+    & > .place-roll { grid-column: 2; grid-row: 1 / span 8; align-self: start; }
+  }
+  .place-roll {
+    position: relative;
+    display: block;
+    width: 104px;
+    height: 70px;
+    background: var(--fill);
+
+    img {
+      display: block;
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border: 1px solid var(--border-light);
+    }
+    span {
+      position: absolute;
+      right: 4px;
+      bottom: 4px;
+      padding: 2px 5px;
+      font-size: .58rem;
+      line-height: 1.2;
+      color: #fff;
+      background: rgba(0, 0, 0, .62);
+    }
+    &:hover img { filter: brightness(1.06); }
+
+    @include media-query(600px) { width: 84px; height: 58px; }
+  }
+  .place-pending {
+    font-size: .7rem;
+    font-style: italic;
+    color: var(--text-light);
+    margin: .4rem 0 0;
+  }
 }
+
+// The roll's full-screen viewer. It is built on <body>, outside .site-main,
+// which is the page's scroll container, so it is not under .travel; it is
+// dark on every skin, as a photo viewer should be.
+.roll-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  background: #0d0c0b;
+  color: #ece8e3;
+  font-family: $base-font-family, -apple-system, Helvetica, Arial, sans-serif;
+
+  &[hidden] { display: none; }
+
+  button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  button:focus { outline: none; }
+  button:focus-visible,
+  a:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+  .rv-head {
+    display: flex;
+    align-items: baseline;
+    gap: .8rem;
+    padding: .9rem 1.2rem .6rem;
+  }
+  .rv-title {
+    margin: 0;
+    font-family: $headline-font-family, Helvetica, Arial, sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -.3px;
+    color: #fff;
+  }
+  .rv-where { margin: 0; font-size: .74rem; color: #a59d94; }
+  .rv-close {
+    margin-left: auto;
+    align-self: center;
+    width: 36px;
+    height: 36px;
+    font-size: 1.6rem;
+    line-height: 1;
+    color: #cfc8c0;
+
+    &:hover { color: #fff; }
+  }
+  .rv-stage {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    padding: 0 4rem;
+    touch-action: pan-y pinch-zoom;
+
+    @include media-query(600px) { padding: 0; }
+  }
+  .rv-img {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  .rv-prev,
+  .rv-next {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 4rem;
+    font-size: 2.4rem;
+    color: #a59d94;
+
+    &:hover:not(:disabled) { color: #fff; }
+    &:disabled { opacity: .2; cursor: default; }
+
+    @include media-query(600px) { width: 3rem; font-size: 2rem; }
+  }
+  .rv-prev { left: 0; }
+  .rv-next { right: 0; }
+  .rv-foot {
+    display: flex;
+    align-items: baseline;
+    gap: .9rem;
+    padding: .7rem 1.2rem .4rem;
+    font-size: .8rem;
+  }
+  .rv-cap { margin: 0; flex: 1; min-width: 0; color: #fff; }
+  .rv-count { font-variant-numeric: tabular-nums; color: #a59d94; font-size: .72rem; }
+  .rv-entry {
+    font-size: .72rem;
+    color: #fd9467;
+    text-decoration: none;
+    white-space: nowrap;
+
+    &:hover { text-decoration: underline; }
+  }
+
+  // The roll again, small, so the viewer can be steered by it too.
+  .rv-strip {
+    display: flex;
+    gap: 5px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: .3rem 1.2rem 1rem;
+
+    &::-webkit-scrollbar { display: none; }
+
+    button {
+      flex: none;
+      height: 44px;
+      padding: 0;
+      opacity: .45;
+      transition: opacity .2s;
+
+      &:hover { opacity: .8; }
+      &[aria-current="true"] { opacity: 1; outline: 2px solid #fd9467; outline-offset: 1px; }
+      // Centred while it fits, scrollable once it does not.
+      &:first-child { margin-left: auto; }
+      &:last-child { margin-right: auto; }
+    }
+    img { display: block; height: 100%; width: auto; }
+  }
+}
+html.rv-open { overflow: hidden; }
 
 
 // =========================================================================

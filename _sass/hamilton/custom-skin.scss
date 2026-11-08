@@ -33,4 +33,15 @@
   // custom-styles.scss, which is a different Sass chain, so it is repeated
   // here; keep the two in step.
   --visited: #{mix(#fc4c02, $background-color, 32%)};
+  // The state of the photo in the film roll's gate: the same accent, less
+  // let down, so it stands out from the other visited states.
+  --gate-fill: #{mix(#fc4c02, $background-color, 60%)};
+
+  // The film roll's base. Black film on a light page; on a dark one that
+  // would be the page itself, sprocket holes and all, so it is lifted.
+  @if lightness($background-color) < 50% {
+    --film: #{mix(#fff, $background-color, 11%)};
+  } @else {
+    --film: #161514;
+  }
 }

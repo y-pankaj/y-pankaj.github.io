@@ -126,14 +126,16 @@ wip: Still adding places, and the photos to go with them.
 {%- assign lod_span = 60 -%}
 
 {%- comment -%}
-  Markers and list entries come out of one loop so that each place's anchor
-  is worked out once. The anchor is the place name as a slug, with the year
-  added when two entries share a name, or `id` if one is given. It used to
-  be the position in the list, which renumbered every link whenever a newer
-  place went in at the top.
+  Markers, the roll's frames and list entries come out of one loop so that
+  each place's anchor is worked out once. The anchor is the place name as a
+  slug, with the year added when two entries share a name, or `id` if one is
+  given. It used to be the position in the list, which renumbered every link
+  whenever a newer place went in at the top.
 {%- endcomment -%}
 {%- assign marks = '' -%}
 {%- assign items = '' -%}
+{%- assign rolls = '' -%}
+{%- assign roll_n = 0 -%}
 {%- for p in places -%}
   {%- assign twins = site.data.travel | where: 'place', p.place -%}
   {%- if p.id -%}
@@ -180,8 +182,82 @@ wip: Still adding places, and the photos to go with them.
       </a>
   {%- endcapture -%}
 
+  {%- comment -%}
+    This place's frames on the roll, and the cover its list entry gets.
+
+    A frame is as wide as its photo is for the roll's height, so it needs the
+    photo's shape, and Liquid cannot open an image: scripts/build_photos.py
+    writes the sizes to _data/photo_sizes.yml. A photo added without running
+    it gets a 3:2 frame until travel-roll.js has seen the real thing. The
+    thumbnail is looked up the way photo-tile.html does it, with the full size
+    in srcset for screens that want more; `sizes` is the frame's width at the
+    stylesheet's 150px (phones, where a frame stops at 80vw) and 210px heights.
+    A photo with no `src` is an unexposed frame with its caption on it.
+  {%- endcomment -%}
+  {%- assign frames = '' -%}
+  {%- assign cover_src = '' -%}
+  {%- assign cover_img = '' -%}
+  {%- assign real_n = 0 -%}
+  {%- for shot in p.photos -%}
+    {%- assign roll_n = roll_n | plus: 1 -%}
+    {%- if shot.src -%}
+      {%- assign real_n = real_n | plus: 1 -%}
+      {%- assign dims = site.data.photo_sizes[shot.src] -%}
+      {%- if dims -%}
+        {%- assign ar = dims[0] | times: 1.0 | divided_by: dims[1] -%}
+      {%- else -%}
+        {%- assign ar = 1.5 -%}
+      {%- endif -%}
+      {%- assign shot_name = shot.src | split: '/' | last -%}
+      {%- assign shot_dir = shot.src.size | minus: shot_name.size -%}
+      {%- assign shot_thumb = shot.src | slice: 0, shot_dir | append: '480/' | append: shot_name -%}
+      {%- assign shot_found = site.static_files | where: 'path', shot_thumb | first -%}
+      {%- if shot_found -%}
+        {%- assign shot_img = shot_thumb -%}
+      {%- else -%}
+        {%- assign shot_img = shot.src -%}
+      {%- endif -%}
+      {%- if cover_src == '' -%}
+        {%- assign cover_src = shot.src -%}
+        {%- assign cover_img = shot_img -%}
+      {%- endif -%}
+      {%- assign phone_w = ar | times: 150 | round -%}
+      {%- if phone_w > 320 -%}{%- assign phone_w = 320 -%}{%- endif -%}
+      {%- assign desk_w = ar | times: 210 | round -%}
+      {%- capture frames -%}{{ frames }}
+          <a class="roll-frame" href="{{ shot.src | relative_url }}" style="--ar: {{ ar | round: 4 }}">
+            <img src="{{ shot_img | relative_url }}"
+              {%- if shot_found and dims %} srcset="{{ shot_thumb | relative_url }} 480w, {{ shot.src | relative_url }} {{ dims[0] }}w" sizes="(max-width: 600px) {{ phone_w }}px, {{ desk_w }}px"{% endif %}
+              {%- if dims %} width="{% if shot_found %}480{% else %}{{ dims[0] }}{% endif %}" height="{% if shot_found %}{{ 480 | divided_by: ar | round }}{% else %}{{ dims[1] }}{% endif %}"{% endif %}
+              alt="{{ shot.caption | default: p.place | escape }}" loading="lazy" decoding="async" draggable="false">
+            <span class="roll-no" aria-hidden="true">{{ roll_n }}</span>
+          </a>
+      {%- endcapture -%}
+    {%- else -%}
+      {%- capture frames -%}{{ frames }}
+          <span class="roll-frame is-blank" style="--ar: 1" data-caption="{{ shot.caption | escape }}">
+            <span class="roll-blank-tag">Not yet developed</span>
+            <span class="roll-blank-cap">{{ shot.caption | default: 'Photo to come' }}</span>
+            <span class="roll-no" aria-hidden="true">{{ roll_n }}</span>
+          </span>
+      {%- endcapture -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- if frames != '' -%}
+    {%- capture rolls -%}{{ rolls }}
+      <div class="roll-place" data-place="{{ pid }}" data-state="{{ p.state | slugify }}"
+           data-title="{{ p.place | escape }}" data-when="{{ when_text | escape }}"
+           data-where="{% if p.state %}{{ p.state | escape }}, {% endif %}{{ p.country | escape }}">
+        <p class="roll-edge" aria-hidden="true">{{ p.place }}{% if p.when %} <b>{{ when_text }}</b>{% endif %}</p>
+        <div class="roll-frames">{{ frames }}
+        </div>
+      </div>
+    {%- endcapture -%}
+  {%- endif -%}
+
   {%- capture items -%}{{ items }}
-      <li class="place" id="{{ pid }}">
+      <li class="place{% if cover_src != '' %} has-cover{% endif %}" id="{{ pid }}">
         <div class="place-head">
           <h3>{{ p.place }}</h3>
           <span class="place-where">{% if p.state %}{{ p.state }}, {% endif %}{{ p.country }} &middot; {{ p.continent }}</span>
@@ -209,12 +285,18 @@ wip: Still adding places, and the photos to go with them.
             <p class="place-warn"><code>state: {{ p.state }}</code> is not one of the 36 in _data/world_map.yml, so this place fills no state on the map.</p>
           {%- endif -%}
         {%- endif -%}
-        {%- if p.photos -%}
-          <div class="shots">
-            {%- for shot in p.photos -%}
-              {%- include photo-tile.html photo=shot alt=p.place -%}
-            {%- endfor -%}
-          </div>
+        {%- comment -%}
+          One cover in place of the photos themselves, which are on the roll.
+          It opens the viewer at this place, or without JavaScript the photo.
+        {%- endcomment -%}
+        {%- if cover_src != '' -%}
+          <a class="place-roll" href="{{ cover_src | relative_url }}" data-place="{{ pid }}"
+             aria-label="{{ real_n }} photo{% if real_n != 1 %}s{% endif %} of {{ p.place | escape }}">
+            <img src="{{ cover_img | relative_url }}" alt="" loading="lazy" decoding="async">
+            <span>{{ real_n }} photo{% if real_n != 1 %}s{% endif %}</span>
+          </a>
+        {%- elsif frames != '' -%}
+          <p class="place-pending">{{ p.photos.size }} photo{% if p.photos.size != 1 %}s{% endif %} to come</p>
         {%- endif -%}
       </li>
   {%- endcapture -%}
@@ -260,6 +342,30 @@ wip: Still adding places, and the photos to go with them.
       <div class="hint"><a href="{{ '/side-quests/#q12' | relative_url }}">side quest #12</a></div>
     </div>
   </div>
+
+  {%- comment -%}
+    The film roll: every photo on the page, in the list's order, on one strip
+    that scrolls sideways. assets/js/travel-roll.js adds the gate -- the frame
+    in the middle, which the map follows -- with the arrows, mouse dragging
+    and the full-screen viewer. Without it the strip still scrolls, and each
+    frame links to its full-size photo.
+  {%- endcomment -%}
+  {%- if roll_n > 0 -%}
+  <section class="roll" id="roll" aria-label="Every photo on this page, newest first">
+    <div class="roll-film" id="roll-film" tabindex="0" role="group" aria-label="Photos. Arrow keys move along the film.">
+      <div class="roll-track">{{ rolls }}
+        <p class="roll-leader" aria-hidden="true"><b>{{ roll_n }} frame{% if roll_n != 1 %}s{% endif %}</b><br>newest first &#9656;</p>
+        <p class="roll-tail" aria-hidden="true">End of roll</p>
+      </div>
+    </div>
+    <div class="roll-bar">
+      <button type="button" class="roll-step" data-step="-1" aria-label="Previous photo">&lsaquo;</button>
+      <p class="roll-caption" aria-live="polite"></p>
+      <span class="roll-hint">Drag or swipe the film &middot; click a photo to see it big</span>
+      <button type="button" class="roll-step" data-step="1" aria-label="Next photo">&rsaquo;</button>
+    </div>
+  </section>
+  {%- endif -%}
 
   {%- comment -%}
     The marker shapes, drawn once and pointed at by every marker. Inline SVG
@@ -316,8 +422,9 @@ wip: Still adding places, and the photos to go with them.
 
   <p class="map-note">
     Scroll to zoom, drag to pan, or use the buttons; hover or tap a marker for
-    the details. Natural Earth outlines{% if wm.states %}, with India's states
-    and union territories once you zoom in on it{% endif %}. Equirectangular
+    the details, and click it to wind the film to its photos. Natural Earth
+    outlines{% if wm.states %}, with India's states and union territories once
+    you zoom in on it{% endif %}. Equirectangular
     projection, true to scale along the Tropic of Cancer. Antarctica is off the
     bottom of the map but still counts as a continent, which feels like
     cheating in its favour.
@@ -341,5 +448,6 @@ wip: Still adding places, and the photos to go with them.
 </div>
 
 <script src="{{ '/assets/js/travel.js' | relative_url }}" defer></script>
+<script src="{{ '/assets/js/travel-roll.js' | relative_url }}" defer></script>
 
 {% include comments.html %}
